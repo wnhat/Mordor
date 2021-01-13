@@ -6,5 +6,7 @@
 /TheProject/obj/
 Sauron/bin/
 Sauron/obj/
-Container/bin
-Container/obj
+Container/bin/
+Container/obj/
+test/bin/
+test/obj/

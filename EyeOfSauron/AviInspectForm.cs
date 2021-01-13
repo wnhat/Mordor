@@ -15,7 +15,6 @@ namespace EyeOfSauron
     public partial class AviInspectForm : Form
     {
         // TODO: initial serverconnect and panel_inf
-        Serverconnecter server = new Serverconnecter();
         Defectcode defect_translator = new Defectcode();
         Panel on_inspect_panel;
         Panel_inf panel_manager;
@@ -27,10 +26,6 @@ namespace EyeOfSauron
             InitializeComponent();
 
             // register event；
-            
-            // form2 event;
-            //
-
         }
 
         private void login(object sender, EventArgs e)

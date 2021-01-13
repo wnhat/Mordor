@@ -124,7 +124,6 @@
             this.Svibutton.TabIndex = 1;
             this.Svibutton.Text = "SVI";
             this.Svibutton.UseVisualStyleBackColor = false;
-            this.Svibutton.Click += new System.EventHandler(this.login_function);
             // 
             // LoginForm
             // 

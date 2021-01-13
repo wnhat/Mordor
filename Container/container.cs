@@ -93,7 +93,7 @@ namespace Container
         public PanelMission(string panelId, MissionType type, PanelPathContainer panelPath)
         {
             PanelId = panelId;
-            Repetition = 1; // TODO:设置任务人员检查
+            Repetition = 1;                                             // TODO:设置任务人员检查次数
             PanelJudge = new PanelJudgeTable();
             Type = type;
             AddTime = DateTime.Now;

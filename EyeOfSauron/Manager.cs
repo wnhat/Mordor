@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EyeOfSauron
 {
-    public class Manager
+    class Manager
     {
         Serverconnecter TheServerConnecter;
         User Operater;
@@ -14,6 +14,8 @@ namespace EyeOfSauron
         public Manager()
         {
             TheServerConnecter = new Serverconnecter();
+            Operater = null;
+
         }
 
         public bool CheckUser(User newUser)

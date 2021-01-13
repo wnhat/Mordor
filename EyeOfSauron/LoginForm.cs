@@ -12,41 +12,39 @@ namespace EyeOfSauron
 {
     public partial class LoginForm : Form
     {
-        Manager TheManager;
+        private Manager TheManager;
+        private AviInspectForm AviForm;
 
-        public LoginForm(Manager theManager)
+        public LoginForm()
         {
             InitializeComponent();
-            TheManager = theManager;
+            TheManager = new Manager();
+            AviForm = new AviInspectForm();
         }
 
-        // register login event；
-        public delegate void login_check_handler(string a);
-        public event login_check_handler logevent;
-        
-        private void login_function(object sender, EventArgs e)
-        {
-            // binding with the login button.
-            string a = userid_box.Text;
-            logevent(a);
-        }
 
         private void userid_box_KeyDown(object sender, KeyEventArgs e)
         {
             // binding with the keyboard enter .
             if (e.KeyCode == Keys.Enter)
             {
-                login_function(sender, e);
+                Avibutton_Click(sender, e);
             }
         }
 
         private void Avibutton_Click(object sender, EventArgs e)
+        {
+            UserCheckIn(AviForm);
+        }
+
+        private void UserCheckIn(Form form)
         {
             User newoperater = new User(this.userid_box.Text, "");
             if (TheManager.CheckUser(newoperater))
             {
                 TheManager.OperaterCheckIn(newoperater);
                 this.Hide();
+                form.Show();
             }
             else
             {

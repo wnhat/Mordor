@@ -18,8 +18,7 @@ namespace EyeOfSauron
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Manager TheManager = new Manager();
-            LoginForm the_main_form = new LoginForm(TheManager);
+            LoginForm the_main_form = new LoginForm();
             Application.Run(the_main_form);
         }
     }

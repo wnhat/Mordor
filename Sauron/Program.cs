@@ -16,17 +16,10 @@ namespace Sauron
     {
         static void Main(string[] args)
         {
-            old();
-            //test();
+            Server();
         }
 
-        static void test()
-        {
-            SqlServerConnector sqlserver = new SqlServerConnector();
-            sqlserver.get_oninspect_mission();
-        }
-
-        static void old()
+        static void Server()
         {
             var timer = new NetMQTimer(TimeSpan.FromSeconds(1800));
             ResponseSocket responseSocket = new ResponseSocket("@tcp://*:5555");
