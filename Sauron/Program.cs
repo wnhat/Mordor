@@ -8,8 +8,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
 using System.Data;
+using Container.Message;
 
-namespace server
+namespace Sauron
 {
     class Program
     {
@@ -45,6 +46,8 @@ namespace server
                     {
                         case MessageType.CLIENT_SEND_MISSION_RESULT:
                             // TODO:
+                            PanelMissionMessage finishedMission = new PanelMissionMessage(messageIn);
+
                             break;
                         case MessageType.CLINET_GET_MISSION:
                             // 
@@ -65,6 +68,18 @@ namespace server
                             TheMissionManager.AddMisionByServer();
                             BaseMessage addMissionMessage = new BaseMessage(MessageType.SERVER_SEND_FINISH);
                             a.Socket.SendMultipartMessage(addMissionMessage);
+                            break;
+                        case MessageType.CLINET_CHECK_USER:
+                            UserCheckMessage userInfo = new UserCheckMessage(messageIn);
+                            // TODO:check user Password & ID；
+                            if (true)
+                            {
+                                a.Socket.SignalOK();
+                            }
+                            else
+                            {
+                                a.Socket.SignalError();
+                            }
                             break;
                         default:
                             break;

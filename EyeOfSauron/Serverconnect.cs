@@ -6,72 +6,44 @@ using System.Threading.Tasks;
 using NetMQ;
 using NetMQ.Sockets;
 using System.IO;
+using Container;
+using Container.Message;
 
-namespace WindowsFormsApp1
+namespace EyeOfSauron
 {
-    class Serverconnect
+    class Serverconnecter
     {
-        
-        private RequestSocket client;
-        public Serverconnect()
+        private RequestSocket request;
+        public Serverconnecter()
         {
-            client = new RequestSocket();
-            client.Connect("tcp://localhost:5555");
-        }
-        // delegate & event;
-
-        public delegate void server_login_check_handler();
-        public event server_login_check_handler logevent;
-
-
-        public void Connectortest()
-        {
-            // for test
-            for (int i = 0; i < 10; i++)
-            {
-                Console.WriteLine("Sending Hello");
-                client.SendFrame("Hello");
-                var message = client.ReceiveFrameString();
-                Console.WriteLine("Received {0}", message);
-            }
+            request = new RequestSocket();
+            request.Connect("tcp://localhost:5555");
         }
 
-        public List<List<string>> Get_mission()
-        { 
-            //return mission_list;
-            //// only for offline test;
-
-            // only for offline test(home);
-            DirectoryInfo origin_directory = new DirectoryInfo(@"D:\program\c#\testdata\Origin");
-            DirectoryInfo[] directory_list = origin_directory.GetDirectories();
-            List<List<string>> mission_list = new List<List<string>>();
-
-            foreach (DirectoryInfo panel_directory in directory_list)
-            {
-                List<string> thispanel = new List<string>();
-                thispanel.Add(panel_directory.Name);
-                thispanel.Add(panel_directory.FullName);
-                thispanel.Add(panel_directory.Name);
-                mission_list.Add(thispanel);
-            }
-
-            return mission_list;
-            // only for offline test(home);
-
+        public PanelMissionMessage GetMission()
+        {
+            // get new panel mission from server;
+            BaseMessage newMessage = new BaseMessage(MessageType.CLINET_GET_MISSION);
+            request.SendMultipartMessage(newMessage);
+            PanelMissionMessage returnMessage = new PanelMissionMessage(request.ReceiveMultipartMessage());
+            return returnMessage;
         }
 
-        public void check_user_password(string user_id)
+        public bool check_user_password(string userId,string passWord)
         {
-            if (true)// TODO:check the server ,then return true or flase
-            {
-                logevent();
-            }
+            UserCheckMessage newMessage = new UserCheckMessage(userId, passWord);
+            request.SendMultipartMessage(newMessage);
+            bool returnbool = request.ReceiveSignal();
+            return returnbool;
         }
 
-        public bool uploadjudgement(string panel_id,string op_id,string defectcode,string defectname)
+        public bool FinishMission(PanelMission finishedMission)
         {
-            // TODO: server paneljudge funtion,return true if succese.
-            return true;
+            // TODO: check is themission finished,if not log the mission;
+            PanelMissionMessage newMessage = new PanelMissionMessage(MessageType.CLIENT_SEND_MISSION_RESULT, finishedMission);
+            request.SendMultipartMessage(newMessage);
+            bool returnbool = request.ReceiveSignal();
+            return returnbool;
         }
     }
 }

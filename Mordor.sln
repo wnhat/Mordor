@@ -1,11 +1,16 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30413.136
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sauron", "Sauron\Sauron.csproj", "{8336CE33-CDEE-408D-972E-D02C01CFD448}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2DFDB54C-E35F-4FB8-ABCE-F95BCF57A68F} = {2DFDB54C-E35F-4FB8-ABCE-F95BCF57A68F}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EyeOfSauron", "EyeOfSauron\EyeOfSauron.csproj", "{E5098A2E-CE9E-4C19-BEFF-3F0667841FA1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Container", "Container\Container.csproj", "{2DFDB54C-E35F-4FB8-ABCE-F95BCF57A68F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,6 +36,14 @@ Global
 		{E5098A2E-CE9E-4C19-BEFF-3F0667841FA1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E5098A2E-CE9E-4C19-BEFF-3F0667841FA1}.Release|x64.ActiveCfg = Release|Any CPU
 		{E5098A2E-CE9E-4C19-BEFF-3F0667841FA1}.Release|x64.Build.0 = Release|Any CPU
+		{2DFDB54C-E35F-4FB8-ABCE-F95BCF57A68F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2DFDB54C-E35F-4FB8-ABCE-F95BCF57A68F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2DFDB54C-E35F-4FB8-ABCE-F95BCF57A68F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2DFDB54C-E35F-4FB8-ABCE-F95BCF57A68F}.Debug|x64.Build.0 = Debug|Any CPU
+		{2DFDB54C-E35F-4FB8-ABCE-F95BCF57A68F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2DFDB54C-E35F-4FB8-ABCE-F95BCF57A68F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2DFDB54C-E35F-4FB8-ABCE-F95BCF57A68F}.Release|x64.ActiveCfg = Release|Any CPU
+		{2DFDB54C-E35F-4FB8-ABCE-F95BCF57A68F}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

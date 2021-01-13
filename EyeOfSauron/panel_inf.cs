@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 
-namespace WindowsFormsApp1
+namespace EyeOfSauron
 {
     class Panel_inf
     {
@@ -28,7 +28,7 @@ namespace WindowsFormsApp1
             // please use this function under another thread,it will cost long time for initial the panel.
             if (!thread_flag)
             {
-                while (panel_list.Count < 20 & panel_path_list.Count != 0)
+                while (panel_list.Count < 5 & panel_path_list.Count != 0)
                 {
                     thread_flag = true;
                     string panelid = panel_path_list[0][0];
@@ -49,6 +49,7 @@ namespace WindowsFormsApp1
 
         public Panel get_first_panel()
         {
+            // TODO: when operator is faster than copy file, it alramed.
             return panel_list[0];
         }
 

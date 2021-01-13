@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WindowsFormsApp1
+namespace EyeOfSauron
 {
     class Panel
     {
@@ -72,6 +72,13 @@ namespace WindowsFormsApp1
                 imgFullSize.Dispose();
                 image_dict.Add(filename, stmimage);
                 imgFullSize.Dispose();
+
+                //FileStream fileStream = new FileStream(Path.Combine(local_directory.FullName, filename), FileMode.Open, FileAccess.Read, FileShare.Read);
+                //// 读取文件的 byte[]    
+                //byte[] bytes = new byte[fileStream.Length];
+                //fileStream.Read(bytes, 0, bytes.Length);
+                //fileStream.Close();
+                //image_dict.Add(filename, bytes);
             }
 
             return false;
