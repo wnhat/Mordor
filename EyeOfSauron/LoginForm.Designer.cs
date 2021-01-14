@@ -32,8 +32,8 @@
             this.userid_box = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.Avibutton = new System.Windows.Forms.Button();
             this.Svibutton = new System.Windows.Forms.Button();
+            this.Avibutton = new System.Windows.Forms.Button();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.SuspendLayout();
@@ -96,6 +96,20 @@
             this.tableLayoutPanel2.Size = new System.Drawing.Size(398, 58);
             this.tableLayoutPanel2.TabIndex = 3;
             // 
+            // Svibutton
+            // 
+            this.Svibutton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
+            this.Svibutton.BackColor = System.Drawing.Color.Cornsilk;
+            this.Svibutton.Font = new System.Drawing.Font("Microsoft YaHei", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.Svibutton.ForeColor = System.Drawing.Color.DarkGreen;
+            this.Svibutton.Location = new System.Drawing.Point(244, 9);
+            this.Svibutton.Margin = new System.Windows.Forms.Padding(10, 9, 10, 9);
+            this.Svibutton.Name = "Svibutton";
+            this.Svibutton.Size = new System.Drawing.Size(109, 40);
+            this.Svibutton.TabIndex = 1;
+            this.Svibutton.Text = "SVI";
+            this.Svibutton.UseVisualStyleBackColor = false;
+            // 
             // Avibutton
             // 
             this.Avibutton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
@@ -110,20 +124,6 @@
             this.Avibutton.Text = "AVI";
             this.Avibutton.UseVisualStyleBackColor = false;
             this.Avibutton.Click += new System.EventHandler(this.Avibutton_Click);
-            // 
-            // Svibutton
-            // 
-            this.Svibutton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
-            this.Svibutton.BackColor = System.Drawing.Color.Cornsilk;
-            this.Svibutton.Font = new System.Drawing.Font("Microsoft YaHei", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.Svibutton.ForeColor = System.Drawing.Color.DarkGreen;
-            this.Svibutton.Location = new System.Drawing.Point(244, 9);
-            this.Svibutton.Margin = new System.Windows.Forms.Padding(10, 9, 10, 9);
-            this.Svibutton.Name = "Svibutton";
-            this.Svibutton.Size = new System.Drawing.Size(109, 40);
-            this.Svibutton.TabIndex = 1;
-            this.Svibutton.Text = "SVI";
-            this.Svibutton.UseVisualStyleBackColor = false;
             // 
             // LoginForm
             // 
