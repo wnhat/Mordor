@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EyeOfSauron
 {
-    class Parameter
+    public class Parameter
     {
         public string      SavePath;
         public string[]    ImageNameList;

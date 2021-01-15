@@ -24,7 +24,6 @@ namespace EyeOfSauron
 
         private string[] ImageNameList;
 
-
         public MissionPackage(int downloadQuantity, string imageSavingPath, string[] imageNameList)
         {
             UnDownloadedMissionQueue = new Queue<PanelMission>();
@@ -33,6 +32,7 @@ namespace EyeOfSauron
             ImageSavingPath = imageSavingPath;
             ImageNameList = imageNameList;
         }
+        public MissionPackage(Parameter sysParameter):this(sysParameter.PreLoadQuantity, sysParameter.SavePath, sysParameter.ImageNameList){}
 
         public void AddMission(PanelMission newmission)
         {
@@ -63,7 +63,6 @@ namespace EyeOfSauron
         public void NewMission()
         {
             OnInspectedMission = PreDownloadedMissionQueue.Dequeue();
-
         }
         public void SetImageNameList(List<string> newnamelist)
         {
@@ -74,46 +73,21 @@ namespace EyeOfSauron
 
     class InspectMission
     {
-        private PanelMission MissionInfo;
-        private string[] ImageNameList;
-        private string SavePath;
-        private InspectFileContainer FileContainer;
-
-        public InspectMission(PanelMission missionInfo, string[] imageNameList, string savePath)
+        private PanelMission missionInfo;
+        DirectoryInfo ImageFile;                        // Result directory
+        string[] ImageNameList;                         // The image name in reuslt file which we need to inspect
+        List<FileContainer> FileArray;                  // File in result directory
+        string SavePath;
+        
+        public InspectMission(PanelMission missioninfo, string[] imageNameList, string savePath)
         {
-            MissionInfo = missionInfo;
+            missionInfo = missioninfo;
             ImageNameList = imageNameList;
             SavePath = savePath;
-            FileContainer = null;
-            DownloadFile();
+            ImageFile = new DirectoryInfo(MissionInfo.PanelPath.Result_path);
+            DownloadFileInMemory();
         }
-
-        public void DownloadFile()
-        {
-            FileContainer = new InspectFileContainer(MissionInfo.PanelPath.Result_path, ImageNameList);
-        }
-
-        public void ChangeSavePath(string newsavepath)
-        {
-            SavePath = newsavepath;
-        }
-
-    }
-
-    class InspectFileContainer
-    {
-        DirectoryInfo ImageFile;        // Result directory
-        string[] ImageNameList;         // The image name in reuslt file which we need to inspect
-        List<FileContainer> FileArray;  // File in result directory
-        string SavePath;
-        public InspectFileContainer(string SrcfilePath, string[] imageNameList)
-        {
-            ImageFile = new DirectoryInfo(SrcfilePath);
-            ImageNameList = imageNameList;
-            GetFileInMemory();
-        }
-
-        public void GetFileInMemory()
+        public void DownloadFileInMemory()
         {
             FileInfo[] filearray = ImageFile.GetFiles();
             foreach (var file in filearray)
@@ -126,7 +100,24 @@ namespace EyeOfSauron
                 }
             }
         }
-
+        public void ChangeSavePath(string newsavepath)
+        {
+            SavePath = newsavepath;
+        }
+        public MemoryStream[] GetImageArray()
+        {
+            MemoryStream[] returnarray = new MemoryStream[ImageNameList.Count()];
+            int i = 0;
+            foreach (var file in FileArray)
+            {
+                if (ImageNameList.Contains(file.Name))
+                {
+                    returnarray[i] = file.GetFileFromMemory();
+                    i++;
+                }
+            }
+            return returnarray;
+        }
         public void SaveFileInDisk()
         {
             DirectoryInfo savedirectory = new DirectoryInfo(SavePath);
@@ -136,30 +127,52 @@ namespace EyeOfSauron
                 file.SaveFileInDisk(savedirectory.FullName);
             }
         }
-
+        public PanelMission MissionInfo
+        {
+            get
+            {
+                return missionInfo;
+            }
+        }
+        public PanelMission Finish(string defectName)
+        {
+            // add defect in to the panelmission`s defect table;
+            SaveFileInDisk();
+            return missionInfo;
+        }
     }
 
     class FileContainer
     {
         FileInfo FileInformation;
         MemoryStream FileMemory;
+
         public FileContainer(FileInfo fileInformation)
         {
             FileInformation = fileInformation;
             FileMemory = new MemoryStream();
             ReadFileInMemory();
         }
-
         public void ReadFileInMemory()
         {
             FileInformation.OpenRead().CopyTo(FileMemory);
         }
-
         public void SaveFileInDisk(string savePath)
         {
             FileInfo newsavefile = new FileInfo(Path.Combine(savePath, FileInformation.Name));
             var writestream = newsavefile.OpenWrite();
             FileMemory.CopyTo(writestream);
+        }
+        public MemoryStream GetFileFromMemory()
+        {
+            return FileMemory;
+        }
+        public string Name
+        {
+            get
+            {
+                return FileInformation.Name;
+            }
         }
     }
 }

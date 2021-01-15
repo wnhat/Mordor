@@ -19,7 +19,7 @@ namespace EyeOfSauron
         {
             InitializeComponent();
             TheManager = new Manager();
-            AviForm = new AviInspectForm();
+            AviForm = new AviInspectForm(this,TheManager);
         }
 
 
@@ -44,7 +44,8 @@ namespace EyeOfSauron
             {
                 TheManager.OperaterCheckIn(newoperater);
                 this.Hide();
-                form.Show();
+                //form.Show();
+                form.ShowDialog();
             }
             else
             {

@@ -100,14 +100,12 @@
     </Compile>
     <Compile Include="Manager.cs" />
     <Compile Include="MissionPackage.cs" />
-    <Compile Include="Panel.cs" />
     <Compile Include="AviInspectForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="AviInspectForm.Designer.cs">
       <DependentUpon>AviInspectForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Panel_inf.cs" />
     <Compile Include="Parameter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

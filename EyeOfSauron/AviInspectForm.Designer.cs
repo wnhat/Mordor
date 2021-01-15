@@ -290,7 +290,7 @@
             this.login_button.TabIndex = 1;
             this.login_button.Text = "用户登录";
             this.login_button.UseVisualStyleBackColor = false;
-            this.login_button.Click += new System.EventHandler(this.login);
+            this.login_button.Click += new System.EventHandler(this.logout);
             // 
             // cell_id_label
             // 
