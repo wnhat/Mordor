@@ -5,19 +5,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Container;
+using Serilog;
 
 namespace Sauron
 {
     class FileManager
     {
         PanelPathManager PathManager;
-        List<string> log_list;
+        ILogger Log;
         IP_TR ip_tr;
         List<INS_pc_manage> Ins_pc_list;
 
         public FileManager(IP_TR ip_tr_)
         {
-            this.log_list = new List<string>();
+            Log = new LoggerConfiguration().WriteTo.Console().CreateLogger();
             this.Ins_pc_list = new List<INS_pc_manage>();
             this.PathManager = new PanelPathManager();
             ip_tr = ip_tr_;
@@ -25,7 +26,7 @@ namespace Sauron
             List<PC> refresh_pc_list = ip_tr.name_to_ip(new List<string> { "AVI"});
             foreach (var pc in refresh_pc_list)
             {
-                Ins_pc_list.Add(new INS_pc_manage(pc,log_list));
+                Ins_pc_list.Add(new INS_pc_manage(pc, Log));
             }
             Refresh_file_list();
         }
@@ -74,15 +75,16 @@ namespace Sauron
 
     }
 
-    class INS_pc_manage : PcManager
+    class INS_pc_manage : PC
     {
-        public INS_pc_manage(PC input_pc, List<string> log_list_)
+        ILogger Log;
+        public INS_pc_manage(PC input_pc, ILogger log)
         {
             this.EqId = input_pc.EqId;
             this.PcIp = input_pc.PcIp;
             this.PcName = input_pc.PcName;
             this.PcSide = input_pc.PcSide;
-            this.log_list = log_list_;
+            Log = log;
         }
 
         public void Serch_file(PanelPathManager new_panel_list)
@@ -91,7 +93,6 @@ namespace Sauron
             List<string> search_list = new Disk_part().getall;  // get serch disk name;
             foreach (var search_disk in search_list)
             {
-                Console.WriteLine("pc: {1} ; disk: {0}",search_disk,PcIp);
                 try
                 {
                     string diskpath1 = Path.Combine(PcIp, "NetworkDrive", search_disk, "Defect Info", "Origin");
@@ -112,8 +113,7 @@ namespace Sauron
                         }
                         else
                         {
-                            log_list.Add(String.Format("result file not exist; panel id : {0}; path: {1}", item.Substring(item.Length - 17), item));
-                            //Console.WriteLine("result file not exist: {0}",item.Name);
+                            Log.Information("result file not exist; panel id : {0}; path: {1}", item.Substring(item.Length - 17), item);
                         }
                     }
 
@@ -131,17 +131,18 @@ namespace Sauron
                         }
                         else
                         {
-                            log_list.Add(String.Format("image file not exist; panel id : {0}; path: {0}", item.Substring(item.Length - 17), item));
+                            Log.Information("image file not exist; panel id : {0}; path: {0}", item.Substring(item.Length - 17), item);
                         }
                     }
                 }
 
                 catch (Exception e)
                 {
-                    log_list.Add(String.Format("查询文件失败：{0}", e.Message));
+                    Log.Information("查询文件失败：{0}", e.Message);
                 }
             }
-            Console.WriteLine("pc: {0} finishied;", PcIp);
+
+            Log.Information("pc: {0} finishied;", PcIp);
             new_panel_list.AddRange(panel_list);
         }
     }

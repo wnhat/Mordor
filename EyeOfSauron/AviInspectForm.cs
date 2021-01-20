@@ -16,25 +16,23 @@ namespace EyeOfSauron
     {
         LoginForm TheParentForm;
         Defectcode defect_translator = new Defectcode();
-        string user = "";
+        Manager TheManager;
 
         public AviInspectForm(LoginForm parentForm,Manager theManager)
         {
             // initial AviInspectForm；
             InitializeComponent();
             TheParentForm = parentForm;
+            TheManager = theManager;
         }
-
         private void logout(object sender, EventArgs e)
         {
-            user = "";
             login_button.Text = "用户登录";
             login_button.BackColor = System.Drawing.Color.SandyBrown;
             // do someting else;
             this.Close();
             TheParentForm.Show();
         }
-
         private void judge_function(object sender, EventArgs e)
         {
             Button sender_button = (Button)sender;
@@ -44,7 +42,9 @@ namespace EyeOfSauron
         }
         private void get_next_panel()
         {
-            
+            origin_image_Box.Image = TheManager.GetOnInspectPanelImage()[0];
+            cell_id_label.Text = TheManager.GetOnInspectPanelId();
+            remain_label.Text = TheManager.RemainMissionCount.ToString();
         }
         protected override void OnFormClosed(FormClosedEventArgs e)
         {

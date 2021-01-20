@@ -68,7 +68,6 @@ namespace Sauron
             }
             data_base.Close();
             return newPanelList;
-
         }
 
         public List<string> get_oninspect_mission()

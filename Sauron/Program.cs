@@ -30,6 +30,7 @@ namespace Sauron
                 IP_TR ip_tr = new IP_TR();
                 FileManager file_container = new FileManager(ip_tr);
                 MissionManager TheMissionManager = new MissionManager(sqlserver, file_container);
+                TheMissionManager.AddMisionByServer();
 
                 responseSocket.ReceiveReady += (s, a) =>
                 {
@@ -37,6 +38,9 @@ namespace Sauron
                     BaseMessage switchmessage = new BaseMessage(messageIn);
                     switch (switchmessage.TheMessageType)
                     {
+                        case MessageType.CLIENT_GET_PANEL_GREAD:
+                            
+                            break;
                         case MessageType.CLIENT_SEND_MISSION_RESULT:
                             // TODO:
                             PanelMissionMessage finishedMission = new PanelMissionMessage(messageIn);

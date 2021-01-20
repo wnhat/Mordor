@@ -60,6 +60,11 @@ namespace EyeOfSauron
                 }
             }
         }
+        public void PreDownloadFile(PanelMission newpanel)
+        {
+            InspectMission newmission = new InspectMission(newpanel, ImageNameList, ImageSavingPath);
+            PreDownloadedMissionQueue.Enqueue(newmission);
+        }
         public void NewMission()
         {
             OnInspectedMission = PreDownloadedMissionQueue.Dequeue();
@@ -68,7 +73,6 @@ namespace EyeOfSauron
         {
             ImageNameList = newnamelist.ToArray();
         }
-
     }
 
     class InspectMission

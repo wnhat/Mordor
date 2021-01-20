@@ -22,7 +22,6 @@ namespace EyeOfSauron
             AviForm = new AviInspectForm(this,TheManager);
         }
 
-
         private void userid_box_KeyDown(object sender, KeyEventArgs e)
         {
             // binding with the keyboard enter .
@@ -44,7 +43,8 @@ namespace EyeOfSauron
             {
                 TheManager.OperaterCheckIn(newoperater);
                 this.Hide();
-                //form.Show();
+                ProcessForm newDownloadProcess = new ProcessForm(TheManager);
+                newDownloadProcess.ShowDialog();
                 form.ShowDialog();
             }
             else

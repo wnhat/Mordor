@@ -14,13 +14,15 @@ namespace EyeOfSauron
         Serverconnecter TheServerConnecter;
         User Operater;
         MissionPackage TheMissionPackage;
-        Parameter SystemParameter;
+        public Parameter SystemParameter;
+        bool StopToCellFlag;
         public Manager()
         {
             SystemParameter = GetParameter();
             TheServerConnecter = new Serverconnecter();
             Operater = null;
-            //TheMissionPackage = new MissionPackage(SystemParameter);
+            StopToCellFlag = false;
+            TheMissionPackage = new MissionPackage(SystemParameter);
         }
 
         public bool CheckUser(User newUser)
@@ -38,12 +40,15 @@ namespace EyeOfSauron
 
         public Parameter GetParameter()
         {
-            //string ip_path = @"D:\1218180\program2\c#\Mordor\EyeOfSauron\sysconfig.json";
-            //StreamReader file = new StreamReader(ip_path);
-            //StringReader file_string = new StringReader(file.ReadToEnd());
-            //JsonSerializer file_serial = new JsonSerializer();
-            //Parameter newparameter = (Parameter)file_serial.Deserialize(new JsonTextReader(file_string), this.GetType());
-            //return newparameter;
+            string sysconfig_path = @"D:\1218180\program2\c#\Mordor\EyeOfSauron\sysconfig.json";
+            FileInfo sysconfig = new FileInfo(sysconfig_path);
+            if (sysconfig.Exists)
+            {
+                var jsonstring = new StreamReader(sysconfig.OpenRead());
+                JsonSerializer file_serial = new JsonSerializer();
+                Parameter newparameter = (Parameter)file_serial.Deserialize(new JsonTextReader(jsonstring), typeof(Parameter));
+                return newparameter;
+            }
             return null;
         }
         public void SaveParameter()
@@ -56,6 +61,11 @@ namespace EyeOfSauron
             var finishedMission = TheMissionPackage.OnInspectedMission.Finish(defectName);
             TheServerConnecter.FinishMission(finishedMission);
             TheMissionPackage.NewMission();
+            if (!StopToCellFlag)
+            {
+                AddMission();
+            }
+            
         }
         public Bitmap[] GetOnInspectPanelImage()
         {
@@ -68,6 +78,28 @@ namespace EyeOfSauron
             }
             return returnArray;
         }
-
+        public string GetOnInspectPanelId()
+        {
+            return TheMissionPackage.OnInspectedMission.MissionInfo.PanelId;
+        }
+        public int RemainMissionCount { get { return TheMissionPackage.Count; } }
+        void CheckRemainMissionCount()
+        {
+            for (int i = 0; i < 20; i++)
+            {
+                AddOneMission();
+            }
+        }
+        public void AddMission()
+        {
+            for (int i = 0; i < 20; i++)
+            {
+                AddOneMission();
+            }
+        }
+        public void AddOneMission()
+        {
+            TheMissionPackage.AddMission(TheServerConnecter.GetMission());
+        }
     }
 }

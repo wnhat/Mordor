@@ -10,6 +10,7 @@ namespace Container.Message
 {
     public enum MessageType
     {
+        CLIENT_GET_PANEL_GREAD,
         CLIENT_SEND_MISSION_RESULT,
         CLINET_GET_MISSION,
         CLINET_GET_MISSION_LIST,
@@ -20,6 +21,7 @@ namespace Container.Message
         SERVER_SEND_MISSION,
         SERVER_SEND_FINISH,
         SERVER_SEND_EORRO,
+        SERVER_SEND_PANEL_GREAD,
     }
 
     public class BaseMessage:NetMQMessage

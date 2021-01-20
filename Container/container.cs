@@ -157,9 +157,4 @@ namespace Container
         public List<PC> pc_list_all { get; set; }
     }
 
-    public class PcManager : PC
-    {
-        public List<string> log_list { get; set; }
-        // TODO: use log lib;
-    }
 }
