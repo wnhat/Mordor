@@ -101,5 +101,9 @@ namespace EyeOfSauron
         {
             TheMissionPackage.AddMission(TheServerConnecter.GetMission());
         }
+        public void PreLoadOneMission()
+        {
+            TheMissionPackage.PreDownloadFile(TheServerConnecter.GetMission());
+        }
     }
 }

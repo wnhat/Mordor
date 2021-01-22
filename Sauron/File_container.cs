@@ -12,13 +12,15 @@ namespace Sauron
     class FileManager
     {
         PanelPathManager PathManager;
-        ILogger Log;
+        ILogger Logger;
         IP_TR ip_tr;
         List<INS_pc_manage> Ins_pc_list;
 
         public FileManager(IP_TR ip_tr_)
         {
-            Log = new LoggerConfiguration().WriteTo.Console().CreateLogger();
+            Logger = new LoggerConfiguration()
+                .WriteTo.File(@"D:\eye of sauron\log\filemanager\log-.txt", rollingInterval: RollingInterval.Hour)
+                .CreateLogger();
             this.Ins_pc_list = new List<INS_pc_manage>();
             this.PathManager = new PanelPathManager();
             ip_tr = ip_tr_;
@@ -26,14 +28,14 @@ namespace Sauron
             List<PC> refresh_pc_list = ip_tr.name_to_ip(new List<string> { "AVI"});
             foreach (var pc in refresh_pc_list)
             {
-                Ins_pc_list.Add(new INS_pc_manage(pc, Log));
+                Ins_pc_list.Add(new INS_pc_manage(pc, Logger));
             }
             Refresh_file_list();
         }
 
         public async void Refresh_file_list()
         {
-            Console.WriteLine("start to refresh the file dict, time is {0}", DateTime.Now);
+            Logger.Information("start to refresh the file dict, time is {0}", DateTime.Now);
             PanelPathManager newPanelPathManager = new PanelPathManager();
             List<Task> task_list = new List<Task>();
             foreach (var pc in Ins_pc_list)
@@ -42,7 +44,7 @@ namespace Sauron
                 task_list.Add(refresh_task);
             }
             await Task.WhenAll(task_list);
-            Console.WriteLine("finished Refresh, time is {0}", DateTime.Now);
+            Logger.Information("finished Refresh, time is {0}", DateTime.Now);
             PathManager = newPanelPathManager;
         }
 

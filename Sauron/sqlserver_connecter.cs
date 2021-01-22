@@ -91,6 +91,23 @@ namespace Sauron
                                     WHERE InspDate BETWEEN '{0}' AND '{1}'
                                     AND OperationID = 'C52000N' AND LastJudge = 'E'", 
                                     get_date_span_sqlstring_last(), get_date_span_sqlstring_now());
+            commandstring = @"SELECT[EqpID],
+                                    [InspDate]
+                                    ,[ModelID]
+                                    ,[InnerID]
+                                    ,[VcrID]
+                                    ,[MviUser]
+                                    ,[LastResult]
+                                    ,[LastJudge]
+                                    ,[DbInTime]
+                                    ,[OperationID]
+                                    ,[StageID]
+                                    ,[LastResultName]
+                                    ,[ProductType]
+                                    ,[MergeToolJudge]
+                                    ,[DefectName]
+        FROM[EDIAS_DB].[dbo].[TAX_PRODUCT_TEST]
+        WHERE EqpID = '7CTCT27' AND InspDate BETWEEN '20200115000000' AND '20200122230000'AND OperationID = 'C52000N' AND LastJudge = 'E'";
             List<string> newDataString = GetInputPanelMession(commandstring);
             return newDataString;
         }

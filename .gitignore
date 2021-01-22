@@ -4,9 +4,11 @@
 /EyeOfSauron/obj/
 /TheProject/bin/
 /TheProject/obj/
-Sauron/bin/
-Sauron/obj/
-Container/bin/
-Container/obj/
-test/bin/
-test/obj/
+/Sauron/bin/
+/Sauron/obj/
+/Container/bin/
+/Container/obj/
+/test/bin/
+/test/obj/
+/Controler/bin/
+/Controler/obj/

@@ -30,7 +30,9 @@ namespace Sauron
                 IP_TR ip_tr = new IP_TR();
                 FileManager file_container = new FileManager(ip_tr);
                 MissionManager TheMissionManager = new MissionManager(sqlserver, file_container);
+                Thread.Sleep(TimeSpan.FromSeconds(150));
                 TheMissionManager.AddMisionByServer();
+                Console.WriteLine("add mission finished.");
 
                 responseSocket.ReceiveReady += (s, a) =>
                 {
@@ -86,10 +88,10 @@ namespace Sauron
 
                 timer.Elapsed += (s, a) =>
                 {
-                    //
                     Console.WriteLine("start refresh the panel list");
                     file_container.Refresh_file_list();
                 };
+
                 poller.Run();
             }
         }

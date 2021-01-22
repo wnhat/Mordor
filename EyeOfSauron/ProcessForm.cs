@@ -21,6 +21,7 @@ namespace EyeOfSauron
             backgroundWorkerForDownload.DoWork += DownloadWork;
             backgroundWorkerForDownload.ProgressChanged += AddProcessBarValue;
             backgroundWorkerForDownload.RunWorkerCompleted += Finished;
+
             backgroundWorkerForDownload.RunWorkerAsync();
         }
 
@@ -28,7 +29,7 @@ namespace EyeOfSauron
         {
             for (int i = 0; i < TheManager.SystemParameter.PreLoadQuantity; i++)
             {
-                TheManager.AddOneMission();
+                TheManager.PreLoadOneMission();
                 backgroundWorkerForDownload.ReportProgress(i / TheManager.SystemParameter.PreLoadQuantity);
             }
         }

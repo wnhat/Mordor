@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Container;
+using Serilog;
 
 namespace Sauron
 {
@@ -13,14 +14,17 @@ namespace Sauron
         SqlServerConnector Thesqlserver;
         FileManager Thefilecontainer;
         public Queue<PanelMission> MissionQueue;
-        List<string> logger;
+        ILogger Logger;
 
         public MissionManager(SqlServerConnector theSqlserver, FileManager theFileContainer)
         {
             this.Thefilecontainer = theFileContainer;
             this.Thesqlserver = theSqlserver;
             MissionQueue = new Queue<PanelMission>();
-            logger = new List<string>();
+            Logger = new LoggerConfiguration()
+                .WriteTo.File(@"D:\eye of sauron\log\missionmanager\log-.txt",rollingInterval:RollingInterval.Day)
+                .WriteTo.Console()
+                .CreateLogger();
         }
 
         public void AddMisionByServer()
@@ -38,7 +42,7 @@ namespace Sauron
                 }
                 else
                 {
-                    logger.Add(String.Format("can not find panel path in the PathContainer, PanelId : {0}", missionid));
+                    Logger.Information("can not find panel path in the PathContainer, PanelId : {0}", missionid);
                 }
             }
         }
