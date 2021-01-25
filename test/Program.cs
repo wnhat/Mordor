@@ -14,7 +14,7 @@ namespace test
     {
         static void Main(string[] args)
         {
-            var log = new LoggerConfiguration().WriteTo.Console();
+            
         }
     }
 }
