@@ -21,7 +21,6 @@ namespace EyeOfSauron
             backgroundWorkerForDownload.DoWork += DownloadWork;
             backgroundWorkerForDownload.ProgressChanged += AddProcessBarValue;
             backgroundWorkerForDownload.RunWorkerCompleted += Finished;
-
             backgroundWorkerForDownload.RunWorkerAsync();
         }
 
@@ -30,7 +29,8 @@ namespace EyeOfSauron
             for (int i = 0; i < TheManager.SystemParameter.PreLoadQuantity; i++)
             {
                 TheManager.PreLoadOneMission();
-                backgroundWorkerForDownload.ReportProgress(i / TheManager.SystemParameter.PreLoadQuantity);
+                int percentage = i * 100 / TheManager.SystemParameter.PreLoadQuantity;
+                backgroundWorkerForDownload.ReportProgress(percentage);
             }
         }
 

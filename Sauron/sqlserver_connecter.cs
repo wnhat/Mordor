@@ -107,7 +107,7 @@ namespace Sauron
                                     ,[MergeToolJudge]
                                     ,[DefectName]
         FROM[EDIAS_DB].[dbo].[TAX_PRODUCT_TEST]
-        WHERE EqpID = '7CTCT27' AND InspDate BETWEEN '20200115000000' AND '20200122230000'AND OperationID = 'C52000N' AND LastJudge = 'E'";
+        WHERE InspDate BETWEEN '20210120000000' AND '20210125230000' AND EqpID = '7CTCT27' AND OperationID = 'C52000N' AND LastJudge = 'E'";
             List<string> newDataString = GetInputPanelMession(commandstring);
             return newDataString;
         }

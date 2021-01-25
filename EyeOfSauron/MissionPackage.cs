@@ -47,17 +47,10 @@ namespace EyeOfSauron
         }
         public void PreDownloadFile()
         {
-            while (PreDownloadedMissionQueue.Count >= DownloadQuantity)
+            while (PreDownloadedMissionQueue.Count >= DownloadQuantity | UnDownloadedMissionQueue.Count == 0)
             {
-                if (UnDownloadedMissionQueue.Count > 0)
-                {
-                    InspectMission newmission = new InspectMission(UnDownloadedMissionQueue.Dequeue(), ImageNameList, ImageSavingPath);
-                    PreDownloadedMissionQueue.Enqueue(newmission);
-                }
-                else
-                {
-                    break;
-                }
+                InspectMission newmission = new InspectMission(UnDownloadedMissionQueue.Dequeue(), ImageNameList, ImageSavingPath);
+                PreDownloadedMissionQueue.Enqueue(newmission);
             }
         }
         public void PreDownloadFile(PanelMission newpanel)
@@ -78,7 +71,7 @@ namespace EyeOfSauron
     class InspectMission
     {
         private PanelMission missionInfo;
-        DirectoryInfo ImageFile;                        // Result directory
+        DirContainer Container;                        // Result directory
         string[] ImageNameList;                         // The image name in reuslt file which we need to inspect
         List<FileContainer> FileArray;                  // File in result directory
         string SavePath;
@@ -88,48 +81,15 @@ namespace EyeOfSauron
             missionInfo = missioninfo;
             ImageNameList = imageNameList;
             SavePath = savePath;
-            ImageFile = new DirectoryInfo(MissionInfo.PanelPath.Result_path);
-            DownloadFileInMemory();
-        }
-        public void DownloadFileInMemory()
-        {
-            FileInfo[] filearray = ImageFile.GetFiles();
-            foreach (var file in filearray)
-            {
-                if (ImageNameList.Contains(file.Name))
-                {
-                    FileContainer newfile = new FileContainer(file);
-                    // TODO: ADD TRY, if read file error,log it;
-                    FileArray.Add(newfile);
-                }
-            }
+            Container = new DirContainer(MissionInfo.PanelPath.Result_path);
         }
         public void ChangeSavePath(string newsavepath)
         {
             SavePath = newsavepath;
         }
-        public MemoryStream[] GetImageArray()
-        {
-            MemoryStream[] returnarray = new MemoryStream[ImageNameList.Count()];
-            int i = 0;
-            foreach (var file in FileArray)
-            {
-                if (ImageNameList.Contains(file.Name))
-                {
-                    returnarray[i] = file.GetFileFromMemory();
-                    i++;
-                }
-            }
-            return returnarray;
-        }
         public void SaveFileInDisk()
         {
-            DirectoryInfo savedirectory = new DirectoryInfo(SavePath);
-            savedirectory.Create();
-            foreach (var file in FileArray)
-            {
-                file.SaveFileInDisk(savedirectory.FullName);
-            }
+            Container.SaveDirInDisk(SavePath);
         }
         public PanelMission MissionInfo
         {
@@ -143,6 +103,10 @@ namespace EyeOfSauron
             // add defect in to the panelmission`s defect table;
             SaveFileInDisk();
             return missionInfo;
+        }
+        public MemoryStream GetFileFromMemory(string filename)
+        {
+            return Container.GetFileFromMemory(filename);
         }
     }
 
@@ -159,17 +123,22 @@ namespace EyeOfSauron
         }
         public void ReadFileInMemory()
         {
+            // TODO: ADD TRY, if read file error,log it;
             FileInformation.OpenRead().CopyTo(FileMemory);
         }
         public void SaveFileInDisk(string savePath)
         {
+            // TODO：async process;
             FileInfo newsavefile = new FileInfo(Path.Combine(savePath, FileInformation.Name));
             var writestream = newsavefile.OpenWrite();
             FileMemory.CopyTo(writestream);
         }
-        public MemoryStream GetFileFromMemory()
+        public MemoryStream FileFromMemory
         {
-            return FileMemory;
+            get
+            {
+                return FileMemory;
+            }
         }
         public string Name
         {
@@ -177,6 +146,85 @@ namespace EyeOfSauron
             {
                 return FileInformation.Name;
             }
+        }
+    }
+
+    class DirContainer
+    {
+        DirectoryInfo DirInfo;
+        FileContainer[] FileContainerArray;
+        DirContainer[] DirContainerArray;
+
+        public DirContainer(string dirPath)
+        {
+            DirInfo = new DirectoryInfo(dirPath);
+            Initial();
+        }
+
+        public void Initial()
+        {
+            InitialFile();
+            InitialDir();
+        }
+        public void InitialFile()
+        {
+            FileInfo[] filearray = DirInfo.GetFiles();
+            FileContainerArray = new FileContainer[filearray.Count()];
+            for (int i = 0; i < FileContainerArray.Count(); i++)
+            {
+                FileContainerArray[i] = new FileContainer(filearray[i]);
+            }
+        }
+        public void InitialDir()
+        {
+            DirectoryInfo[] dirarray = DirInfo.GetDirectories();
+            if (dirarray.Count() > 0)
+            {
+                DirContainerArray = new DirContainer[dirarray.Count()];
+                for (int i = 0; i < FileContainerArray.Count(); i++)
+                {
+                    DirContainerArray[i] = new DirContainer(dirarray[i].FullName);
+                }
+            }
+            else
+            {
+                DirContainerArray = null;
+            }
+        }
+        public void SaveDirInDisk(string savePath)
+        {
+            DirectoryInfo savetarget = new DirectoryInfo(savePath);
+            DirectoryInfo subDir = savetarget.CreateSubdirectory(DirInfo.Name);
+            foreach (var file in FileContainerArray)
+            {
+                file.SaveFileInDisk(subDir.FullName);
+            }
+
+            foreach (var Dir in DirContainerArray)
+            {
+                Dir.SaveDirInDisk(subDir.FullName);
+            }
+        }
+
+        public MemoryStream GetFileFromMemory(string fileName)
+        {
+            foreach (var file in FileContainerArray)
+            {
+                if (file.Name == fileName)
+                {
+                    return file.FileFromMemory;
+                }
+            }
+            foreach (var Dir in DirContainerArray)
+            {
+                var returnvalue = Dir.GetFileFromMemory(fileName);
+                if (returnvalue != null)
+                {
+                    return returnvalue;
+                }
+            }
+
+            return null;
         }
     }
 }

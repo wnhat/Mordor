@@ -37,8 +37,6 @@
             this.bright_defect_button = new System.Windows.Forms.Button();
             this.s_grade_button = new System.Windows.Forms.Button();
             this.e_grade_button = new System.Windows.Forms.Button();
-            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.origin_image_Box = new System.Windows.Forms.PictureBox();
             this.virtual_image_Box = new System.Windows.Forms.PictureBox();
             this.defect_Listview = new System.Windows.Forms.ListView();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
@@ -46,11 +44,15 @@
             this.login_button = new System.Windows.Forms.Button();
             this.cell_id_label = new System.Windows.Forms.Label();
             this.remain_label = new System.Windows.Forms.Label();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.tableLayoutPanel1.SuspendLayout();
-            this.tableLayoutPanel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.origin_image_Box)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.virtual_image_Box)).BeginInit();
             this.tableLayoutPanel3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             this.SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -186,34 +188,6 @@
             this.e_grade_button.UseVisualStyleBackColor = true;
             this.e_grade_button.Click += new System.EventHandler(this.judge_function);
             // 
-            // tableLayoutPanel2
-            // 
-            this.tableLayoutPanel2.ColumnCount = 2;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 70.43757F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 29.56243F));
-            this.tableLayoutPanel2.Controls.Add(this.origin_image_Box, 0, 0);
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(8, 8);
-            this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(2);
-            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 2;
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(1879, 741);
-            this.tableLayoutPanel2.TabIndex = 1;
-            // 
-            // origin_image_Box
-            // 
-            this.origin_image_Box.BackColor = System.Drawing.Color.Black;
-            this.origin_image_Box.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.origin_image_Box.Location = new System.Drawing.Point(2, 2);
-            this.origin_image_Box.Margin = new System.Windows.Forms.Padding(2);
-            this.origin_image_Box.Name = "origin_image_Box";
-            this.tableLayoutPanel2.SetRowSpan(this.origin_image_Box, 2);
-            this.origin_image_Box.Size = new System.Drawing.Size(1319, 737);
-            this.origin_image_Box.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.origin_image_Box.TabIndex = 0;
-            this.origin_image_Box.TabStop = false;
-            // 
             // virtual_image_Box
             // 
             this.virtual_image_Box.BackColor = System.Drawing.Color.DarkGreen;
@@ -300,14 +274,46 @@
             this.remain_label.Text = "剩余任务数：";
             this.remain_label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // pictureBox1
+            // 
+            this.pictureBox1.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.pictureBox1.Location = new System.Drawing.Point(15, 12);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(666, 347);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox1.TabIndex = 5;
+            this.pictureBox1.TabStop = false;
+            // 
+            // pictureBox2
+            // 
+            this.pictureBox2.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.pictureBox2.Location = new System.Drawing.Point(687, 12);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(666, 347);
+            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox2.TabIndex = 6;
+            this.pictureBox2.TabStop = false;
+            // 
+            // pictureBox3
+            // 
+            this.pictureBox3.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.pictureBox3.Location = new System.Drawing.Point(15, 365);
+            this.pictureBox3.Name = "pictureBox3";
+            this.pictureBox3.Size = new System.Drawing.Size(666, 347);
+            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox3.TabIndex = 7;
+            this.pictureBox3.TabStop = false;
+            // 
             // AviInspectForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(1902, 1024);
+            this.Controls.Add(this.pictureBox3);
+            this.Controls.Add(this.pictureBox2);
+            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.tableLayoutPanel3);
             this.Controls.Add(this.virtual_image_Box);
             this.Controls.Add(this.defect_Listview);
-            this.Controls.Add(this.tableLayoutPanel2);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Margin = new System.Windows.Forms.Padding(2);
             this.MaximumSize = new System.Drawing.Size(1920, 1080);
@@ -317,11 +323,12 @@
             this.Text = "Form1";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.origin_image_Box)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.virtual_image_Box)).EndInit();
             this.tableLayoutPanel3.ResumeLayout(false);
             this.tableLayoutPanel3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -337,15 +344,16 @@
         private System.Windows.Forms.Button bright_defect_button;
         private System.Windows.Forms.Button s_grade_button;
         private System.Windows.Forms.Button e_grade_button;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
-        private System.Windows.Forms.PictureBox origin_image_Box;
         private System.Windows.Forms.PictureBox virtual_image_Box;
         private System.Windows.Forms.ListView defect_Listview;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
-        private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Button login_button;
         private System.Windows.Forms.Label cell_id_label;
         private System.Windows.Forms.Label remain_label;
+        private System.Windows.Forms.ProgressBar progressBar1;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.PictureBox pictureBox2;
+        private System.Windows.Forms.PictureBox pictureBox3;
     }
 }
 

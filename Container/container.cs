@@ -53,11 +53,6 @@ namespace Container
         }
     }
 
-    public class container
-    {
-
-    }
-
     public class PanelPathContainer
     {
         public string Panel_id { get; }

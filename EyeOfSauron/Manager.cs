@@ -56,6 +56,10 @@ namespace EyeOfSauron
 
         }
 
+        public void InspectStart()
+        {
+            TheMissionPackage.NewMission();
+        }
         public void InspectFinished(string defectName)
         {
             var finishedMission = TheMissionPackage.OnInspectedMission.Finish(defectName);
@@ -65,19 +69,18 @@ namespace EyeOfSauron
             {
                 AddMission();
             }
-            
         }
+
         public Bitmap[] GetOnInspectPanelImage()
         {
-            var imageInMemory = TheMissionPackage.OnInspectedMission.GetImageArray();
-            int imageCount = imageInMemory.Count();
-            Bitmap[] returnArray = new Bitmap[imageCount];
-            for (int i = 0; i < imageCount; i++)
+            Bitmap[] returnarray = new Bitmap[SystemParameter.ImageNameList.Count()];
+            for (int i = 0; i < SystemParameter.ImageNameList.Count(); i++)
             {
-                returnArray[i] = new Bitmap(imageInMemory[i]);
+                returnarray[i] = new Bitmap(TheMissionPackage.OnInspectedMission.GetFileFromMemory(SystemParameter.ImageNameList[i]));
             }
-            return returnArray;
+            return returnarray;
         }
+
         public string GetOnInspectPanelId()
         {
             return TheMissionPackage.OnInspectedMission.MissionInfo.PanelId;

@@ -35,14 +35,18 @@ namespace EyeOfSauron
         }
         private void judge_function(object sender, EventArgs e)
         {
-            Button sender_button = (Button)sender;
-            string defectname = sender_button.Text;
-            string defectcode = defect_translator.name2code(sender_button.Text);
+            //Button sender_button = (Button)sender;
+            //string defectname = sender_button.Text;
+            //string defectcode = defect_translator.name2code(sender_button.Text);
             get_next_panel();
         }
         private void get_next_panel()
         {
-            origin_image_Box.Image = TheManager.GetOnInspectPanelImage()[0];
+            TheManager.InspectStart();
+            Bitmap[] imagearray = TheManager.GetOnInspectPanelImage();
+            pictureBox1.Image = imagearray[0];
+            pictureBox2.Image = imagearray[1];
+            pictureBox3.Image = imagearray[2];
             cell_id_label.Text = TheManager.GetOnInspectPanelId();
             remain_label.Text = TheManager.RemainMissionCount.ToString();
         }
