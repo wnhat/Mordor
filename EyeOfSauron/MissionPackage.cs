@@ -71,9 +71,8 @@ namespace EyeOfSauron
     class InspectMission
     {
         private PanelMission missionInfo;
-        DirContainer Container;                        // Result directory
+        DirContainer Container;                         
         string[] ImageNameList;                         // The image name in reuslt file which we need to inspect
-        List<FileContainer> FileArray;                  // File in result directory
         string SavePath;
         
         public InspectMission(PanelMission missioninfo, string[] imageNameList, string savePath)
@@ -149,6 +148,9 @@ namespace EyeOfSauron
         }
     }
 
+    /// <summary>
+    /// copy the giving path dir(and it`s subdir) to local memory;
+    /// </summary>
     class DirContainer
     {
         DirectoryInfo DirInfo;

@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Container;
 using Serilog;
+using System.Threading;
 
 namespace Sauron
 {
@@ -15,6 +16,9 @@ namespace Sauron
         FileManager Thefilecontainer;
         public Queue<PanelMission> MissionQueue;
         ILogger Logger;
+        public Queue<long> MissionNumberQueue;
+        Dictionary<long, PanelMission> TheContainer;
+        public Queue<PanelMission> FinishedMissionQueue;
 
         public MissionManager(SqlServerConnector theSqlserver, FileManager theFileContainer)
         {
@@ -25,6 +29,15 @@ namespace Sauron
                 .WriteTo.File(@"D:\eye of sauron\log\missionmanager\log-.txt",rollingInterval:RollingInterval.Day)
                 .WriteTo.Console()
                 .CreateLogger();
+
+            long newmissionnumber = new Random().Next();
+            for (int i = 0; i < 1000000; i++)
+            {
+                MissionNumberQueue.Enqueue(newmissionnumber);
+                newmissionnumber += 1;
+            }
+
+            TheContainer = new Dictionary<long, PanelMission>();
         }
 
         public void AddMisionByServer()
@@ -38,7 +51,7 @@ namespace Sauron
                 var mission = Thefilecontainer.GetPanel(missionid);
                 if (mission != null)
                 {
-                    MissionQueue.Enqueue(new PanelMission(missionid, MissionType.PRODUCITVE, mission));
+                    MissionQueue.Enqueue(new PanelMission(missionid, MissionType.PRODUCITVE, mission,MissionNumberQueue.Dequeue()));
                 }
                 else
                 {
@@ -50,23 +63,21 @@ namespace Sauron
         public PanelMission GetMission()
         {
             PanelMission returnpanel = MissionQueue.Dequeue();
+            TheContainer.Add(returnpanel.MissionNumber, returnpanel);
             return returnpanel;
         }
+
+        public void SendResult(PanelMissionResult newresult)
+        {
+            // Add result sended form the clint,if finished add to queue waitting for insert to database;
+            PanelMission thePanelMission = TheContainer[newresult.MissionNumber];
+            thePanelMission.AddResult(newresult);
+            if (thePanelMission.finished)
+            {
+                FinishedMissionQueue.Enqueue(thePanelMission);
+                TheContainer.Remove(thePanelMission.MissionNumber);
+            }
+        }
     }
 
-    class MissionDict
-    {
-        Dictionary<long, PanelMission> TheContainer = new Dictionary<long, PanelMission>();
-
-        public void Add(PanelMission newMission)
-        {
-            TheContainer.Add(newMission.MissionNumber, newMission);
-        }
-
-        public void Remove(long missionNumber)
-        {
-            TheContainer.Remove(missionNumber);
-        }
-
-    }
 }

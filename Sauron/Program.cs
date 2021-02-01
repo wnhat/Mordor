@@ -30,6 +30,7 @@ namespace Sauron
                 IP_TR ip_tr = new IP_TR();
                 FileManager file_container = new FileManager(ip_tr);
                 MissionManager TheMissionManager = new MissionManager(sqlserver, file_container);
+                // wait the async process finish;
                 Thread.Sleep(TimeSpan.FromSeconds(150));
                 TheMissionManager.AddMisionByServer();
                 Console.WriteLine("add mission finished.");

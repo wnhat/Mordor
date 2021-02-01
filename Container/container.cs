@@ -19,6 +19,7 @@ namespace Container
         D,
         E,
         F,
+        U,  //unfinish
     }
 
     public enum MissionType
@@ -26,6 +27,13 @@ namespace Container
         PRODUCITVE  , // 正常设备量产产生的任务；
         INS_CHECK   , // 作为核对检查准确性发布的任务；
         
+    }
+
+    public enum InspectSection
+    {
+        AVI,
+        SVI,
+        APP,
     }
 
     public struct Disk_part
@@ -74,57 +82,152 @@ namespace Container
 
     }
 
+    public class JudgeTable
+    {
+        public Operator[] OperaterArray;
+        public Defect[] DefectArray;
+        public JudgeGrade[] JudgeArray;
+        public JudgeGrade LastJudge;
+
+        public JudgeTable()
+        {
+            //int arratlen = getnames
+            OperaterArray = new Operator[3];
+            DefectArray = new Defect[3];
+
+
+        }
+        
+        public void AddDefect(Defect newdefect)
+        {
+            switch (newdefect.Section)
+            {
+                case InspectSection.AVI:
+
+                    break;
+                case InspectSection.SVI:
+
+                    break;
+                case InspectSection.APP:
+
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+    public class PanelMissionResult
+    {
+        public string PanelId;
+        public long MissionNumber;
+        public JudgeGrade Judge;
+        public Defect defect;
+        public InspectSection Section; // AVI OR SVI OR APP;
+        public Operator Op;
+
+    }
+
     public class PanelMission
     {
         public string PanelId;
         public int Repetition;
-        public PanelJudgeTable PanelJudge;
+        public List<Defect> DefectList;
         public MissionType Type;
         public DateTime AddTime;
-        public bool Complete;
         public PanelPathContainer PanelPath;
         public long MissionNumber;
 
-        public PanelMission(string panelId, MissionType type, PanelPathContainer panelPath)
+        public bool AviFinished;
+        public bool SviFinished;
+        public bool AppFinished;
+        public Operator AviOp;
+        public Operator SviOp;
+        public Operator AppOp;
+        public Defect AviDefect;
+        public Defect SviDefect;
+        public Defect AppDefect;
+        public JudgeGrade AviJudge;
+        public JudgeGrade SviJudge;
+        public JudgeGrade AppJudge;
+        public JudgeGrade LastJudge;
+        public bool finished { get { return AviFinished & SviFinished & AppFinished; } }
+
+        // TODO: Add Defect rank later;
+        public string DefectCode
+        {
+            get
+            {
+                if (DefectList.Count != 0)
+                {
+                    return DefectList[0].DefectCode;
+                }
+                else
+                {
+                    return null;
+                }
+            }  }
+        public string DefectName
+        {
+            get
+            {
+                if (DefectList.Count != 0)
+                {
+                    return DefectList[0].DefectName;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+
+
+        public PanelMission(string panelId, MissionType type, PanelPathContainer panelPath, long missionnumber)
         {
             PanelId = panelId;
-            Repetition = 1;                                             // TODO:设置任务人员检查次数
-            PanelJudge = new PanelJudgeTable();
+            Repetition = 1;                         // TODO:设置任务人员检查次数
             Type = type;
             AddTime = DateTime.Now;
-            Complete = false;
+            AviFinished = SviFinished = AppFinished = false;
+            AppFinished = true; // 暂时不管；
+            AviOp = SviOp = AppOp = null;
+            AviDefect = SviDefect = AppDefect = null;
+            
             PanelPath = panelPath;
-            MissionNumber = DateTime.Now.ToBinary();
+            MissionNumber = missionnumber;
         }
 
-        public PanelJudgeTable GetResult()
+        public bool Complete
         {
-            return PanelJudge;
+            get
+            {
+                return (AviFinished & SviFinished & AppFinished);
+            }
         }
-
-        public bool IsComplete()
+        public void AddResult(PanelMissionResult newresult)
         {
-            return Complete;
+
         }
-
     }
 
-    public class PanelJudgeTable
+    public class Defect
     {
-
+        public string DefectName;
+        public string DefectCode;
+        public InspectSection Section;     // where the defect generated(like "AVI" OR "SVI");
+        public int[] Position;
     }
-
-    public class PanelJudgement
-    {
-        public Operator Op;
-        public JudgeGrade Judge;
-
-    }
+    
 
     public class Operator
     {
-        public string Name { get; set; }
-        public string Id { get; set; }
+        public Operator(string name,string id)
+        {
+            Name = name;
+            Id = id;
+        }
+        public string Name { get;}
+        public string Id { get;}
     }
 
     public class PC
@@ -133,7 +236,6 @@ namespace Container
         public string PcIp { get; set; }
         public string PcName { get; set; }
         public string PcSide { get; set; }
-
         public bool IsPcInType(List<int> eq_id_list, List<string> pc_name_list, List<string> pc_side_list)
         {
             if (eq_id_list.Contains(EqId) & pc_name_list.Contains(PcName) & pc_side_list.Contains(PcSide))
@@ -151,5 +253,4 @@ namespace Container
     {
         public List<PC> pc_list_all { get; set; }
     }
-
 }

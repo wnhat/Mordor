@@ -24,20 +24,27 @@ namespace EyeOfSauron
             InitializeComponent();
             TheParentForm = parentForm;
             TheManager = theManager;
+
+            // set image name label；
+            imagelabel1.Text = TheManager.SystemParameter.ImageNameList[0];
+            imagelabel2.Text = TheManager.SystemParameter.ImageNameList[1];
+            imagelabel3.Text = TheManager.SystemParameter.ImageNameList[2];
         }
         private void logout(object sender, EventArgs e)
         {
             login_button.Text = "用户登录";
             login_button.BackColor = System.Drawing.Color.SandyBrown;
             // do someting else;
+            // send unfinished mission bak to the server;
             this.Close();
             TheParentForm.Show();
         }
         private void judge_function(object sender, EventArgs e)
         {
-            //Button sender_button = (Button)sender;
-            //string defectname = sender_button.Text;
-            //string defectcode = defect_translator.name2code(sender_button.Text);
+            Button sender_button = (Button)sender;
+            string defectname = sender_button.Text;
+            string defectcode = defect_translator.name2code(sender_button.Text);
+
             get_next_panel();
         }
         private void get_next_panel()

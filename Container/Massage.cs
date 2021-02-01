@@ -100,4 +100,13 @@ namespace Container.Message
         }
 
     }
+
+    public class PanelResultMessage:BaseMessage
+    {
+        PanelMissionResult TheResult;
+        public PanelResultMessage(MessageType type,PanelMissionResult result):base(type)
+        {
+            TheResult = result;
+        }
+    }
 }

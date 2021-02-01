@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Container;
 
 namespace Sauron
 {
@@ -53,7 +54,7 @@ namespace Sauron
             return newdata;
         }
 
-        List<string> GetInputPanelMession(string commandstring)
+        List<string> GetInputPanelMission(string commandstring)
         {
             List<string> newPanelList = new List<string>();
             SqlCommand newcommand = new SqlCommand(commandstring, data_base);
@@ -108,8 +109,65 @@ namespace Sauron
                                     ,[DefectName]
         FROM[EDIAS_DB].[dbo].[TAX_PRODUCT_TEST]
         WHERE InspDate BETWEEN '20210120000000' AND '20210125230000' AND EqpID = '7CTCT27' AND OperationID = 'C52000N' AND LastJudge = 'E'";
-            List<string> newDataString = GetInputPanelMession(commandstring);
+            List<string> newDataString = GetInputPanelMission(commandstring);
             return newDataString;
+        }
+
+        public void InsertFinishedMission(PanelMission panel)
+        {
+            string commandstring = string.Format(@"USE [EDIAS_DB] GO
+INSERT INTO [dbo].[AET_IMAGE_INSPECT_RESULT]
+           ([PanelID]
+           ,[AVIOperaterID]
+           ,[AVIOperaterName]
+           ,[SVIOperaterID]
+           ,[SVIOperaterName]
+           ,[APPOperaterID]
+           ,[APPOperaterName]
+           ,[AviJudge]
+           ,[SviJudge]
+           ,[AppJudge]
+           ,[LastJudge]
+           ,[DefectCode]
+           ,[DefectName]
+           ,[MissionAddTime]
+           ,[MissionFinishTime]
+           ,[AllDefect]
+           ,[ImageEqpID])
+     VALUES
+           (<PanelID, char(17),>
+           ,<AVIOperaterID, varchar(10),>
+           ,<AVIOperaterName, nvarchar(10),>
+           ,<SVIOperaterID, nvarchar(10),>
+           ,<SVIOperaterName, nvarchar(10),>
+           ,<APPOperaterID, nvarchar(10),>
+           ,<APPOperaterName, nvarchar(10),>
+           ,<AviJudge, char(1),>
+           ,<SviJudge, char(1),>
+           ,<AppJudge, char(1),>
+           ,<LastJudge, char(1),>
+           ,<DefectCode, char(8),>
+           ,<DefectName, nchar(10),>
+           ,<MissionAddTime, char(14),>
+           ,<MissionFinishTime, char(14),>
+           ,<AllDefect, nvarchar(50),>
+           ,<ImageEqpID, nchar(7),>)
+GO", new object[] {
+                panel.PanelId,
+                panel.AviOp.Id,
+                panel.AviOp.Name,
+                panel.SviOp.Id,
+                panel.SviOp.Name,
+                panel.AppOp.Id,
+                panel.AppOp.Name,
+                panel.AviJudge,
+                panel.SviJudge,
+                panel.AppJudge,
+                panel.LastJudge,
+                panel.DefectCode,
+                panel.DefectName,
+                panel.
+            });
         }
     }
 }
