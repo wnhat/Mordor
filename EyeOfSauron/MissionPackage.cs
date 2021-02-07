@@ -34,6 +34,12 @@ namespace EyeOfSauron
         }
         public MissionPackage(Parameter sysParameter):this(sysParameter.PreLoadQuantity, sysParameter.SavePath, sysParameter.ImageNameList){}
 
+        public void CleanMission()
+        {
+            UnDownloadedMissionQueue = new Queue<PanelMission>();
+            PreDownloadedMissionQueue = new Queue<InspectMission>();
+            OnInspectedMission = null;
+        }
         public void AddMission(PanelMission newmission)
         {
             UnDownloadedMissionQueue.Enqueue(newmission);
@@ -66,14 +72,22 @@ namespace EyeOfSauron
         {
             ImageNameList = newnamelist.ToArray();
         }
+        public Queue<PanelMission> GetUnfinishedMission()
+        {
+            UnDownloadedMissionQueue.Enqueue(OnInspectedMission.MissionInfo);
+            while (PreDownloadedMissionQueue.Count == 0)
+            {
+                UnDownloadedMissionQueue.Enqueue(PreDownloadedMissionQueue.Dequeue().MissionInfo);
+            }
+            return UnDownloadedMissionQueue;
+        }
     }
 
     class InspectMission
     {
         private PanelMission missionInfo;
-        DirContainer Container;                        // Result directory
+        DirContainer Container;                         
         string[] ImageNameList;                         // The image name in reuslt file which we need to inspect
-        List<FileContainer> FileArray;                  // File in result directory
         string SavePath;
         
         public InspectMission(PanelMission missioninfo, string[] imageNameList, string savePath)
@@ -149,6 +163,9 @@ namespace EyeOfSauron
         }
     }
 
+    /// <summary>
+    /// copy the giving path dir(and it`s subdir) to local memory;
+    /// </summary>
     class DirContainer
     {
         DirectoryInfo DirInfo;

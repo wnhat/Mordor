@@ -12,11 +12,18 @@ namespace Container.Message
     {
         CLIENT_GET_PANEL_GREAD,
         CLIENT_SEND_MISSION_RESULT,
-        CLINET_GET_MISSION,
+        CLINET_GET_MISSION_AVI,
+        CLINET_GET_MISSION_SVI,
+        CLINET_GET_MISSION_APP,
+
         CLINET_GET_MISSION_LIST,
-        CLINET_CLEAR_MISSION,
-        CLINET_ADD_MISSION,
         CLINET_CHECK_USER,
+        CLINET_SEND_UNFINISHED_MISSION_AVI,
+        CLINET_SEND_UNFINISHED_MISSION_SVI,
+        CLINET_SEND_UNFINISHED_MISSION_APP,
+
+        CONTROLER_CLEAR_MISSION,
+        CONTROLER_ADD_MISSION,
 
         SERVER_SEND_MISSION,
         SERVER_SEND_FINISH,
@@ -99,5 +106,14 @@ namespace Container.Message
             PassWord = theMessage[2].ConvertToString();
         }
 
+    }
+
+    public class PanelResultMessage:BaseMessage
+    {
+        PanelMissionResult TheResult;
+        public PanelResultMessage(MessageType type,PanelMissionResult result):base(type)
+        {
+            TheResult = result;
+        }
     }
 }

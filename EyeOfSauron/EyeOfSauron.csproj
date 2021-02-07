@@ -97,6 +97,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AviInspectForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="defectcode.cs" />
     <Compile Include="LoginForm.cs">
       <SubType>Form</SubType>
@@ -106,11 +109,11 @@
     </Compile>
     <Compile Include="Manager.cs" />
     <Compile Include="MissionPackage.cs" />
-    <Compile Include="AviInspectForm.cs">
+    <Compile Include="InspectForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AviInspectForm.Designer.cs">
-      <DependentUpon>AviInspectForm.cs</DependentUpon>
+    <Compile Include="InspectForm.Designer.cs">
+      <DependentUpon>InspectForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Parameter.cs" />
     <Compile Include="ProcessForm.cs">
@@ -129,8 +132,8 @@
       <DependentUpon>settings.cs</DependentUpon>
     </Compile>
     <Compile Include="User.cs" />
-    <EmbeddedResource Include="AviInspectForm.resx">
-      <DependentUpon>AviInspectForm.cs</DependentUpon>
+    <EmbeddedResource Include="InspectForm.resx">
+      <DependentUpon>InspectForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="LoginForm.resx">
       <DependentUpon>LoginForm.cs</DependentUpon>

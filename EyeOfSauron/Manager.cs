@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Container;
 
 namespace EyeOfSauron
 {
@@ -107,6 +108,15 @@ namespace EyeOfSauron
         public void PreLoadOneMission()
         {
             TheMissionPackage.PreDownloadFile(TheServerConnecter.GetMission());
+        }
+        public void SendUnfinishedMissionBackToServer(InspectSection section)
+        {
+            Queue<PanelMission> returnmissionqueue = TheMissionPackage.GetUnfinishedMission();
+            while (returnmissionqueue.Count == 0)
+            {
+                TheServerConnecter.SendUnfinishedMissionBack(section, returnmissionqueue.Dequeue());
+            }
+            TheMissionPackage.CleanMission();
         }
     }
 }

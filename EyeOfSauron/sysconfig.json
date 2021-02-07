@@ -1,5 +1,7 @@
 {
 	"SavePath":"D:/eye of sauron/runtime",
-	"ImageNameList":["04_WHITE_Pre_Input.jpg","06_G64_Pre_Input.jpg","08_G64-2_Pre_Input.jpg"],
+	"AviImageNameList":["04_WHITE_Pre_Input.jpg","06_G64_Pre_Input.jpg","08_G64-2_Pre_Input.jpg"],
+	"SviImageNameList":["White_Side_HSV_H.jpg","White_Side_Lab_A.jpg","White_Side_Lab_B.jpg"],
+	"AppImageNameList":["04_WHITE_Pre_Input.jpg","06_G64_Pre_Input.jpg","08_G64-2_Pre_Input.jpg"],
 	"PreLoadQuantity":20
 }

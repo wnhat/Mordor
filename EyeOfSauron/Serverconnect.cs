@@ -23,7 +23,7 @@ namespace EyeOfSauron
         public PanelMission GetMission()
         {
             // get new panel mission from server;
-            BaseMessage newMessage = new BaseMessage(MessageType.CLINET_GET_MISSION);
+            BaseMessage newMessage = new BaseMessage(MessageType.CLINET_GET_MISSION_AVI);
             request.SendMultipartMessage(newMessage);
             PanelMissionMessage returnMessage = new PanelMissionMessage(request.ReceiveMultipartMessage());
             return returnMessage.ThePanelMission;
@@ -44,6 +44,25 @@ namespace EyeOfSauron
             request.SendMultipartMessage(newMessage);
             bool returnbool = request.ReceiveSignal();
             return returnbool;
+        }
+
+        public void SendUnfinishedMissionBack(InspectSection section,PanelMission mission)
+        {
+            MessageType missionsection = MessageType.CLINET_SEND_UNFINISHED_MISSION_AVI;
+            switch (section)
+            {
+                case InspectSection.AVI:
+                    missionsection = MessageType.CLINET_SEND_UNFINISHED_MISSION_AVI;
+                    break;
+                case InspectSection.SVI:
+                    missionsection = MessageType.CLINET_SEND_UNFINISHED_MISSION_SVI;
+                    break;
+                case InspectSection.APP:
+                    missionsection = MessageType.CLINET_SEND_UNFINISHED_MISSION_APP;
+                    break;
+            }
+            PanelMissionMessage message = new PanelMissionMessage(missionsection, mission);
+            request.SendMultipartMessage(message);
         }
     }
 }

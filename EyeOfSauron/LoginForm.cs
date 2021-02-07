@@ -7,19 +7,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Container;
 
 namespace EyeOfSauron
 {
     public partial class LoginForm : Form
     {
         private Manager TheManager;
-        private AviInspectForm AviForm;
+        private InspectForm TheInspectForm;
 
         public LoginForm()
         {
             InitializeComponent();
             TheManager = new Manager();
-            AviForm = new AviInspectForm(this,TheManager);
+            TheInspectForm = new InspectForm(this,TheManager);
         }
 
         private void userid_box_KeyDown(object sender, KeyEventArgs e)
@@ -33,7 +34,8 @@ namespace EyeOfSauron
 
         private void Avibutton_Click(object sender, EventArgs e)
         {
-            UserCheckIn(AviForm);
+            TheInspectForm.SetInspectSection(InspectSection.AVI);
+            UserCheckIn(TheInspectForm);
         }
 
         private void UserCheckIn(Form form)
@@ -51,6 +53,12 @@ namespace EyeOfSauron
             {
                 MessageBox.Show("用户名密码错误");
             }
+        }
+
+        private void Svibutton_Click(object sender, EventArgs e)
+        {
+            TheInspectForm.SetInspectSection(InspectSection.SVI);
+            UserCheckIn(TheInspectForm);
         }
     }
 }
