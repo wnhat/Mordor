@@ -34,11 +34,17 @@ namespace Container
         AVI,
         SVI,
         APP,
+        MTP,
+        MVI,
+        MAIN,
+        PRE,
+        POST,
     }
     public enum Side
     {
         LEFT,
         RIGHT,
+        NULL,
     }
     public enum DiskPart
     {
@@ -56,13 +62,6 @@ namespace Container
         Q_Drive,
         R_Drive,
         S_Drive,
-    }
-
-    public enum InspectSection
-    {
-        AVI,
-        SVI,
-        APP,
     }
 
     public struct Disk_part
@@ -93,32 +92,35 @@ namespace Container
 
     public class PanelPathContainer
     {
-        public string Panel_id { get; }
+        public string PanelId { get; }
+        PC PcInfo;
+        DiskPart diskName;
+
+        public PanelPathContainer(string panel_id, PC pc, DiskPart diskName)
+        {
+            PanelId = panel_id;
+            PcInfo = pc;
+            this.diskName = diskName;
+        }
+
+        public string DiskName { get { return diskName.ToString(); } }
+        public string PcSection { get { return PcInfo.PcName.ToString(); }  }
         public string Origin_image_path
         {
             get
             {   // \\172.16.180.83\NetworkDrive\F_Drive\Defect Info\Origin
-                string returnstring = "\\\\" + ;
+                string returnstring = "\\\\" + PcInfo.PcIp + "\\NetworkDrive\\" + DiskName + "\\Origin\\" + PanelId;
                 return returnstring;
             }
         }
-        public string Result_path { get; }
-        InspectSection pcSection;
-        int Eq_id;
-        DiskPart diskName;
-        public string DiskName { get { return diskName.ToString(); } }
-        public string PcSection { get { return pcSection.ToString(); }  }
-
-        public PanelPathContainer(string panel_id, string origin_image_path, string result_path, int eq_id, string pc_name, DiskPart diskname)
+        public string Result_path
         {
-            this.Panel_id = panel_id;
-            this.Origin_image_path = origin_image_path;
-            this.Result_path = result_path;
-            this.Eq_id = eq_id;
-            this.Pc_name = pc_name;
-            this.diskName = diskname;
+            get
+            {   // \\172.16.180.83\NetworkDrive\F_Drive\Defect Info\Origin
+                string returnstring = "\\\\" + PcInfo.PcIp + "\\NetworkDrive\\" + DiskName + "\\Result\\" + PanelId;
+                return returnstring;
+            }
         }
-
     }
 
     public class PanelMissionResult
@@ -274,9 +276,9 @@ namespace Container
     {
         public int EqId { get; set; }
         public string PcIp { get; set; }
-        public string PcName { get; set; }
+        public InspectSection PcName { get; set; }
         public string PcSide { get; set; }
-        public bool IsPcInType(List<int> eq_id_list, List<string> pc_name_list, List<string> pc_side_list)
+        public bool IsPcInType(List<int> eq_id_list, InspectSection[] pc_name_list, List<string> pc_side_list)
         {
             if (eq_id_list.Contains(EqId) & pc_name_list.Contains(PcName) & pc_side_list.Contains(PcSide))
             {

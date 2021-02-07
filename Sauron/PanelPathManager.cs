@@ -17,13 +17,13 @@ namespace Sauron
         {
             lock (ContainerLock)
             {
-                if (theContainer.ContainsKey(thispanel.Panel_id))
+                if (theContainer.ContainsKey(thispanel.PanelId))
                 {
-                    theContainer[thispanel.Panel_id].Add(thispanel);
+                    theContainer[thispanel.PanelId].Add(thispanel);
                 }
                 else
                 {
-                    theContainer.Add(thispanel.Panel_id, new List<PanelPathContainer> { thispanel });
+                    theContainer.Add(thispanel.PanelId, new List<PanelPathContainer> { thispanel });
                 }
             }
         }

@@ -97,9 +97,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AviInspectForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="defectcode.cs" />
     <Compile Include="LoginForm.cs">
       <SubType>Form</SubType>

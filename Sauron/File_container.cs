@@ -25,7 +25,7 @@ namespace Sauron
             this.PathManager = new PanelPathManager();
             ip_tr = ip_tr_;
 
-            List<PC> refresh_pc_list = ip_tr.name_to_ip(new List<string> { "AVI"});
+            List<PC> refresh_pc_list = ip_tr.name_to_ip(new InspectSection[] { InspectSection.AVI });
             foreach (var pc in refresh_pc_list)
             {
                 Ins_pc_list.Add(new INS_pc_manage(pc, Logger));
@@ -77,63 +77,40 @@ namespace Sauron
 
     }
 
-    class INS_pc_manage : PC
+    class INS_pc_manage
     {
         ILogger Log;
+        PC PcInfo;
         public INS_pc_manage(PC input_pc, ILogger log)
         {
-            this.EqId = input_pc.EqId;
-            this.PcIp = input_pc.PcIp;
-            this.PcName = input_pc.PcName;
-            this.PcSide = input_pc.PcSide;
+            PcInfo = input_pc;
             Log = log;
         }
 
         public void Serch_file(PanelPathManager new_panel_list)
         {
             PanelPathManager panel_list = new PanelPathManager();
-            List<string> search_list = new Disk_part().getall;  // get serch disk name;
-            foreach (var search_disk in search_list)
+            foreach (var search_disk in (DiskPart[])Enum.GetValues(typeof(DiskPart)))
             {
                 try
                 {
-                    string diskpath1 = Path.Combine(PcIp, "NetworkDrive", search_disk, "Defect Info", "Origin");
-                    string diskpath2 = Path.Combine(PcIp, "NetworkDrive", search_disk, "Defect Info", "Result");
-                    List<string> image_directory_list = Directory.GetDirectories(diskpath1).ToList();
+                    string diskpath1 = Path.Combine(PcInfo.PcIp, "NetworkDrive", search_disk.ToString(), "Defect Info", "Origin");
+                    string diskpath2 = Path.Combine(PcInfo.PcIp, "NetworkDrive", search_disk.ToString(), "Defect Info", "Result");
+                    string[] image_directory_list = Directory.GetDirectories(diskpath1);
                     List<string> result_directory_list = Directory.GetDirectories(diskpath2).ToList();
-                    image_directory_list.Sort();
-                    result_directory_list.Sort();
 
-                    foreach (var item in image_directory_list)
+                    foreach (var item in image_directory_list.Intersect(result_directory_list))
                     {
-                        string this_panel_result_dir = result_directory_list.FirstOrDefault(x => { return x.Substring(x.Length-17) == item.Substring(item.Length-17); });
+                        string this_panel_result_dir = result_directory_list.FirstOrDefault(x => { return x.Substring(x.Length - 17) == item.Substring(item.Length - 17); });
                         if (this_panel_result_dir != null)
                         {
-                            PanelPathContainer this_panel = new PanelPathContainer(item.Substring(item.Length - 17), item, this_panel_result_dir, EqId, PcName, search_disk);
+                            PanelPathContainer this_panel = new PanelPathContainer(item.Substring(item.Length - 17),PcInfo, search_disk);
                             panel_list.PanelPathAdd(this_panel);
                             result_directory_list.Remove(this_panel_result_dir);
                         }
                         else
                         {
-                            Log.Information("result file not exist; panel id : {0}; path: {1}", item.Substring(item.Length - 17), item);
-                        }
-                    }
-
-                    foreach (var item in result_directory_list)
-                    {
-                        string this_panel_image_dir = image_directory_list.FirstOrDefault(x => { return x.Substring(x.Length - 17) == item.Substring(item.Length - 17); });
-                        if (this_panel_image_dir != null)
-                        {
-                            PanelPathContainer this_panel = new PanelPathContainer(item.Substring(item.Length - 17), this_panel_image_dir, item, EqId, PcName, search_disk);
-                            if (!panel_list.Contains(this_panel.Panel_id))
-                            {
-                                panel_list.PanelPathAdd(this_panel);
-                            }
-                            image_directory_list.Remove(this_panel_image_dir);
-                        }
-                        else
-                        {
-                            Log.Information("image file not exist; panel id : {0}; path: {0}", item.Substring(item.Length - 17), item);
+                            Log.Information("result or image file not exist; panel id : {0}; path: {1}", item.Substring(item.Length - 17), item);
                         }
                     }
                 }
@@ -146,6 +123,6 @@ namespace Sauron
 
             Log.Information("pc: {0} finishied;", PcIp);
             new_panel_list.AddRange(panel_list);
-        }
+        }    
     }
 }
