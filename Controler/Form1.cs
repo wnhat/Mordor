@@ -91,7 +91,7 @@ namespace Controler
 
         private void buttonAddmission_Click(object sender, EventArgs e)
         {
-            BaseMessage newmassage = new BaseMessage(MessageType.CLINET_ADD_MISSION);
+            BaseMessage newmassage = new BaseMessage(MessageType.CONTROLER_ADD_MISSION);
             request.SendMultipartMessage(newmassage);
             request.ReceiveMultipartMessage();
         }

@@ -24,9 +24,38 @@ namespace Container
 
     public enum MissionType
     {
-        PRODUCITVE  , // 正常设备量产产生的任务；
-        INS_CHECK   , // 作为核对检查准确性发布的任务；
-        
+        PRODUCITVE, // 正常设备量产产生的任务；
+        INS_CHECK, // 作为核对检查准确性发布的任务；
+
+    }
+
+    public enum InspectSection
+    {
+        AVI,
+        SVI,
+        APP,
+    }
+    public enum Side
+    {
+        LEFT,
+        RIGHT,
+    }
+    public enum DiskPart
+    {
+        F_Drive,
+        G_Drive,
+        H_Drive,
+        I_Drive,
+        J_Drive,
+        K_Drive,
+        L_Drive,
+        M_Drive,
+        N_Drive,
+        O_Drive,
+        P_Drive,
+        Q_Drive,
+        R_Drive,
+        S_Drive,
     }
 
     public enum InspectSection
@@ -54,68 +83,44 @@ namespace Container
         string S_DRIVE { get { return "S_Drive"; } }
         public List<string> getall
         {
-            get {
+            get
+            {
                 return new List<string>{ "F_Drive", "G_Drive" , "H_Drive" , "I_Drive" , "J_Drive" ,
                     "K_Drive" , "L_Drive" , "M_Drive" , "N_Drive" , "O_Drive" , "P_Drive", "Q_Drive", "R_Drive", "S_Drive" };
-                }
+            }
         }
     }
 
     public class PanelPathContainer
     {
         public string Panel_id { get; }
-        public string Origin_image_path { get; }
+        public string Origin_image_path
+        {
+            get
+            {   // \\172.16.180.83\NetworkDrive\F_Drive\Defect Info\Origin
+                string returnstring = "\\\\" + ;
+                return returnstring;
+            }
+        }
         public string Result_path { get; }
-        public string Pc_name { get; }
-        public int Eq_id { get; }
-        public string Disk_name { get; }
+        InspectSection pcSection;
+        int Eq_id;
+        DiskPart diskName;
+        public string DiskName { get { return diskName.ToString(); } }
+        public string PcSection { get { return pcSection.ToString(); }  }
 
-        public PanelPathContainer(string panel_id, string origin_image_path, string result_path,int eq_id, string pc_name,string disk_name)
+        public PanelPathContainer(string panel_id, string origin_image_path, string result_path, int eq_id, string pc_name, DiskPart diskname)
         {
             this.Panel_id = panel_id;
             this.Origin_image_path = origin_image_path;
             this.Result_path = result_path;
             this.Eq_id = eq_id;
             this.Pc_name = pc_name;
-            this.Disk_name = disk_name;
+            this.diskName = diskname;
         }
 
     }
 
-    public class JudgeTable
-    {
-        public Operator[] OperaterArray;
-        public Defect[] DefectArray;
-        public JudgeGrade[] JudgeArray;
-        public JudgeGrade LastJudge;
-
-        public JudgeTable()
-        {
-            //int arratlen = getnames
-            OperaterArray = new Operator[3];
-            DefectArray = new Defect[3];
-
-
-        }
-        
-        public void AddDefect(Defect newdefect)
-        {
-            switch (newdefect.Section)
-            {
-                case InspectSection.AVI:
-
-                    break;
-                case InspectSection.SVI:
-
-                    break;
-                case InspectSection.APP:
-
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
     public class PanelMissionResult
     {
         public string PanelId;
@@ -124,7 +129,6 @@ namespace Container
         public Defect defect;
         public InspectSection Section; // AVI OR SVI OR APP;
         public Operator Op;
-
     }
 
     public class PanelMission
@@ -134,6 +138,7 @@ namespace Container
         public List<Defect> DefectList;
         public MissionType Type;
         public DateTime AddTime;
+        public DateTime FinishTime;
         public PanelPathContainer PanelPath;
         public long MissionNumber;
 
@@ -149,8 +154,11 @@ namespace Container
         public JudgeGrade AviJudge;
         public JudgeGrade SviJudge;
         public JudgeGrade AppJudge;
+
         public JudgeGrade LastJudge;
+
         public bool finished { get { return AviFinished & SviFinished & AppFinished; } }
+        public string AllDefect;
 
         // TODO: Add Defect rank later;
         public string DefectCode
@@ -165,7 +173,8 @@ namespace Container
                 {
                     return null;
                 }
-            }  }
+            }
+        }
         public string DefectName
         {
             get
@@ -181,7 +190,6 @@ namespace Container
             }
         }
 
-
         public PanelMission(string panelId, MissionType type, PanelPathContainer panelPath, long missionnumber)
         {
             PanelId = panelId;
@@ -192,7 +200,8 @@ namespace Container
             AppFinished = true; // 暂时不管；
             AviOp = SviOp = AppOp = null;
             AviDefect = SviDefect = AppDefect = null;
-            
+
+
             PanelPath = panelPath;
             MissionNumber = missionnumber;
         }
@@ -204,9 +213,39 @@ namespace Container
                 return (AviFinished & SviFinished & AppFinished);
             }
         }
+
         public void AddResult(PanelMissionResult newresult)
         {
+            switch (newresult.Section)
+            {
+                case InspectSection.AVI:
+                    AviOp = newresult.Op;
+                    AviJudge = newresult.Judge;
+                    AviFinished = true;
+                    AviDefect = newresult.defect;
 
+                    break;
+                case InspectSection.SVI:
+                    SviOp = newresult.Op;
+                    SviJudge = newresult.Judge;
+                    SviFinished = true;
+                    SviDefect = newresult.defect;
+                    break;
+                case InspectSection.APP:
+                    AppOp = newresult.Op;
+                    AppJudge = newresult.Judge;
+                    AppFinished = true;
+                    AppDefect = newresult.defect;
+                    break;
+                default:
+                    AllDefect += newresult.defect.DefectName;
+                    break;
+            }
+
+            if (finished)
+            {
+                FinishTime = DateTime.Now;
+            }
         }
     }
 
@@ -219,15 +258,16 @@ namespace Container
     }
     
 
+
     public class Operator
     {
-        public Operator(string name,string id)
+        public Operator(string name, string id)
         {
             Name = name;
             Id = id;
         }
-        public string Name { get;}
-        public string Id { get;}
+        public string Name { get; }
+        public string Id { get; }
     }
 
     public class PC

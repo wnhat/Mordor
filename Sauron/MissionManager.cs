@@ -17,18 +17,27 @@ namespace Sauron
         public Queue<PanelMission> MissionQueue;
         ILogger Logger;
         public Queue<long> MissionNumberQueue;
-        Dictionary<long, PanelMission> TheContainer;
-        public Queue<PanelMission> FinishedMissionQueue;
+        Dictionary<long, PanelMission> OninspectMissionContainer;
+        Queue<PanelMission> AviOnInspectMissionQueue;
+        Queue<PanelMission> SviOnInspectMissionQueue;
+        Queue<PanelMission> AppOnInspectMissionQueue;
+        Queue<PanelMission> FinishedMissionQueue;
 
         public MissionManager(SqlServerConnector theSqlserver, FileManager theFileContainer)
         {
             this.Thefilecontainer = theFileContainer;
             this.Thesqlserver = theSqlserver;
-            MissionQueue = new Queue<PanelMission>();
             Logger = new LoggerConfiguration()
                 .WriteTo.File(@"D:\eye of sauron\log\missionmanager\log-.txt",rollingInterval:RollingInterval.Day)
                 .WriteTo.Console()
                 .CreateLogger();
+
+            MissionQueue = new Queue<PanelMission>();
+            MissionNumberQueue = new Queue<long>();
+            AviOnInspectMissionQueue = new Queue<PanelMission>();
+            SviOnInspectMissionQueue = new Queue<PanelMission>();
+            AppOnInspectMissionQueue = new Queue<PanelMission>();
+            FinishedMissionQueue = new Queue<PanelMission>();
 
             long newmissionnumber = new Random().Next();
             for (int i = 0; i < 1000000; i++)
@@ -37,13 +46,13 @@ namespace Sauron
                 newmissionnumber += 1;
             }
 
-            TheContainer = new Dictionary<long, PanelMission>();
+            OninspectMissionContainer = new Dictionary<long, PanelMission>();
         }
 
         public void AddMisionByServer()
         {
             // 获取SQL server近一小时的C52000N站点近一小时E级产品添加任务
-            List<string> missionDataSet = Thesqlserver.get_oninspect_mission();
+            List<string> missionDataSet = Thesqlserver.GetInputPanelMission();
             foreach (var missionid in missionDataSet)
             {
                 // TODO: 当一张屏多次进入设备时返回的列表将不是单一值；
@@ -60,22 +69,54 @@ namespace Sauron
             }
         }
 
-        public PanelMission GetMission()
+        public PanelMission GetAviMission()
         {
-            PanelMission returnpanel = MissionQueue.Dequeue();
-            TheContainer.Add(returnpanel.MissionNumber, returnpanel);
-            return returnpanel;
+            if (AviOnInspectMissionQueue.Count == 0)
+            {
+                AddMissionInQueue();
+            }
+            PanelMission newpanelmission = AviOnInspectMissionQueue.Dequeue();
+            return newpanelmission;
+        }
+        public PanelMission GetSviMission()
+        {
+            if (SviOnInspectMissionQueue.Count == 0)
+            {
+                AddMissionInQueue();
+            }
+            PanelMission newpanelmission = SviOnInspectMissionQueue.Dequeue();
+            return newpanelmission;
+        }
+        public PanelMission GetAppMission()
+        {
+            if (AppOnInspectMissionQueue.Count == 0)
+            {
+                AddMissionInQueue();
+            }
+            PanelMission newpanelmission = AppOnInspectMissionQueue.Dequeue();
+            return newpanelmission;
+        }
+
+        private void AddMissionInQueue()
+        {
+            PanelMission newmission = MissionQueue.Dequeue();
+            OninspectMissionContainer.Add(newmission.MissionNumber, newmission);
+            AviOnInspectMissionQueue.Enqueue(newmission);
+            SviOnInspectMissionQueue.Enqueue(newmission);
+            //AppOnInspectMissionQueue.Enqueue(newmission);
         }
 
         public void SendResult(PanelMissionResult newresult)
         {
             // Add result sended form the clint,if finished add to queue waitting for insert to database;
-            PanelMission thePanelMission = TheContainer[newresult.MissionNumber];
+            PanelMission thePanelMission = OninspectMissionContainer[newresult.MissionNumber];
             thePanelMission.AddResult(newresult);
             if (thePanelMission.finished)
             {
                 FinishedMissionQueue.Enqueue(thePanelMission);
-                TheContainer.Remove(thePanelMission.MissionNumber);
+                OninspectMissionContainer.Remove(thePanelMission.MissionNumber);
+                MissionNumberQueue.Enqueue(thePanelMission.MissionNumber);
+                Thesqlserver.InsertFinishedMission(thePanelMission);
             }
         }
     }

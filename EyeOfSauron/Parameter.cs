@@ -8,8 +8,10 @@ namespace EyeOfSauron
 {
     public class Parameter
     {
-        public string      SavePath;
-        public string[]    ImageNameList;
-        public int         PreLoadQuantity;
+        public string       SavePath;
+        public string[]     AviImageNameList;
+        public string[]     SviImageNameList;
+        public string[]     AppImageNameList;
+        public int          PreLoadQuantity;
     }
 }

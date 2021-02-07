@@ -34,6 +34,12 @@ namespace EyeOfSauron
         }
         public MissionPackage(Parameter sysParameter):this(sysParameter.PreLoadQuantity, sysParameter.SavePath, sysParameter.ImageNameList){}
 
+        public void CleanMission()
+        {
+            UnDownloadedMissionQueue = new Queue<PanelMission>();
+            PreDownloadedMissionQueue = new Queue<InspectMission>();
+            OnInspectedMission = null;
+        }
         public void AddMission(PanelMission newmission)
         {
             UnDownloadedMissionQueue.Enqueue(newmission);
@@ -65,6 +71,15 @@ namespace EyeOfSauron
         public void SetImageNameList(List<string> newnamelist)
         {
             ImageNameList = newnamelist.ToArray();
+        }
+        public Queue<PanelMission> GetUnfinishedMission()
+        {
+            UnDownloadedMissionQueue.Enqueue(OnInspectedMission.MissionInfo);
+            while (PreDownloadedMissionQueue.Count == 0)
+            {
+                UnDownloadedMissionQueue.Enqueue(PreDownloadedMissionQueue.Dequeue().MissionInfo);
+            }
+            return UnDownloadedMissionQueue;
         }
     }
 

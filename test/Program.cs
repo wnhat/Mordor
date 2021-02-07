@@ -38,7 +38,7 @@ namespace test
         public int hashcode;
         public long Timeclass;
         public double randomint;
-        public string MD5;
+        //public string MD5;
 
         public Tester(double random)
         {

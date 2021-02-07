@@ -42,28 +42,34 @@ namespace Sauron
                     switch (switchmessage.TheMessageType)
                     {
                         case MessageType.CLIENT_GET_PANEL_GREAD:
-                            
+
                             break;
                         case MessageType.CLIENT_SEND_MISSION_RESULT:
                             // TODO:
                             PanelMissionMessage finishedMission = new PanelMissionMessage(messageIn);
 
                             break;
-                        case MessageType.CLINET_GET_MISSION:
-                            // 
-                            Console.WriteLine("start send mission");
-                            PanelMissionMessage newmission = new PanelMissionMessage(MessageType.SERVER_SEND_MISSION, TheMissionManager.GetMission());
-                            a.Socket.SendMultipartMessage(newmission);
+                        case MessageType.CLINET_GET_MISSION_AVI:
+                            PanelMissionMessage newavimission = new PanelMissionMessage(MessageType.SERVER_SEND_MISSION, TheMissionManager.GetAviMission());
+                            a.Socket.SendMultipartMessage(newavimission);
+                            break;
+                        case MessageType.CLINET_GET_MISSION_SVI:
+                            PanelMissionMessage newsvimission = new PanelMissionMessage(MessageType.SERVER_SEND_MISSION, TheMissionManager.GetSviMission());
+                            a.Socket.SendMultipartMessage(newsvimission);
+                            break;
+                        case MessageType.CLINET_GET_MISSION_APP:
+                            PanelMissionMessage newappmission = new PanelMissionMessage(MessageType.SERVER_SEND_MISSION, TheMissionManager.GetAppMission());
+                            a.Socket.SendMultipartMessage(newappmission);
                             break;
                         case MessageType.CLINET_GET_MISSION_LIST:
                             break;
-                        case MessageType.CLINET_CLEAR_MISSION:
-                            Console.WriteLine("start clean");
+                        case MessageType.CONTROLER_CLEAR_MISSION:
+                            Console.WriteLine("start clean mission queue;");
                             TheMissionManager.MissionQueue.Clear();
                             BaseMessage clearMissionMessage = new BaseMessage(MessageType.SERVER_SEND_FINISH);
                             a.Socket.SendMultipartMessage(clearMissionMessage);
                             break;
-                        case MessageType.CLINET_ADD_MISSION:
+                        case MessageType.CONTROLER_ADD_MISSION:
                             Console.WriteLine("start add mission");
                             TheMissionManager.AddMisionByServer();
                             BaseMessage addMissionMessage = new BaseMessage(MessageType.SERVER_SEND_FINISH);

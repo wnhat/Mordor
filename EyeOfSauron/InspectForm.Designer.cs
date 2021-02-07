@@ -1,6 +1,6 @@
 ﻿namespace EyeOfSauron
 {
-    partial class AviInspectForm
+    partial class InspectForm
     {
         /// <summary>
         /// 必需的设计器变量。
