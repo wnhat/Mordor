@@ -12,7 +12,6 @@ namespace Sauron
     {
         Dictionary<string, List<PanelPathContainer>> theContainer = new Dictionary<string, List<PanelPathContainer>>();
         private readonly object ContainerLock = new object();
-
         public void PanelPathAdd(PanelPathContainer thispanel)
         {
             lock (ContainerLock)
@@ -72,17 +71,5 @@ namespace Sauron
             }
             
         }
-
-        //public PanelPathContainer PanelPathGetLatest(string panelId)
-        //{
-        //    if (theContainer.ContainsKey(panelId))
-        //    {
-        //        List<PanelPathContainer> returnlist = theContainer[panelId];
-        //    }
-        //    else
-        //    {
-        //        return null;
-        //    }
-        //}
     }
 }

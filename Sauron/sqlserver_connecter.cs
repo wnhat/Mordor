@@ -159,7 +159,7 @@ GO", new object[] {
                 FormateDateString(panel.AddTime),
                 FormateDateString(panel.FinishTime),
                 panel.AllDefect,
-                panel.PanelPath.Eq_id,
+                panel.PanelPath.EqId,
             });
             SqlCommand newcommand = new SqlCommand(commandstring, data_base);
             data_base.Open();

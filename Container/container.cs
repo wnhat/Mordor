@@ -102,9 +102,9 @@ namespace Container
             PcInfo = pc;
             this.diskName = diskName;
         }
-
+        public string EqId { get { return PcInfo.EqId.ToString(); } }
         public string DiskName { get { return diskName.ToString(); } }
-        public string PcSection { get { return PcInfo.PcName.ToString(); }  }
+        public string PcSection { get { return PcInfo.PcName.ToString(); } }
         public string Origin_image_path
         {
             get
@@ -258,7 +258,7 @@ namespace Container
         public InspectSection Section;     // where the defect generated(like "AVI" OR "SVI");
         public int[] Position;
     }
-    
+
 
 
     public class Operator
@@ -277,8 +277,8 @@ namespace Container
         public int EqId { get; set; }
         public string PcIp { get; set; }
         public InspectSection PcName { get; set; }
-        public string PcSide { get; set; }
-        public bool IsPcInType(List<int> eq_id_list, InspectSection[] pc_name_list, List<string> pc_side_list)
+        public Side PcSide { get; set; }
+        public bool IsPcInType(List<int> eq_id_list, InspectSection[] pc_name_list, Side[] pc_side_list)
         {
             if (eq_id_list.Contains(EqId) & pc_name_list.Contains(PcName) & pc_side_list.Contains(PcSide))
             {
@@ -293,6 +293,6 @@ namespace Container
 
     public class PcContainer
     {
-        public List<PC> pc_list_all { get; set; }
+        public List<PC> PcListAll { get; set; }
     }
 }

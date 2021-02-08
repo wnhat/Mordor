@@ -14,31 +14,31 @@ namespace Sauron
         PanelPathManager PathManager;
         ILogger Logger;
         IP_TR ip_tr;
-        List<INS_pc_manage> Ins_pc_list;
+        List<INS_pc_manage> InsPCList;
 
         public FileManager(IP_TR ip_tr_)
         {
             Logger = new LoggerConfiguration()
                 .WriteTo.File(@"D:\eye of sauron\log\filemanager\log-.txt", rollingInterval: RollingInterval.Hour)
                 .CreateLogger();
-            this.Ins_pc_list = new List<INS_pc_manage>();
+            this.InsPCList = new List<INS_pc_manage>();
             this.PathManager = new PanelPathManager();
             ip_tr = ip_tr_;
 
-            List<PC> refresh_pc_list = ip_tr.name_to_ip(new InspectSection[] { InspectSection.AVI });
+            List<PC> refresh_pc_list = ip_tr.name_to_ip(new InspectSection[] { InspectSection.AVI,InspectSection.SVI,InspectSection.APP});
             foreach (var pc in refresh_pc_list)
             {
-                Ins_pc_list.Add(new INS_pc_manage(pc, Logger));
+                InsPCList.Add(new INS_pc_manage(pc, Logger));
             }
-            Refresh_file_list();
-        }
+            RefreshFileList();
 
-        public async void Refresh_file_list()
+        }
+        public async void RefreshFileList()
         {
             Logger.Information("start to refresh the file dict, time is {0}", DateTime.Now);
             PanelPathManager newPanelPathManager = new PanelPathManager();
             List<Task> task_list = new List<Task>();
-            foreach (var pc in Ins_pc_list)
+            foreach (var pc in InsPCList)
             {
                 var refresh_task = Task.Run(() => pc.Serch_file(newPanelPathManager));
                 task_list.Add(refresh_task);
@@ -47,8 +47,7 @@ namespace Sauron
             Logger.Information("finished Refresh, time is {0}", DateTime.Now);
             PathManager = newPanelPathManager;
         }
-
-        public List<PanelPathContainer> GetPanelList(string panel_id)
+        public List<PanelPathContainer> GetPanelPathList(string panel_id)
         {
             if (PathManager.Contains(panel_id))
             {
@@ -59,11 +58,10 @@ namespace Sauron
                 return null;
             }
         }
-
         public PanelPathContainer GetPanel(string panel_id)
         {
             // return the first matching result;
-            var result = GetPanelList(panel_id);
+            var result = GetPanelPathList(panel_id);
             if (result != null)
             {
                 return result[0];
@@ -72,9 +70,8 @@ namespace Sauron
             {
                 return null;
             }
-            
-        }
 
+        }
     }
 
     class INS_pc_manage
@@ -94,25 +91,29 @@ namespace Sauron
             {
                 try
                 {
-                    string diskpath1 = Path.Combine(PcInfo.PcIp, "NetworkDrive", search_disk.ToString(), "Defect Info", "Origin");
-                    string diskpath2 = Path.Combine(PcInfo.PcIp, "NetworkDrive", search_disk.ToString(), "Defect Info", "Result");
+                    string diskpath1 = Path.Combine("\\\\",PcInfo.PcIp, "NetworkDrive", search_disk.ToString(), "Defect Info", "Origin");
+                    string diskpath2 = Path.Combine("\\\\",PcInfo.PcIp, "NetworkDrive", search_disk.ToString(), "Defect Info", "Result");
                     string[] image_directory_list = Directory.GetDirectories(diskpath1);
-                    List<string> result_directory_list = Directory.GetDirectories(diskpath2).ToList();
-
+                    for (int i = 0; i < image_directory_list.Length; i++)
+                    {
+                        image_directory_list[i] = image_directory_list[i].Substring(image_directory_list[i].Length - 17);
+                    }
+                    string[] result_directory_list = Directory.GetDirectories(diskpath2);
+                    for (int i = 0; i < result_directory_list.Length; i++)
+                    {
+                        result_directory_list[i] = result_directory_list[i].Substring(result_directory_list[i].Length - 17);
+                    }
                     foreach (var item in image_directory_list.Intersect(result_directory_list))
                     {
-                        string this_panel_result_dir = result_directory_list.FirstOrDefault(x => { return x.Substring(x.Length - 17) == item.Substring(item.Length - 17); });
-                        if (this_panel_result_dir != null)
-                        {
-                            PanelPathContainer this_panel = new PanelPathContainer(item.Substring(item.Length - 17),PcInfo, search_disk);
-                            panel_list.PanelPathAdd(this_panel);
-                            result_directory_list.Remove(this_panel_result_dir);
-                        }
-                        else
-                        {
-                            Log.Information("result or image file not exist; panel id : {0}; path: {1}", item.Substring(item.Length - 17), item);
-                        }
+                        PanelPathContainer this_panel = new PanelPathContainer(item.Substring(item.Length - 17), PcInfo, search_disk);
+                        panel_list.PanelPathAdd(this_panel);
+
                     }
+                    foreach (var item in image_directory_list.Except(result_directory_list))
+                    {
+                        Log.Information("result or image file not exist; panel id : {0}; path: {1}", item.Substring(item.Length - 17), item);
+                    }
+
                 }
 
                 catch (Exception e)
@@ -121,8 +122,8 @@ namespace Sauron
                 }
             }
 
-            Log.Information("pc: {0} finishied;", PcIp);
+            Log.Information("pc: {0} finishied;", PcInfo.PcIp);
             new_panel_list.AddRange(panel_list);
-        }    
+        }
     }
 }

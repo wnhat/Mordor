@@ -1,1924 +1,1924 @@
 {
-    "pc_list_all": [
+    "PcListAll": [
         {
             "EqId": 1,
-            "PcIp": "\\\\172.16.160.11",
-            "PcName": "AVI",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 1,
-            "PcIp": "\\\\172.16.160.12",
-            "PcName": "AVI",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 2,
-            "PcIp": "\\\\172.16.160.21",
-            "PcName": "AVI",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 2,
-            "PcIp": "\\\\172.16.160.22",
-            "PcName": "AVI",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 3,
-            "PcIp": "\\\\172.16.160.31",
-            "PcName": "AVI",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 3,
-            "PcIp": "\\\\172.16.160.32",
-            "PcName": "AVI",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 4,
-            "PcIp": "\\\\172.16.160.41",
-            "PcName": "AVI",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 4,
-            "PcIp": "\\\\172.16.160.42",
-            "PcName": "AVI",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 5,
-            "PcIp": "\\\\172.16.160.51",
-            "PcName": "AVI",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 5,
-            "PcIp": "\\\\172.16.160.52",
-            "PcName": "AVI",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 6,
-            "PcIp": "\\\\172.16.160.61",
-            "PcName": "AVI",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 6,
-            "PcIp": "\\\\172.16.160.62",
-            "PcName": "AVI",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 7,
-            "PcIp": "\\\\172.16.160.71",
-            "PcName": "AVI",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 7,
-            "PcIp": "\\\\172.16.160.72",
-            "PcName": "AVI",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 8,
-            "PcIp": "\\\\172.16.160.81",
-            "PcName": "AVI",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 8,
-            "PcIp": "\\\\172.16.160.82",
-            "PcName": "AVI",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 9,
-            "PcIp": "\\\\172.16.160.91",
-            "PcName": "AVI",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 9,
-            "PcIp": "\\\\172.16.160.92",
-            "PcName": "AVI",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 10,
-            "PcIp": "\\\\172.16.160.101",
-            "PcName": "AVI",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 10,
-            "PcIp": "\\\\172.16.160.102",
-            "PcName": "AVI",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 11,
-            "PcIp": "\\\\172.16.160.111",
-            "PcName": "AVI",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 11,
-            "PcIp": "\\\\172.16.160.112",
-            "PcName": "AVI",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 12,
-            "PcIp": "\\\\172.16.170.11",
-            "PcName": "AVI",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 12,
-            "PcIp": "\\\\172.16.170.12",
-            "PcName": "AVI",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 13,
-            "PcIp": "\\\\172.16.170.21",
-            "PcName": "AVI",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 13,
-            "PcIp": "\\\\172.16.170.22",
-            "PcName": "AVI",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 14,
-            "PcIp": "\\\\172.16.170.31",
-            "PcName": "AVI",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 14,
-            "PcIp": "\\\\172.16.170.32",
-            "PcName": "AVI",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 15,
-            "PcIp": "\\\\172.16.170.41",
-            "PcName": "AVI",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 15,
-            "PcIp": "\\\\172.16.170.42",
-            "PcName": "AVI",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 16,
-            "PcIp": "\\\\172.16.170.51",
-            "PcName": "AVI",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 16,
-            "PcIp": "\\\\172.16.170.52",
-            "PcName": "AVI",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 17,
-            "PcIp": "\\\\172.16.170.61",
-            "PcName": "AVI",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 17,
-            "PcIp": "\\\\172.16.170.62",
-            "PcName": "AVI",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 18,
-            "PcIp": "\\\\172.16.170.71",
-            "PcName": "AVI",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 18,
-            "PcIp": "\\\\172.16.170.72",
-            "PcName": "AVI",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 19,
-            "PcIp": "\\\\172.16.170.81",
-            "PcName": "AVI",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 19,
-            "PcIp": "\\\\172.16.170.82",
-            "PcName": "AVI",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 20,
-            "PcIp": "\\\\172.16.170.91",
-            "PcName": "AVI",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 20,
-            "PcIp": "\\\\172.16.170.92",
-            "PcName": "AVI",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 21,
-            "PcIp": "\\\\172.16.170.101",
-            "PcName": "AVI",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 21,
-            "PcIp": "\\\\172.16.170.102",
-            "PcName": "AVI",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 22,
-            "PcIp": "\\\\172.16.170.111",
-            "PcName": "AVI",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 22,
-            "PcIp": "\\\\172.16.170.112",
-            "PcName": "AVI",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 23,
-            "PcIp": "\\\\172.16.180.11",
-            "PcName": "AVI",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 23,
-            "PcIp": "\\\\172.16.180.12",
-            "PcName": "AVI",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 24,
-            "PcIp": "\\\\172.16.180.21",
-            "PcName": "AVI",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 24,
-            "PcIp": "\\\\172.16.180.22",
-            "PcName": "AVI",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 25,
-            "PcIp": "\\\\172.16.180.31",
-            "PcName": "AVI",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 25,
-            "PcIp": "\\\\172.16.180.32",
-            "PcName": "AVI",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 26,
-            "PcIp": "\\\\172.16.180.41",
-            "PcName": "AVI",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 26,
-            "PcIp": "\\\\172.16.180.42",
-            "PcName": "AVI",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 27,
-            "PcIp": "\\\\172.16.180.51",
-            "PcName": "AVI",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 27,
-            "PcIp": "\\\\172.16.180.52",
-            "PcName": "AVI",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 28,
-            "PcIp": "\\\\172.16.180.61",
-            "PcName": "AVI",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 28,
-            "PcIp": "\\\\172.16.180.62",
-            "PcName": "AVI",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 29,
-            "PcIp": "\\\\172.16.180.71",
-            "PcName": "AVI",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 29,
-            "PcIp": "\\\\172.16.180.72",
-            "PcName": "AVI",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 30,
-            "PcIp": "\\\\172.16.180.81",
-            "PcName": "AVI",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 30,
-            "PcIp": "\\\\172.16.180.82",
-            "PcName": "AVI",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 31,
-            "PcIp": "\\\\172.16.180.91",
-            "PcName": "AVI",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 31,
-            "PcIp": "\\\\172.16.180.92",
-            "PcName": "AVI",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 32,
-            "PcIp": "\\\\172.16.180.101",
-            "PcName": "AVI",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 32,
-            "PcIp": "\\\\172.16.180.102",
-            "PcName": "AVI",
-            "PcSide": "RIGHT"
+            "PcIp": "172.16.160.11",
+            "PcName": 0,
+            "PcSide": 0
         },
         {
             "EqId": 1,
-            "PcIp": "\\\\172.16.160.13",
-            "PcName": "SVI",
-            "PcSide": "LEFT"
+            "PcIp": "172.16.160.12",
+            "PcName": 0,
+            "PcSide": 1
+        },
+        {
+            "EqId": 2,
+            "PcIp": "172.16.160.21",
+            "PcName": 0,
+            "PcSide": 0
+        },
+        {
+            "EqId": 2,
+            "PcIp": "172.16.160.22",
+            "PcName": 0,
+            "PcSide": 1
+        },
+        {
+            "EqId": 3,
+            "PcIp": "172.16.160.31",
+            "PcName": 0,
+            "PcSide": 0
+        },
+        {
+            "EqId": 3,
+            "PcIp": "172.16.160.32",
+            "PcName": 0,
+            "PcSide": 1
+        },
+        {
+            "EqId": 4,
+            "PcIp": "172.16.160.41",
+            "PcName": 0,
+            "PcSide": 0
+        },
+        {
+            "EqId": 4,
+            "PcIp": "172.16.160.42",
+            "PcName": 0,
+            "PcSide": 1
+        },
+        {
+            "EqId": 5,
+            "PcIp": "172.16.160.51",
+            "PcName": 0,
+            "PcSide": 0
+        },
+        {
+            "EqId": 5,
+            "PcIp": "172.16.160.52",
+            "PcName": 0,
+            "PcSide": 1
+        },
+        {
+            "EqId": 6,
+            "PcIp": "172.16.160.61",
+            "PcName": 0,
+            "PcSide": 0
+        },
+        {
+            "EqId": 6,
+            "PcIp": "172.16.160.62",
+            "PcName": 0,
+            "PcSide": 1
+        },
+        {
+            "EqId": 7,
+            "PcIp": "172.16.160.71",
+            "PcName": 0,
+            "PcSide": 0
+        },
+        {
+            "EqId": 7,
+            "PcIp": "172.16.160.72",
+            "PcName": 0,
+            "PcSide": 1
+        },
+        {
+            "EqId": 8,
+            "PcIp": "172.16.160.81",
+            "PcName": 0,
+            "PcSide": 0
+        },
+        {
+            "EqId": 8,
+            "PcIp": "172.16.160.82",
+            "PcName": 0,
+            "PcSide": 1
+        },
+        {
+            "EqId": 9,
+            "PcIp": "172.16.160.91",
+            "PcName": 0,
+            "PcSide": 0
+        },
+        {
+            "EqId": 9,
+            "PcIp": "172.16.160.92",
+            "PcName": 0,
+            "PcSide": 1
+        },
+        {
+            "EqId": 10,
+            "PcIp": "172.16.160.101",
+            "PcName": 0,
+            "PcSide": 0
+        },
+        {
+            "EqId": 10,
+            "PcIp": "172.16.160.102",
+            "PcName": 0,
+            "PcSide": 1
+        },
+        {
+            "EqId": 11,
+            "PcIp": "172.16.160.111",
+            "PcName": 0,
+            "PcSide": 0
+        },
+        {
+            "EqId": 11,
+            "PcIp": "172.16.160.112",
+            "PcName": 0,
+            "PcSide": 1
+        },
+        {
+            "EqId": 12,
+            "PcIp": "172.16.170.11",
+            "PcName": 0,
+            "PcSide": 0
+        },
+        {
+            "EqId": 12,
+            "PcIp": "172.16.170.12",
+            "PcName": 0,
+            "PcSide": 1
+        },
+        {
+            "EqId": 13,
+            "PcIp": "172.16.170.21",
+            "PcName": 0,
+            "PcSide": 0
+        },
+        {
+            "EqId": 13,
+            "PcIp": "172.16.170.22",
+            "PcName": 0,
+            "PcSide": 1
+        },
+        {
+            "EqId": 14,
+            "PcIp": "172.16.170.31",
+            "PcName": 0,
+            "PcSide": 0
+        },
+        {
+            "EqId": 14,
+            "PcIp": "172.16.170.32",
+            "PcName": 0,
+            "PcSide": 1
+        },
+        {
+            "EqId": 15,
+            "PcIp": "172.16.170.41",
+            "PcName": 0,
+            "PcSide": 0
+        },
+        {
+            "EqId": 15,
+            "PcIp": "172.16.170.42",
+            "PcName": 0,
+            "PcSide": 1
+        },
+        {
+            "EqId": 16,
+            "PcIp": "172.16.170.51",
+            "PcName": 0,
+            "PcSide": 0
+        },
+        {
+            "EqId": 16,
+            "PcIp": "172.16.170.52",
+            "PcName": 0,
+            "PcSide": 1
+        },
+        {
+            "EqId": 17,
+            "PcIp": "172.16.170.61",
+            "PcName": 0,
+            "PcSide": 0
+        },
+        {
+            "EqId": 17,
+            "PcIp": "172.16.170.62",
+            "PcName": 0,
+            "PcSide": 1
+        },
+        {
+            "EqId": 18,
+            "PcIp": "172.16.170.71",
+            "PcName": 0,
+            "PcSide": 0
+        },
+        {
+            "EqId": 18,
+            "PcIp": "172.16.170.72",
+            "PcName": 0,
+            "PcSide": 1
+        },
+        {
+            "EqId": 19,
+            "PcIp": "172.16.170.81",
+            "PcName": 0,
+            "PcSide": 0
+        },
+        {
+            "EqId": 19,
+            "PcIp": "172.16.170.82",
+            "PcName": 0,
+            "PcSide": 1
+        },
+        {
+            "EqId": 20,
+            "PcIp": "172.16.170.91",
+            "PcName": 0,
+            "PcSide": 0
+        },
+        {
+            "EqId": 20,
+            "PcIp": "172.16.170.92",
+            "PcName": 0,
+            "PcSide": 1
+        },
+        {
+            "EqId": 21,
+            "PcIp": "172.16.170.101",
+            "PcName": 0,
+            "PcSide": 0
+        },
+        {
+            "EqId": 21,
+            "PcIp": "172.16.170.102",
+            "PcName": 0,
+            "PcSide": 1
+        },
+        {
+            "EqId": 22,
+            "PcIp": "172.16.170.111",
+            "PcName": 0,
+            "PcSide": 0
+        },
+        {
+            "EqId": 22,
+            "PcIp": "172.16.170.112",
+            "PcName": 0,
+            "PcSide": 1
+        },
+        {
+            "EqId": 23,
+            "PcIp": "172.16.180.11",
+            "PcName": 0,
+            "PcSide": 0
+        },
+        {
+            "EqId": 23,
+            "PcIp": "172.16.180.12",
+            "PcName": 0,
+            "PcSide": 1
+        },
+        {
+            "EqId": 24,
+            "PcIp": "172.16.180.21",
+            "PcName": 0,
+            "PcSide": 0
+        },
+        {
+            "EqId": 24,
+            "PcIp": "172.16.180.22",
+            "PcName": 0,
+            "PcSide": 1
+        },
+        {
+            "EqId": 25,
+            "PcIp": "172.16.180.31",
+            "PcName": 0,
+            "PcSide": 0
+        },
+        {
+            "EqId": 25,
+            "PcIp": "172.16.180.32",
+            "PcName": 0,
+            "PcSide": 1
+        },
+        {
+            "EqId": 26,
+            "PcIp": "172.16.180.41",
+            "PcName": 0,
+            "PcSide": 0
+        },
+        {
+            "EqId": 26,
+            "PcIp": "172.16.180.42",
+            "PcName": 0,
+            "PcSide": 1
+        },
+        {
+            "EqId": 27,
+            "PcIp": "172.16.180.51",
+            "PcName": 0,
+            "PcSide": 0
+        },
+        {
+            "EqId": 27,
+            "PcIp": "172.16.180.52",
+            "PcName": 0,
+            "PcSide": 1
+        },
+        {
+            "EqId": 28,
+            "PcIp": "172.16.180.61",
+            "PcName": 0,
+            "PcSide": 0
+        },
+        {
+            "EqId": 28,
+            "PcIp": "172.16.180.62",
+            "PcName": 0,
+            "PcSide": 1
+        },
+        {
+            "EqId": 29,
+            "PcIp": "172.16.180.71",
+            "PcName": 0,
+            "PcSide": 0
+        },
+        {
+            "EqId": 29,
+            "PcIp": "172.16.180.72",
+            "PcName": 0,
+            "PcSide": 1
+        },
+        {
+            "EqId": 30,
+            "PcIp": "172.16.180.81",
+            "PcName": 0,
+            "PcSide": 0
+        },
+        {
+            "EqId": 30,
+            "PcIp": "172.16.180.82",
+            "PcName": 0,
+            "PcSide": 1
+        },
+        {
+            "EqId": 31,
+            "PcIp": "172.16.180.91",
+            "PcName": 0,
+            "PcSide": 0
+        },
+        {
+            "EqId": 31,
+            "PcIp": "172.16.180.92",
+            "PcName": 0,
+            "PcSide": 1
+        },
+        {
+            "EqId": 32,
+            "PcIp": "172.16.180.101",
+            "PcName": 0,
+            "PcSide": 0
+        },
+        {
+            "EqId": 32,
+            "PcIp": "172.16.180.102",
+            "PcName": 0,
+            "PcSide": 1
         },
         {
             "EqId": 1,
-            "PcIp": "\\\\172.16.160.14",
-            "PcName": "SVI",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 2,
-            "PcIp": "\\\\172.16.160.23",
-            "PcName": "SVI",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 2,
-            "PcIp": "\\\\172.16.160.24",
-            "PcName": "SVI",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 3,
-            "PcIp": "\\\\172.16.160.33",
-            "PcName": "SVI",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 3,
-            "PcIp": "\\\\172.16.160.34",
-            "PcName": "SVI",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 4,
-            "PcIp": "\\\\172.16.160.43",
-            "PcName": "SVI",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 4,
-            "PcIp": "\\\\172.16.160.44",
-            "PcName": "SVI",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 5,
-            "PcIp": "\\\\172.16.160.53",
-            "PcName": "SVI",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 5,
-            "PcIp": "\\\\172.16.160.54",
-            "PcName": "SVI",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 6,
-            "PcIp": "\\\\172.16.160.63",
-            "PcName": "SVI",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 6,
-            "PcIp": "\\\\172.16.160.64",
-            "PcName": "SVI",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 7,
-            "PcIp": "\\\\172.16.160.73",
-            "PcName": "SVI",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 7,
-            "PcIp": "\\\\172.16.160.74",
-            "PcName": "SVI",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 8,
-            "PcIp": "\\\\172.16.160.83",
-            "PcName": "SVI",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 8,
-            "PcIp": "\\\\172.16.160.84",
-            "PcName": "SVI",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 9,
-            "PcIp": "\\\\172.16.160.93",
-            "PcName": "SVI",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 9,
-            "PcIp": "\\\\172.16.160.94",
-            "PcName": "SVI",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 10,
-            "PcIp": "\\\\172.16.160.103",
-            "PcName": "SVI",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 10,
-            "PcIp": "\\\\172.16.160.104",
-            "PcName": "SVI",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 11,
-            "PcIp": "\\\\172.16.160.113",
-            "PcName": "SVI",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 11,
-            "PcIp": "\\\\172.16.160.114",
-            "PcName": "SVI",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 12,
-            "PcIp": "\\\\172.16.170.13",
-            "PcName": "SVI",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 12,
-            "PcIp": "\\\\172.16.170.14",
-            "PcName": "SVI",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 13,
-            "PcIp": "\\\\172.16.170.23",
-            "PcName": "SVI",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 13,
-            "PcIp": "\\\\172.16.170.24",
-            "PcName": "SVI",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 14,
-            "PcIp": "\\\\172.16.170.33",
-            "PcName": "SVI",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 14,
-            "PcIp": "\\\\172.16.170.34",
-            "PcName": "SVI",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 15,
-            "PcIp": "\\\\172.16.170.43",
-            "PcName": "SVI",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 15,
-            "PcIp": "\\\\172.16.170.44",
-            "PcName": "SVI",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 16,
-            "PcIp": "\\\\172.16.170.53",
-            "PcName": "SVI",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 16,
-            "PcIp": "\\\\172.16.170.54",
-            "PcName": "SVI",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 17,
-            "PcIp": "\\\\172.16.170.63",
-            "PcName": "SVI",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 17,
-            "PcIp": "\\\\172.16.170.64",
-            "PcName": "SVI",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 18,
-            "PcIp": "\\\\172.16.170.73",
-            "PcName": "SVI",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 18,
-            "PcIp": "\\\\172.16.170.74",
-            "PcName": "SVI",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 19,
-            "PcIp": "\\\\172.16.170.83",
-            "PcName": "SVI",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 19,
-            "PcIp": "\\\\172.16.170.84",
-            "PcName": "SVI",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 20,
-            "PcIp": "\\\\172.16.170.93",
-            "PcName": "SVI",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 20,
-            "PcIp": "\\\\172.16.170.94",
-            "PcName": "SVI",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 21,
-            "PcIp": "\\\\172.16.170.103",
-            "PcName": "SVI",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 21,
-            "PcIp": "\\\\172.16.170.104",
-            "PcName": "SVI",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 22,
-            "PcIp": "\\\\172.16.170.113",
-            "PcName": "SVI",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 22,
-            "PcIp": "\\\\172.16.170.114",
-            "PcName": "SVI",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 23,
-            "PcIp": "\\\\172.16.180.13",
-            "PcName": "SVI",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 23,
-            "PcIp": "\\\\172.16.180.14",
-            "PcName": "SVI",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 24,
-            "PcIp": "\\\\172.16.180.23",
-            "PcName": "SVI",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 24,
-            "PcIp": "\\\\172.16.180.24",
-            "PcName": "SVI",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 25,
-            "PcIp": "\\\\172.16.180.33",
-            "PcName": "SVI",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 25,
-            "PcIp": "\\\\172.16.180.34",
-            "PcName": "SVI",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 26,
-            "PcIp": "\\\\172.16.180.43",
-            "PcName": "SVI",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 26,
-            "PcIp": "\\\\172.16.180.44",
-            "PcName": "SVI",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 27,
-            "PcIp": "\\\\172.16.180.53",
-            "PcName": "SVI",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 27,
-            "PcIp": "\\\\172.16.180.54",
-            "PcName": "SVI",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 28,
-            "PcIp": "\\\\172.16.180.63",
-            "PcName": "SVI",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 28,
-            "PcIp": "\\\\172.16.180.64",
-            "PcName": "SVI",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 29,
-            "PcIp": "\\\\172.16.180.73",
-            "PcName": "SVI",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 29,
-            "PcIp": "\\\\172.16.180.74",
-            "PcName": "SVI",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 30,
-            "PcIp": "\\\\172.16.180.83",
-            "PcName": "SVI",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 30,
-            "PcIp": "\\\\172.16.180.84",
-            "PcName": "SVI",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 31,
-            "PcIp": "\\\\172.16.180.93",
-            "PcName": "SVI",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 31,
-            "PcIp": "\\\\172.16.180.94",
-            "PcName": "SVI",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 32,
-            "PcIp": "\\\\172.16.180.103",
-            "PcName": "SVI",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 32,
-            "PcIp": "\\\\172.16.180.104",
-            "PcName": "SVI",
-            "PcSide": "RIGHT"
+            "PcIp": "172.16.160.13",
+            "PcName": 1,
+            "PcSide": 0
         },
         {
             "EqId": 1,
-            "PcIp": "\\\\172.16.160.15",
-            "PcName": "APP",
-            "PcSide": "LEFT"
+            "PcIp": "172.16.160.14",
+            "PcName": 1,
+            "PcSide": 1
+        },
+        {
+            "EqId": 2,
+            "PcIp": "172.16.160.23",
+            "PcName": 1,
+            "PcSide": 0
+        },
+        {
+            "EqId": 2,
+            "PcIp": "172.16.160.24",
+            "PcName": 1,
+            "PcSide": 1
+        },
+        {
+            "EqId": 3,
+            "PcIp": "172.16.160.33",
+            "PcName": 1,
+            "PcSide": 0
+        },
+        {
+            "EqId": 3,
+            "PcIp": "172.16.160.34",
+            "PcName": 1,
+            "PcSide": 1
+        },
+        {
+            "EqId": 4,
+            "PcIp": "172.16.160.43",
+            "PcName": 1,
+            "PcSide": 0
+        },
+        {
+            "EqId": 4,
+            "PcIp": "172.16.160.44",
+            "PcName": 1,
+            "PcSide": 1
+        },
+        {
+            "EqId": 5,
+            "PcIp": "172.16.160.53",
+            "PcName": 1,
+            "PcSide": 0
+        },
+        {
+            "EqId": 5,
+            "PcIp": "172.16.160.54",
+            "PcName": 1,
+            "PcSide": 1
+        },
+        {
+            "EqId": 6,
+            "PcIp": "172.16.160.63",
+            "PcName": 1,
+            "PcSide": 0
+        },
+        {
+            "EqId": 6,
+            "PcIp": "172.16.160.64",
+            "PcName": 1,
+            "PcSide": 1
+        },
+        {
+            "EqId": 7,
+            "PcIp": "172.16.160.73",
+            "PcName": 1,
+            "PcSide": 0
+        },
+        {
+            "EqId": 7,
+            "PcIp": "172.16.160.74",
+            "PcName": 1,
+            "PcSide": 1
+        },
+        {
+            "EqId": 8,
+            "PcIp": "172.16.160.83",
+            "PcName": 1,
+            "PcSide": 0
+        },
+        {
+            "EqId": 8,
+            "PcIp": "172.16.160.84",
+            "PcName": 1,
+            "PcSide": 1
+        },
+        {
+            "EqId": 9,
+            "PcIp": "172.16.160.93",
+            "PcName": 1,
+            "PcSide": 0
+        },
+        {
+            "EqId": 9,
+            "PcIp": "172.16.160.94",
+            "PcName": 1,
+            "PcSide": 1
+        },
+        {
+            "EqId": 10,
+            "PcIp": "172.16.160.103",
+            "PcName": 1,
+            "PcSide": 0
+        },
+        {
+            "EqId": 10,
+            "PcIp": "172.16.160.104",
+            "PcName": 1,
+            "PcSide": 1
+        },
+        {
+            "EqId": 11,
+            "PcIp": "172.16.160.113",
+            "PcName": 1,
+            "PcSide": 0
+        },
+        {
+            "EqId": 11,
+            "PcIp": "172.16.160.114",
+            "PcName": 1,
+            "PcSide": 1
+        },
+        {
+            "EqId": 12,
+            "PcIp": "172.16.170.13",
+            "PcName": 1,
+            "PcSide": 0
+        },
+        {
+            "EqId": 12,
+            "PcIp": "172.16.170.14",
+            "PcName": 1,
+            "PcSide": 1
+        },
+        {
+            "EqId": 13,
+            "PcIp": "172.16.170.23",
+            "PcName": 1,
+            "PcSide": 0
+        },
+        {
+            "EqId": 13,
+            "PcIp": "172.16.170.24",
+            "PcName": 1,
+            "PcSide": 1
+        },
+        {
+            "EqId": 14,
+            "PcIp": "172.16.170.33",
+            "PcName": 1,
+            "PcSide": 0
+        },
+        {
+            "EqId": 14,
+            "PcIp": "172.16.170.34",
+            "PcName": 1,
+            "PcSide": 1
+        },
+        {
+            "EqId": 15,
+            "PcIp": "172.16.170.43",
+            "PcName": 1,
+            "PcSide": 0
+        },
+        {
+            "EqId": 15,
+            "PcIp": "172.16.170.44",
+            "PcName": 1,
+            "PcSide": 1
+        },
+        {
+            "EqId": 16,
+            "PcIp": "172.16.170.53",
+            "PcName": 1,
+            "PcSide": 0
+        },
+        {
+            "EqId": 16,
+            "PcIp": "172.16.170.54",
+            "PcName": 1,
+            "PcSide": 1
+        },
+        {
+            "EqId": 17,
+            "PcIp": "172.16.170.63",
+            "PcName": 1,
+            "PcSide": 0
+        },
+        {
+            "EqId": 17,
+            "PcIp": "172.16.170.64",
+            "PcName": 1,
+            "PcSide": 1
+        },
+        {
+            "EqId": 18,
+            "PcIp": "172.16.170.73",
+            "PcName": 1,
+            "PcSide": 0
+        },
+        {
+            "EqId": 18,
+            "PcIp": "172.16.170.74",
+            "PcName": 1,
+            "PcSide": 1
+        },
+        {
+            "EqId": 19,
+            "PcIp": "172.16.170.83",
+            "PcName": 1,
+            "PcSide": 0
+        },
+        {
+            "EqId": 19,
+            "PcIp": "172.16.170.84",
+            "PcName": 1,
+            "PcSide": 1
+        },
+        {
+            "EqId": 20,
+            "PcIp": "172.16.170.93",
+            "PcName": 1,
+            "PcSide": 0
+        },
+        {
+            "EqId": 20,
+            "PcIp": "172.16.170.94",
+            "PcName": 1,
+            "PcSide": 1
+        },
+        {
+            "EqId": 21,
+            "PcIp": "172.16.170.103",
+            "PcName": 1,
+            "PcSide": 0
+        },
+        {
+            "EqId": 21,
+            "PcIp": "172.16.170.104",
+            "PcName": 1,
+            "PcSide": 1
+        },
+        {
+            "EqId": 22,
+            "PcIp": "172.16.170.113",
+            "PcName": 1,
+            "PcSide": 0
+        },
+        {
+            "EqId": 22,
+            "PcIp": "172.16.170.114",
+            "PcName": 1,
+            "PcSide": 1
+        },
+        {
+            "EqId": 23,
+            "PcIp": "172.16.180.13",
+            "PcName": 1,
+            "PcSide": 0
+        },
+        {
+            "EqId": 23,
+            "PcIp": "172.16.180.14",
+            "PcName": 1,
+            "PcSide": 1
+        },
+        {
+            "EqId": 24,
+            "PcIp": "172.16.180.23",
+            "PcName": 1,
+            "PcSide": 0
+        },
+        {
+            "EqId": 24,
+            "PcIp": "172.16.180.24",
+            "PcName": 1,
+            "PcSide": 1
+        },
+        {
+            "EqId": 25,
+            "PcIp": "172.16.180.33",
+            "PcName": 1,
+            "PcSide": 0
+        },
+        {
+            "EqId": 25,
+            "PcIp": "172.16.180.34",
+            "PcName": 1,
+            "PcSide": 1
+        },
+        {
+            "EqId": 26,
+            "PcIp": "172.16.180.43",
+            "PcName": 1,
+            "PcSide": 0
+        },
+        {
+            "EqId": 26,
+            "PcIp": "172.16.180.44",
+            "PcName": 1,
+            "PcSide": 1
+        },
+        {
+            "EqId": 27,
+            "PcIp": "172.16.180.53",
+            "PcName": 1,
+            "PcSide": 0
+        },
+        {
+            "EqId": 27,
+            "PcIp": "172.16.180.54",
+            "PcName": 1,
+            "PcSide": 1
+        },
+        {
+            "EqId": 28,
+            "PcIp": "172.16.180.63",
+            "PcName": 1,
+            "PcSide": 0
+        },
+        {
+            "EqId": 28,
+            "PcIp": "172.16.180.64",
+            "PcName": 1,
+            "PcSide": 1
+        },
+        {
+            "EqId": 29,
+            "PcIp": "172.16.180.73",
+            "PcName": 1,
+            "PcSide": 0
+        },
+        {
+            "EqId": 29,
+            "PcIp": "172.16.180.74",
+            "PcName": 1,
+            "PcSide": 1
+        },
+        {
+            "EqId": 30,
+            "PcIp": "172.16.180.83",
+            "PcName": 1,
+            "PcSide": 0
+        },
+        {
+            "EqId": 30,
+            "PcIp": "172.16.180.84",
+            "PcName": 1,
+            "PcSide": 1
+        },
+        {
+            "EqId": 31,
+            "PcIp": "172.16.180.93",
+            "PcName": 1,
+            "PcSide": 0
+        },
+        {
+            "EqId": 31,
+            "PcIp": "172.16.180.94",
+            "PcName": 1,
+            "PcSide": 1
+        },
+        {
+            "EqId": 32,
+            "PcIp": "172.16.180.103",
+            "PcName": 1,
+            "PcSide": 0
+        },
+        {
+            "EqId": 32,
+            "PcIp": "172.16.180.104",
+            "PcName": 1,
+            "PcSide": 1
         },
         {
             "EqId": 1,
-            "PcIp": "\\\\172.16.160.16",
-            "PcName": "APP",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 2,
-            "PcIp": "\\\\172.16.160.25",
-            "PcName": "APP",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 2,
-            "PcIp": "\\\\172.16.160.26",
-            "PcName": "APP",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 3,
-            "PcIp": "\\\\172.16.160.35",
-            "PcName": "APP",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 3,
-            "PcIp": "\\\\172.16.160.36",
-            "PcName": "APP",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 4,
-            "PcIp": "\\\\172.16.160.45",
-            "PcName": "APP",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 4,
-            "PcIp": "\\\\172.16.160.46",
-            "PcName": "APP",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 5,
-            "PcIp": "\\\\172.16.160.55",
-            "PcName": "APP",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 5,
-            "PcIp": "\\\\172.16.160.56",
-            "PcName": "APP",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 6,
-            "PcIp": "\\\\172.16.160.65",
-            "PcName": "APP",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 6,
-            "PcIp": "\\\\172.16.160.66",
-            "PcName": "APP",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 7,
-            "PcIp": "\\\\172.16.160.75",
-            "PcName": "APP",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 7,
-            "PcIp": "\\\\172.16.160.76",
-            "PcName": "APP",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 8,
-            "PcIp": "\\\\172.16.160.85",
-            "PcName": "APP",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 8,
-            "PcIp": "\\\\172.16.160.86",
-            "PcName": "APP",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 9,
-            "PcIp": "\\\\172.16.160.95",
-            "PcName": "APP",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 9,
-            "PcIp": "\\\\172.16.160.96",
-            "PcName": "APP",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 10,
-            "PcIp": "\\\\172.16.160.105",
-            "PcName": "APP",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 10,
-            "PcIp": "\\\\172.16.160.106",
-            "PcName": "APP",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 11,
-            "PcIp": "\\\\172.16.160.115",
-            "PcName": "APP",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 11,
-            "PcIp": "\\\\172.16.160.116",
-            "PcName": "APP",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 12,
-            "PcIp": "\\\\172.16.170.15",
-            "PcName": "APP",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 12,
-            "PcIp": "\\\\172.16.170.16",
-            "PcName": "APP",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 13,
-            "PcIp": "\\\\172.16.170.25",
-            "PcName": "APP",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 13,
-            "PcIp": "\\\\172.16.170.26",
-            "PcName": "APP",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 14,
-            "PcIp": "\\\\172.16.170.35",
-            "PcName": "APP",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 14,
-            "PcIp": "\\\\172.16.170.36",
-            "PcName": "APP",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 15,
-            "PcIp": "\\\\172.16.170.45",
-            "PcName": "APP",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 15,
-            "PcIp": "\\\\172.16.170.46",
-            "PcName": "APP",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 16,
-            "PcIp": "\\\\172.16.170.55",
-            "PcName": "APP",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 16,
-            "PcIp": "\\\\172.16.170.56",
-            "PcName": "APP",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 17,
-            "PcIp": "\\\\172.16.170.65",
-            "PcName": "APP",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 17,
-            "PcIp": "\\\\172.16.170.66",
-            "PcName": "APP",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 18,
-            "PcIp": "\\\\172.16.170.75",
-            "PcName": "APP",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 18,
-            "PcIp": "\\\\172.16.170.76",
-            "PcName": "APP",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 19,
-            "PcIp": "\\\\172.16.170.85",
-            "PcName": "APP",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 19,
-            "PcIp": "\\\\172.16.170.86",
-            "PcName": "APP",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 20,
-            "PcIp": "\\\\172.16.170.95",
-            "PcName": "APP",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 20,
-            "PcIp": "\\\\172.16.170.96",
-            "PcName": "APP",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 21,
-            "PcIp": "\\\\172.16.170.105",
-            "PcName": "APP",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 21,
-            "PcIp": "\\\\172.16.170.106",
-            "PcName": "APP",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 22,
-            "PcIp": "\\\\172.16.170.115",
-            "PcName": "APP",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 22,
-            "PcIp": "\\\\172.16.170.116",
-            "PcName": "APP",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 23,
-            "PcIp": "\\\\172.16.180.15",
-            "PcName": "APP",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 23,
-            "PcIp": "\\\\172.16.180.16",
-            "PcName": "APP",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 24,
-            "PcIp": "\\\\172.16.180.25",
-            "PcName": "APP",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 24,
-            "PcIp": "\\\\172.16.180.26",
-            "PcName": "APP",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 25,
-            "PcIp": "\\\\172.16.180.35",
-            "PcName": "APP",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 25,
-            "PcIp": "\\\\172.16.180.36",
-            "PcName": "APP",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 26,
-            "PcIp": "\\\\172.16.180.45",
-            "PcName": "APP",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 26,
-            "PcIp": "\\\\172.16.180.46",
-            "PcName": "APP",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 27,
-            "PcIp": "\\\\172.16.180.55",
-            "PcName": "APP",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 27,
-            "PcIp": "\\\\172.16.180.56",
-            "PcName": "APP",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 28,
-            "PcIp": "\\\\172.16.180.65",
-            "PcName": "APP",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 28,
-            "PcIp": "\\\\172.16.180.66",
-            "PcName": "APP",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 29,
-            "PcIp": "\\\\172.16.180.75",
-            "PcName": "APP",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 29,
-            "PcIp": "\\\\172.16.180.76",
-            "PcName": "APP",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 30,
-            "PcIp": "\\\\172.16.180.85",
-            "PcName": "APP",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 30,
-            "PcIp": "\\\\172.16.180.86",
-            "PcName": "APP",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 31,
-            "PcIp": "\\\\172.16.180.95",
-            "PcName": "APP",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 31,
-            "PcIp": "\\\\172.16.180.96",
-            "PcName": "APP",
-            "PcSide": "RIGHT"
-        },
-        {
-            "EqId": 32,
-            "PcIp": "\\\\172.16.180.105",
-            "PcName": "APP",
-            "PcSide": "LEFT"
-        },
-        {
-            "EqId": 32,
-            "PcIp": "\\\\172.16.180.106",
-            "PcName": "APP",
-            "PcSide": "RIGHT"
+            "PcIp": "172.16.160.15",
+            "PcName": 2,
+            "PcSide": 0
         },
         {
             "EqId": 1,
-            "PcIp": "\\\\172.16.160.17",
-            "PcName": "MAIN",
-            "PcSide": null
+            "PcIp": "172.16.160.16",
+            "PcName": 2,
+            "PcSide": 1
         },
         {
             "EqId": 2,
-            "PcIp": "\\\\172.16.160.27",
-            "PcName": "MAIN",
-            "PcSide": null
+            "PcIp": "172.16.160.25",
+            "PcName": 2,
+            "PcSide": 0
+        },
+        {
+            "EqId": 2,
+            "PcIp": "172.16.160.26",
+            "PcName": 2,
+            "PcSide": 1
         },
         {
             "EqId": 3,
-            "PcIp": "\\\\172.16.160.37",
-            "PcName": "MAIN",
-            "PcSide": null
+            "PcIp": "172.16.160.35",
+            "PcName": 2,
+            "PcSide": 0
+        },
+        {
+            "EqId": 3,
+            "PcIp": "172.16.160.36",
+            "PcName": 2,
+            "PcSide": 1
         },
         {
             "EqId": 4,
-            "PcIp": "\\\\172.16.160.47",
-            "PcName": "MAIN",
-            "PcSide": null
+            "PcIp": "172.16.160.45",
+            "PcName": 2,
+            "PcSide": 0
+        },
+        {
+            "EqId": 4,
+            "PcIp": "172.16.160.46",
+            "PcName": 2,
+            "PcSide": 1
         },
         {
             "EqId": 5,
-            "PcIp": "\\\\172.16.160.57",
-            "PcName": "MAIN",
-            "PcSide": null
+            "PcIp": "172.16.160.55",
+            "PcName": 2,
+            "PcSide": 0
+        },
+        {
+            "EqId": 5,
+            "PcIp": "172.16.160.56",
+            "PcName": 2,
+            "PcSide": 1
         },
         {
             "EqId": 6,
-            "PcIp": "\\\\172.16.160.67",
-            "PcName": "MAIN",
-            "PcSide": null
+            "PcIp": "172.16.160.65",
+            "PcName": 2,
+            "PcSide": 0
+        },
+        {
+            "EqId": 6,
+            "PcIp": "172.16.160.66",
+            "PcName": 2,
+            "PcSide": 1
         },
         {
             "EqId": 7,
-            "PcIp": "\\\\172.16.160.77",
-            "PcName": "MAIN",
-            "PcSide": null
+            "PcIp": "172.16.160.75",
+            "PcName": 2,
+            "PcSide": 0
+        },
+        {
+            "EqId": 7,
+            "PcIp": "172.16.160.76",
+            "PcName": 2,
+            "PcSide": 1
         },
         {
             "EqId": 8,
-            "PcIp": "\\\\172.16.160.87",
-            "PcName": "MAIN",
-            "PcSide": null
+            "PcIp": "172.16.160.85",
+            "PcName": 2,
+            "PcSide": 0
+        },
+        {
+            "EqId": 8,
+            "PcIp": "172.16.160.86",
+            "PcName": 2,
+            "PcSide": 1
         },
         {
             "EqId": 9,
-            "PcIp": "\\\\172.16.160.97",
-            "PcName": "MAIN",
-            "PcSide": null
+            "PcIp": "172.16.160.95",
+            "PcName": 2,
+            "PcSide": 0
+        },
+        {
+            "EqId": 9,
+            "PcIp": "172.16.160.96",
+            "PcName": 2,
+            "PcSide": 1
         },
         {
             "EqId": 10,
-            "PcIp": "\\\\172.16.160.107",
-            "PcName": "MAIN",
-            "PcSide": null
+            "PcIp": "172.16.160.105",
+            "PcName": 2,
+            "PcSide": 0
+        },
+        {
+            "EqId": 10,
+            "PcIp": "172.16.160.106",
+            "PcName": 2,
+            "PcSide": 1
         },
         {
             "EqId": 11,
-            "PcIp": "\\\\172.16.160.117",
-            "PcName": "MAIN",
-            "PcSide": null
+            "PcIp": "172.16.160.115",
+            "PcName": 2,
+            "PcSide": 0
+        },
+        {
+            "EqId": 11,
+            "PcIp": "172.16.160.116",
+            "PcName": 2,
+            "PcSide": 1
         },
         {
             "EqId": 12,
-            "PcIp": "\\\\172.16.170.17",
-            "PcName": "MAIN",
-            "PcSide": null
+            "PcIp": "172.16.170.15",
+            "PcName": 2,
+            "PcSide": 0
+        },
+        {
+            "EqId": 12,
+            "PcIp": "172.16.170.16",
+            "PcName": 2,
+            "PcSide": 1
         },
         {
             "EqId": 13,
-            "PcIp": "\\\\172.16.170.27",
-            "PcName": "MAIN",
-            "PcSide": null
+            "PcIp": "172.16.170.25",
+            "PcName": 2,
+            "PcSide": 0
+        },
+        {
+            "EqId": 13,
+            "PcIp": "172.16.170.26",
+            "PcName": 2,
+            "PcSide": 1
         },
         {
             "EqId": 14,
-            "PcIp": "\\\\172.16.170.37",
-            "PcName": "MAIN",
-            "PcSide": null
+            "PcIp": "172.16.170.35",
+            "PcName": 2,
+            "PcSide": 0
+        },
+        {
+            "EqId": 14,
+            "PcIp": "172.16.170.36",
+            "PcName": 2,
+            "PcSide": 1
         },
         {
             "EqId": 15,
-            "PcIp": "\\\\172.16.170.47",
-            "PcName": "MAIN",
-            "PcSide": null
+            "PcIp": "172.16.170.45",
+            "PcName": 2,
+            "PcSide": 0
+        },
+        {
+            "EqId": 15,
+            "PcIp": "172.16.170.46",
+            "PcName": 2,
+            "PcSide": 1
         },
         {
             "EqId": 16,
-            "PcIp": "\\\\172.16.170.57",
-            "PcName": "MAIN",
-            "PcSide": null
+            "PcIp": "172.16.170.55",
+            "PcName": 2,
+            "PcSide": 0
+        },
+        {
+            "EqId": 16,
+            "PcIp": "172.16.170.56",
+            "PcName": 2,
+            "PcSide": 1
         },
         {
             "EqId": 17,
-            "PcIp": "\\\\172.16.170.67",
-            "PcName": "MAIN",
-            "PcSide": null
+            "PcIp": "172.16.170.65",
+            "PcName": 2,
+            "PcSide": 0
+        },
+        {
+            "EqId": 17,
+            "PcIp": "172.16.170.66",
+            "PcName": 2,
+            "PcSide": 1
         },
         {
             "EqId": 18,
-            "PcIp": "\\\\172.16.170.77",
-            "PcName": "MAIN",
-            "PcSide": null
+            "PcIp": "172.16.170.75",
+            "PcName": 2,
+            "PcSide": 0
+        },
+        {
+            "EqId": 18,
+            "PcIp": "172.16.170.76",
+            "PcName": 2,
+            "PcSide": 1
         },
         {
             "EqId": 19,
-            "PcIp": "\\\\172.16.170.87",
-            "PcName": "MAIN",
-            "PcSide": null
+            "PcIp": "172.16.170.85",
+            "PcName": 2,
+            "PcSide": 0
+        },
+        {
+            "EqId": 19,
+            "PcIp": "172.16.170.86",
+            "PcName": 2,
+            "PcSide": 1
         },
         {
             "EqId": 20,
-            "PcIp": "\\\\172.16.170.97",
-            "PcName": "MAIN",
-            "PcSide": null
+            "PcIp": "172.16.170.95",
+            "PcName": 2,
+            "PcSide": 0
+        },
+        {
+            "EqId": 20,
+            "PcIp": "172.16.170.96",
+            "PcName": 2,
+            "PcSide": 1
         },
         {
             "EqId": 21,
-            "PcIp": "\\\\172.16.170.107",
-            "PcName": "MAIN",
-            "PcSide": null
+            "PcIp": "172.16.170.105",
+            "PcName": 2,
+            "PcSide": 0
+        },
+        {
+            "EqId": 21,
+            "PcIp": "172.16.170.106",
+            "PcName": 2,
+            "PcSide": 1
         },
         {
             "EqId": 22,
-            "PcIp": "\\\\172.16.170.117",
-            "PcName": "MAIN",
-            "PcSide": null
+            "PcIp": "172.16.170.115",
+            "PcName": 2,
+            "PcSide": 0
+        },
+        {
+            "EqId": 22,
+            "PcIp": "172.16.170.116",
+            "PcName": 2,
+            "PcSide": 1
         },
         {
             "EqId": 23,
-            "PcIp": "\\\\172.16.180.17",
-            "PcName": "MAIN",
-            "PcSide": null
+            "PcIp": "172.16.180.15",
+            "PcName": 2,
+            "PcSide": 0
+        },
+        {
+            "EqId": 23,
+            "PcIp": "172.16.180.16",
+            "PcName": 2,
+            "PcSide": 1
         },
         {
             "EqId": 24,
-            "PcIp": "\\\\172.16.180.27",
-            "PcName": "MAIN",
-            "PcSide": null
+            "PcIp": "172.16.180.25",
+            "PcName": 2,
+            "PcSide": 0
+        },
+        {
+            "EqId": 24,
+            "PcIp": "172.16.180.26",
+            "PcName": 2,
+            "PcSide": 1
         },
         {
             "EqId": 25,
-            "PcIp": "\\\\172.16.180.37",
-            "PcName": "MAIN",
-            "PcSide": null
+            "PcIp": "172.16.180.35",
+            "PcName": 2,
+            "PcSide": 0
+        },
+        {
+            "EqId": 25,
+            "PcIp": "172.16.180.36",
+            "PcName": 2,
+            "PcSide": 1
         },
         {
             "EqId": 26,
-            "PcIp": "\\\\172.16.180.47",
-            "PcName": "MAIN",
-            "PcSide": null
+            "PcIp": "172.16.180.45",
+            "PcName": 2,
+            "PcSide": 0
+        },
+        {
+            "EqId": 26,
+            "PcIp": "172.16.180.46",
+            "PcName": 2,
+            "PcSide": 1
         },
         {
             "EqId": 27,
-            "PcIp": "\\\\172.16.180.57",
-            "PcName": "MAIN",
-            "PcSide": null
+            "PcIp": "172.16.180.55",
+            "PcName": 2,
+            "PcSide": 0
+        },
+        {
+            "EqId": 27,
+            "PcIp": "172.16.180.56",
+            "PcName": 2,
+            "PcSide": 1
         },
         {
             "EqId": 28,
-            "PcIp": "\\\\172.16.180.67",
-            "PcName": "MAIN",
-            "PcSide": null
+            "PcIp": "172.16.180.65",
+            "PcName": 2,
+            "PcSide": 0
+        },
+        {
+            "EqId": 28,
+            "PcIp": "172.16.180.66",
+            "PcName": 2,
+            "PcSide": 1
         },
         {
             "EqId": 29,
-            "PcIp": "\\\\172.16.180.77",
-            "PcName": "MAIN",
-            "PcSide": null
+            "PcIp": "172.16.180.75",
+            "PcName": 2,
+            "PcSide": 0
+        },
+        {
+            "EqId": 29,
+            "PcIp": "172.16.180.76",
+            "PcName": 2,
+            "PcSide": 1
         },
         {
             "EqId": 30,
-            "PcIp": "\\\\172.16.180.87",
-            "PcName": "MAIN",
-            "PcSide": null
+            "PcIp": "172.16.180.85",
+            "PcName": 2,
+            "PcSide": 0
+        },
+        {
+            "EqId": 30,
+            "PcIp": "172.16.180.86",
+            "PcName": 2,
+            "PcSide": 1
         },
         {
             "EqId": 31,
-            "PcIp": "\\\\172.16.180.97",
-            "PcName": "MAIN",
-            "PcSide": null
+            "PcIp": "172.16.180.95",
+            "PcName": 2,
+            "PcSide": 0
+        },
+        {
+            "EqId": 31,
+            "PcIp": "172.16.180.96",
+            "PcName": 2,
+            "PcSide": 1
         },
         {
             "EqId": 32,
-            "PcIp": "\\\\172.16.180.107",
-            "PcName": "MAIN",
-            "PcSide": null
+            "PcIp": "172.16.180.105",
+            "PcName": 2,
+            "PcSide": 0
+        },
+        {
+            "EqId": 32,
+            "PcIp": "172.16.180.106",
+            "PcName": 2,
+            "PcSide": 1
         },
         {
             "EqId": 1,
-            "PcIp": "\\\\172.16.160.10",
-            "PcName": "MTP",
-            "PcSide": null
+            "PcIp": "172.16.160.17",
+            "PcName": 5,
+            "PcSide": 2
         },
         {
             "EqId": 2,
-            "PcIp": "\\\\172.16.160.20",
-            "PcName": "MTP",
-            "PcSide": null
+            "PcIp": "172.16.160.27",
+            "PcName": 5,
+            "PcSide": 2
         },
         {
             "EqId": 3,
-            "PcIp": "\\\\172.16.160.30",
-            "PcName": "MTP",
-            "PcSide": null
+            "PcIp": "172.16.160.37",
+            "PcName": 5,
+            "PcSide": 2
         },
         {
             "EqId": 4,
-            "PcIp": "\\\\172.16.160.40",
-            "PcName": "MTP",
-            "PcSide": null
+            "PcIp": "172.16.160.47",
+            "PcName": 5,
+            "PcSide": 2
         },
         {
             "EqId": 5,
-            "PcIp": "\\\\172.16.160.50",
-            "PcName": "MTP",
-            "PcSide": null
+            "PcIp": "172.16.160.57",
+            "PcName": 5,
+            "PcSide": 2
         },
         {
             "EqId": 6,
-            "PcIp": "\\\\172.16.160.60",
-            "PcName": "MTP",
-            "PcSide": null
+            "PcIp": "172.16.160.67",
+            "PcName": 5,
+            "PcSide": 2
         },
         {
             "EqId": 7,
-            "PcIp": "\\\\172.16.160.70",
-            "PcName": "MTP",
-            "PcSide": null
+            "PcIp": "172.16.160.77",
+            "PcName": 5,
+            "PcSide": 2
         },
         {
             "EqId": 8,
-            "PcIp": "\\\\172.16.160.80",
-            "PcName": "MTP",
-            "PcSide": null
+            "PcIp": "172.16.160.87",
+            "PcName": 5,
+            "PcSide": 2
         },
         {
             "EqId": 9,
-            "PcIp": "\\\\172.16.160.90",
-            "PcName": "MTP",
-            "PcSide": null
+            "PcIp": "172.16.160.97",
+            "PcName": 5,
+            "PcSide": 2
         },
         {
             "EqId": 10,
-            "PcIp": "\\\\172.16.160.100",
-            "PcName": "MTP",
-            "PcSide": null
+            "PcIp": "172.16.160.107",
+            "PcName": 5,
+            "PcSide": 2
         },
         {
             "EqId": 11,
-            "PcIp": "\\\\172.16.160.110",
-            "PcName": "MTP",
-            "PcSide": null
+            "PcIp": "172.16.160.117",
+            "PcName": 5,
+            "PcSide": 2
         },
         {
             "EqId": 12,
-            "PcIp": "\\\\172.16.170.10",
-            "PcName": "MTP",
-            "PcSide": null
+            "PcIp": "172.16.170.17",
+            "PcName": 5,
+            "PcSide": 2
         },
         {
             "EqId": 13,
-            "PcIp": "\\\\172.16.170.20",
-            "PcName": "MTP",
-            "PcSide": null
+            "PcIp": "172.16.170.27",
+            "PcName": 5,
+            "PcSide": 2
         },
         {
             "EqId": 14,
-            "PcIp": "\\\\172.16.170.30",
-            "PcName": "MTP",
-            "PcSide": null
+            "PcIp": "172.16.170.37",
+            "PcName": 5,
+            "PcSide": 2
         },
         {
             "EqId": 15,
-            "PcIp": "\\\\172.16.170.40",
-            "PcName": "MTP",
-            "PcSide": null
+            "PcIp": "172.16.170.47",
+            "PcName": 5,
+            "PcSide": 2
         },
         {
             "EqId": 16,
-            "PcIp": "\\\\172.16.170.50",
-            "PcName": "MTP",
-            "PcSide": null
+            "PcIp": "172.16.170.57",
+            "PcName": 5,
+            "PcSide": 2
         },
         {
             "EqId": 17,
-            "PcIp": "\\\\172.16.170.60",
-            "PcName": "MTP",
-            "PcSide": null
+            "PcIp": "172.16.170.67",
+            "PcName": 5,
+            "PcSide": 2
         },
         {
             "EqId": 18,
-            "PcIp": "\\\\172.16.170.70",
-            "PcName": "MTP",
-            "PcSide": null
+            "PcIp": "172.16.170.77",
+            "PcName": 5,
+            "PcSide": 2
         },
         {
             "EqId": 19,
-            "PcIp": "\\\\172.16.170.80",
-            "PcName": "MTP",
-            "PcSide": null
+            "PcIp": "172.16.170.87",
+            "PcName": 5,
+            "PcSide": 2
         },
         {
             "EqId": 20,
-            "PcIp": "\\\\172.16.170.90",
-            "PcName": "MTP",
-            "PcSide": null
+            "PcIp": "172.16.170.97",
+            "PcName": 5,
+            "PcSide": 2
         },
         {
             "EqId": 21,
-            "PcIp": "\\\\172.16.170.100",
-            "PcName": "MTP",
-            "PcSide": null
+            "PcIp": "172.16.170.107",
+            "PcName": 5,
+            "PcSide": 2
         },
         {
             "EqId": 22,
-            "PcIp": "\\\\172.16.170.110",
-            "PcName": "MTP",
-            "PcSide": null
+            "PcIp": "172.16.170.117",
+            "PcName": 5,
+            "PcSide": 2
         },
         {
             "EqId": 23,
-            "PcIp": "\\\\172.16.180.10",
-            "PcName": "MTP",
-            "PcSide": null
+            "PcIp": "172.16.180.17",
+            "PcName": 5,
+            "PcSide": 2
         },
         {
             "EqId": 24,
-            "PcIp": "\\\\172.16.180.20",
-            "PcName": "MTP",
-            "PcSide": null
+            "PcIp": "172.16.180.27",
+            "PcName": 5,
+            "PcSide": 2
         },
         {
             "EqId": 25,
-            "PcIp": "\\\\172.16.180.30",
-            "PcName": "MTP",
-            "PcSide": null
+            "PcIp": "172.16.180.37",
+            "PcName": 5,
+            "PcSide": 2
         },
         {
             "EqId": 26,
-            "PcIp": "\\\\172.16.180.40",
-            "PcName": "MTP",
-            "PcSide": null
+            "PcIp": "172.16.180.47",
+            "PcName": 5,
+            "PcSide": 2
         },
         {
             "EqId": 27,
-            "PcIp": "\\\\172.16.180.50",
-            "PcName": "MTP",
-            "PcSide": null
+            "PcIp": "172.16.180.57",
+            "PcName": 5,
+            "PcSide": 2
         },
         {
             "EqId": 28,
-            "PcIp": "\\\\172.16.180.60",
-            "PcName": "MTP",
-            "PcSide": null
+            "PcIp": "172.16.180.67",
+            "PcName": 5,
+            "PcSide": 2
         },
         {
             "EqId": 29,
-            "PcIp": "\\\\172.16.180.70",
-            "PcName": "MTP",
-            "PcSide": null
+            "PcIp": "172.16.180.77",
+            "PcName": 5,
+            "PcSide": 2
         },
         {
             "EqId": 30,
-            "PcIp": "\\\\172.16.180.80",
-            "PcName": "MTP",
-            "PcSide": null
+            "PcIp": "172.16.180.87",
+            "PcName": 5,
+            "PcSide": 2
         },
         {
             "EqId": 31,
-            "PcIp": "\\\\172.16.180.90",
-            "PcName": "MTP",
-            "PcSide": null
+            "PcIp": "172.16.180.97",
+            "PcName": 5,
+            "PcSide": 2
         },
         {
             "EqId": 32,
-            "PcIp": "\\\\172.16.180.100",
-            "PcName": "MTP",
-            "PcSide": null
+            "PcIp": "172.16.180.107",
+            "PcName": 5,
+            "PcSide": 2
         },
         {
             "EqId": 1,
-            "PcIp": "\\\\172.16.160.18",
-            "PcName": "PRE",
-            "PcSide": null
+            "PcIp": "172.16.160.10",
+            "PcName": 3,
+            "PcSide": 2
         },
         {
             "EqId": 2,
-            "PcIp": "\\\\172.16.160.28",
-            "PcName": "PRE",
-            "PcSide": null
+            "PcIp": "172.16.160.20",
+            "PcName": 3,
+            "PcSide": 2
         },
         {
             "EqId": 3,
-            "PcIp": "\\\\172.16.160.38",
-            "PcName": "PRE",
-            "PcSide": null
+            "PcIp": "172.16.160.30",
+            "PcName": 3,
+            "PcSide": 2
         },
         {
             "EqId": 4,
-            "PcIp": "\\\\172.16.160.48",
-            "PcName": "PRE",
-            "PcSide": null
+            "PcIp": "172.16.160.40",
+            "PcName": 3,
+            "PcSide": 2
         },
         {
             "EqId": 5,
-            "PcIp": "\\\\172.16.160.58",
-            "PcName": "PRE",
-            "PcSide": null
+            "PcIp": "172.16.160.50",
+            "PcName": 3,
+            "PcSide": 2
         },
         {
             "EqId": 6,
-            "PcIp": "\\\\172.16.160.68",
-            "PcName": "PRE",
-            "PcSide": null
+            "PcIp": "172.16.160.60",
+            "PcName": 3,
+            "PcSide": 2
         },
         {
             "EqId": 7,
-            "PcIp": "\\\\172.16.160.78",
-            "PcName": "PRE",
-            "PcSide": null
+            "PcIp": "172.16.160.70",
+            "PcName": 3,
+            "PcSide": 2
         },
         {
             "EqId": 8,
-            "PcIp": "\\\\172.16.160.88",
-            "PcName": "PRE",
-            "PcSide": null
+            "PcIp": "172.16.160.80",
+            "PcName": 3,
+            "PcSide": 2
         },
         {
             "EqId": 9,
-            "PcIp": "\\\\172.16.160.98",
-            "PcName": "PRE",
-            "PcSide": null
+            "PcIp": "172.16.160.90",
+            "PcName": 3,
+            "PcSide": 2
         },
         {
             "EqId": 10,
-            "PcIp": "\\\\172.16.160.108",
-            "PcName": "PRE",
-            "PcSide": null
+            "PcIp": "172.16.160.100",
+            "PcName": 3,
+            "PcSide": 2
         },
         {
             "EqId": 11,
-            "PcIp": "\\\\172.16.160.118",
-            "PcName": "PRE",
-            "PcSide": null
+            "PcIp": "172.16.160.110",
+            "PcName": 3,
+            "PcSide": 2
         },
         {
             "EqId": 12,
-            "PcIp": "\\\\172.16.170.18",
-            "PcName": "PRE",
-            "PcSide": null
+            "PcIp": "172.16.170.10",
+            "PcName": 3,
+            "PcSide": 2
         },
         {
             "EqId": 13,
-            "PcIp": "\\\\172.16.170.28",
-            "PcName": "PRE",
-            "PcSide": null
+            "PcIp": "172.16.170.20",
+            "PcName": 3,
+            "PcSide": 2
         },
         {
             "EqId": 14,
-            "PcIp": "\\\\172.16.170.38",
-            "PcName": "PRE",
-            "PcSide": null
+            "PcIp": "172.16.170.30",
+            "PcName": 3,
+            "PcSide": 2
         },
         {
             "EqId": 15,
-            "PcIp": "\\\\172.16.170.48",
-            "PcName": "PRE",
-            "PcSide": null
+            "PcIp": "172.16.170.40",
+            "PcName": 3,
+            "PcSide": 2
         },
         {
             "EqId": 16,
-            "PcIp": "\\\\172.16.170.58",
-            "PcName": "PRE",
-            "PcSide": null
+            "PcIp": "172.16.170.50",
+            "PcName": 3,
+            "PcSide": 2
         },
         {
             "EqId": 17,
-            "PcIp": "\\\\172.16.170.68",
-            "PcName": "PRE",
-            "PcSide": null
+            "PcIp": "172.16.170.60",
+            "PcName": 3,
+            "PcSide": 2
         },
         {
             "EqId": 18,
-            "PcIp": "\\\\172.16.170.78",
-            "PcName": "PRE",
-            "PcSide": null
+            "PcIp": "172.16.170.70",
+            "PcName": 3,
+            "PcSide": 2
         },
         {
             "EqId": 19,
-            "PcIp": "\\\\172.16.170.88",
-            "PcName": "PRE",
-            "PcSide": null
+            "PcIp": "172.16.170.80",
+            "PcName": 3,
+            "PcSide": 2
         },
         {
             "EqId": 20,
-            "PcIp": "\\\\172.16.170.98",
-            "PcName": "PRE",
-            "PcSide": null
+            "PcIp": "172.16.170.90",
+            "PcName": 3,
+            "PcSide": 2
         },
         {
             "EqId": 21,
-            "PcIp": "\\\\172.16.170.108",
-            "PcName": "PRE",
-            "PcSide": null
+            "PcIp": "172.16.170.100",
+            "PcName": 3,
+            "PcSide": 2
         },
         {
             "EqId": 22,
-            "PcIp": "\\\\172.16.170.118",
-            "PcName": "PRE",
-            "PcSide": null
+            "PcIp": "172.16.170.110",
+            "PcName": 3,
+            "PcSide": 2
         },
         {
             "EqId": 23,
-            "PcIp": "\\\\172.16.180.18",
-            "PcName": "PRE",
-            "PcSide": null
+            "PcIp": "172.16.180.10",
+            "PcName": 3,
+            "PcSide": 2
         },
         {
             "EqId": 24,
-            "PcIp": "\\\\172.16.180.28",
-            "PcName": "PRE",
-            "PcSide": null
+            "PcIp": "172.16.180.20",
+            "PcName": 3,
+            "PcSide": 2
         },
         {
             "EqId": 25,
-            "PcIp": "\\\\172.16.180.38",
-            "PcName": "PRE",
-            "PcSide": null
+            "PcIp": "172.16.180.30",
+            "PcName": 3,
+            "PcSide": 2
         },
         {
             "EqId": 26,
-            "PcIp": "\\\\172.16.180.48",
-            "PcName": "PRE",
-            "PcSide": null
+            "PcIp": "172.16.180.40",
+            "PcName": 3,
+            "PcSide": 2
         },
         {
             "EqId": 27,
-            "PcIp": "\\\\172.16.180.58",
-            "PcName": "PRE",
-            "PcSide": null
+            "PcIp": "172.16.180.50",
+            "PcName": 3,
+            "PcSide": 2
         },
         {
             "EqId": 28,
-            "PcIp": "\\\\172.16.180.68",
-            "PcName": "PRE",
-            "PcSide": null
+            "PcIp": "172.16.180.60",
+            "PcName": 3,
+            "PcSide": 2
         },
         {
             "EqId": 29,
-            "PcIp": "\\\\172.16.180.78",
-            "PcName": "PRE",
-            "PcSide": null
+            "PcIp": "172.16.180.70",
+            "PcName": 3,
+            "PcSide": 2
         },
         {
             "EqId": 30,
-            "PcIp": "\\\\172.16.180.88",
-            "PcName": "PRE",
-            "PcSide": null
+            "PcIp": "172.16.180.80",
+            "PcName": 3,
+            "PcSide": 2
         },
         {
             "EqId": 31,
-            "PcIp": "\\\\172.16.180.98",
-            "PcName": "PRE",
-            "PcSide": null
+            "PcIp": "172.16.180.90",
+            "PcName": 3,
+            "PcSide": 2
         },
         {
             "EqId": 32,
-            "PcIp": "\\\\172.16.180.108",
-            "PcName": "PRE",
-            "PcSide": null
+            "PcIp": "172.16.180.100",
+            "PcName": 3,
+            "PcSide": 2
         },
         {
             "EqId": 1,
-            "PcIp": "\\\\172.16.160.19",
-            "PcName": "POST",
-            "PcSide": null
+            "PcIp": "172.16.160.18",
+            "PcName": 6,
+            "PcSide": 2
         },
         {
             "EqId": 2,
-            "PcIp": "\\\\172.16.160.29",
-            "PcName": "POST",
-            "PcSide": null
+            "PcIp": "172.16.160.28",
+            "PcName": 6,
+            "PcSide": 2
         },
         {
             "EqId": 3,
-            "PcIp": "\\\\172.16.160.39",
-            "PcName": "POST",
-            "PcSide": null
+            "PcIp": "172.16.160.38",
+            "PcName": 6,
+            "PcSide": 2
         },
         {
             "EqId": 4,
-            "PcIp": "\\\\172.16.160.49",
-            "PcName": "POST",
-            "PcSide": null
+            "PcIp": "172.16.160.48",
+            "PcName": 6,
+            "PcSide": 2
         },
         {
             "EqId": 5,
-            "PcIp": "\\\\172.16.160.59",
-            "PcName": "POST",
-            "PcSide": null
+            "PcIp": "172.16.160.58",
+            "PcName": 6,
+            "PcSide": 2
         },
         {
             "EqId": 6,
-            "PcIp": "\\\\172.16.160.69",
-            "PcName": "POST",
-            "PcSide": null
+            "PcIp": "172.16.160.68",
+            "PcName": 6,
+            "PcSide": 2
         },
         {
             "EqId": 7,
-            "PcIp": "\\\\172.16.160.79",
-            "PcName": "POST",
-            "PcSide": null
+            "PcIp": "172.16.160.78",
+            "PcName": 6,
+            "PcSide": 2
         },
         {
             "EqId": 8,
-            "PcIp": "\\\\172.16.160.89",
-            "PcName": "POST",
-            "PcSide": null
+            "PcIp": "172.16.160.88",
+            "PcName": 6,
+            "PcSide": 2
         },
         {
             "EqId": 9,
-            "PcIp": "\\\\172.16.160.99",
-            "PcName": "POST",
-            "PcSide": null
+            "PcIp": "172.16.160.98",
+            "PcName": 6,
+            "PcSide": 2
         },
         {
             "EqId": 10,
-            "PcIp": "\\\\172.16.160.109",
-            "PcName": "POST",
-            "PcSide": null
+            "PcIp": "172.16.160.108",
+            "PcName": 6,
+            "PcSide": 2
         },
         {
             "EqId": 11,
-            "PcIp": "\\\\172.16.160.119",
-            "PcName": "POST",
-            "PcSide": null
+            "PcIp": "172.16.160.118",
+            "PcName": 6,
+            "PcSide": 2
         },
         {
             "EqId": 12,
-            "PcIp": "\\\\172.16.170.19",
-            "PcName": "POST",
-            "PcSide": null
+            "PcIp": "172.16.170.18",
+            "PcName": 6,
+            "PcSide": 2
         },
         {
             "EqId": 13,
-            "PcIp": "\\\\172.16.170.29",
-            "PcName": "POST",
-            "PcSide": null
+            "PcIp": "172.16.170.28",
+            "PcName": 6,
+            "PcSide": 2
         },
         {
             "EqId": 14,
-            "PcIp": "\\\\172.16.170.39",
-            "PcName": "POST",
-            "PcSide": null
+            "PcIp": "172.16.170.38",
+            "PcName": 6,
+            "PcSide": 2
         },
         {
             "EqId": 15,
-            "PcIp": "\\\\172.16.170.49",
-            "PcName": "POST",
-            "PcSide": null
+            "PcIp": "172.16.170.48",
+            "PcName": 6,
+            "PcSide": 2
         },
         {
             "EqId": 16,
-            "PcIp": "\\\\172.16.170.59",
-            "PcName": "POST",
-            "PcSide": null
+            "PcIp": "172.16.170.58",
+            "PcName": 6,
+            "PcSide": 2
         },
         {
             "EqId": 17,
-            "PcIp": "\\\\172.16.170.69",
-            "PcName": "POST",
-            "PcSide": null
+            "PcIp": "172.16.170.68",
+            "PcName": 6,
+            "PcSide": 2
         },
         {
             "EqId": 18,
-            "PcIp": "\\\\172.16.170.79",
-            "PcName": "POST",
-            "PcSide": null
+            "PcIp": "172.16.170.78",
+            "PcName": 6,
+            "PcSide": 2
         },
         {
             "EqId": 19,
-            "PcIp": "\\\\172.16.170.89",
-            "PcName": "POST",
-            "PcSide": null
+            "PcIp": "172.16.170.88",
+            "PcName": 6,
+            "PcSide": 2
         },
         {
             "EqId": 20,
-            "PcIp": "\\\\172.16.170.99",
-            "PcName": "POST",
-            "PcSide": null
+            "PcIp": "172.16.170.98",
+            "PcName": 6,
+            "PcSide": 2
         },
         {
             "EqId": 21,
-            "PcIp": "\\\\172.16.170.109",
-            "PcName": "POST",
-            "PcSide": null
+            "PcIp": "172.16.170.108",
+            "PcName": 6,
+            "PcSide": 2
         },
         {
             "EqId": 22,
-            "PcIp": "\\\\172.16.170.119",
-            "PcName": "POST",
-            "PcSide": null
+            "PcIp": "172.16.170.118",
+            "PcName": 6,
+            "PcSide": 2
         },
         {
             "EqId": 23,
-            "PcIp": "\\\\172.16.180.19",
-            "PcName": "POST",
-            "PcSide": null
+            "PcIp": "172.16.180.18",
+            "PcName": 6,
+            "PcSide": 2
         },
         {
             "EqId": 24,
-            "PcIp": "\\\\172.16.180.29",
-            "PcName": "POST",
-            "PcSide": null
+            "PcIp": "172.16.180.28",
+            "PcName": 6,
+            "PcSide": 2
         },
         {
             "EqId": 25,
-            "PcIp": "\\\\172.16.180.39",
-            "PcName": "POST",
-            "PcSide": null
+            "PcIp": "172.16.180.38",
+            "PcName": 6,
+            "PcSide": 2
         },
         {
             "EqId": 26,
-            "PcIp": "\\\\172.16.180.49",
-            "PcName": "POST",
-            "PcSide": null
+            "PcIp": "172.16.180.48",
+            "PcName": 6,
+            "PcSide": 2
         },
         {
             "EqId": 27,
-            "PcIp": "\\\\172.16.180.59",
-            "PcName": "POST",
-            "PcSide": null
+            "PcIp": "172.16.180.58",
+            "PcName": 6,
+            "PcSide": 2
         },
         {
             "EqId": 28,
-            "PcIp": "\\\\172.16.180.69",
-            "PcName": "POST",
-            "PcSide": null
+            "PcIp": "172.16.180.68",
+            "PcName": 6,
+            "PcSide": 2
         },
         {
             "EqId": 29,
-            "PcIp": "\\\\172.16.180.79",
-            "PcName": "POST",
-            "PcSide": null
+            "PcIp": "172.16.180.78",
+            "PcName": 6,
+            "PcSide": 2
         },
         {
             "EqId": 30,
-            "PcIp": "\\\\172.16.180.89",
-            "PcName": "POST",
-            "PcSide": null
+            "PcIp": "172.16.180.88",
+            "PcName": 6,
+            "PcSide": 2
         },
         {
             "EqId": 31,
-            "PcIp": "\\\\172.16.180.99",
-            "PcName": "POST",
-            "PcSide": null
+            "PcIp": "172.16.180.98",
+            "PcName": 6,
+            "PcSide": 2
         },
         {
             "EqId": 32,
-            "PcIp": "\\\\172.16.180.109",
-            "PcName": "POST",
-            "PcSide": null
+            "PcIp": "172.16.180.108",
+            "PcName": 6,
+            "PcSide": 2
+        },
+        {
+            "EqId": 1,
+            "PcIp": "172.16.160.19",
+            "PcName": 7,
+            "PcSide": 2
+        },
+        {
+            "EqId": 2,
+            "PcIp": "172.16.160.29",
+            "PcName": 7,
+            "PcSide": 2
+        },
+        {
+            "EqId": 3,
+            "PcIp": "172.16.160.39",
+            "PcName": 7,
+            "PcSide": 2
+        },
+        {
+            "EqId": 4,
+            "PcIp": "172.16.160.49",
+            "PcName": 7,
+            "PcSide": 2
+        },
+        {
+            "EqId": 5,
+            "PcIp": "172.16.160.59",
+            "PcName": 7,
+            "PcSide": 2
+        },
+        {
+            "EqId": 6,
+            "PcIp": "172.16.160.69",
+            "PcName": 7,
+            "PcSide": 2
+        },
+        {
+            "EqId": 7,
+            "PcIp": "172.16.160.79",
+            "PcName": 7,
+            "PcSide": 2
+        },
+        {
+            "EqId": 8,
+            "PcIp": "172.16.160.89",
+            "PcName": 7,
+            "PcSide": 2
+        },
+        {
+            "EqId": 9,
+            "PcIp": "172.16.160.99",
+            "PcName": 7,
+            "PcSide": 2
+        },
+        {
+            "EqId": 10,
+            "PcIp": "172.16.160.109",
+            "PcName": 7,
+            "PcSide": 2
+        },
+        {
+            "EqId": 11,
+            "PcIp": "172.16.160.119",
+            "PcName": 7,
+            "PcSide": 2
+        },
+        {
+            "EqId": 12,
+            "PcIp": "172.16.170.19",
+            "PcName": 7,
+            "PcSide": 2
+        },
+        {
+            "EqId": 13,
+            "PcIp": "172.16.170.29",
+            "PcName": 7,
+            "PcSide": 2
+        },
+        {
+            "EqId": 14,
+            "PcIp": "172.16.170.39",
+            "PcName": 7,
+            "PcSide": 2
+        },
+        {
+            "EqId": 15,
+            "PcIp": "172.16.170.49",
+            "PcName": 7,
+            "PcSide": 2
+        },
+        {
+            "EqId": 16,
+            "PcIp": "172.16.170.59",
+            "PcName": 7,
+            "PcSide": 2
+        },
+        {
+            "EqId": 17,
+            "PcIp": "172.16.170.69",
+            "PcName": 7,
+            "PcSide": 2
+        },
+        {
+            "EqId": 18,
+            "PcIp": "172.16.170.79",
+            "PcName": 7,
+            "PcSide": 2
+        },
+        {
+            "EqId": 19,
+            "PcIp": "172.16.170.89",
+            "PcName": 7,
+            "PcSide": 2
+        },
+        {
+            "EqId": 20,
+            "PcIp": "172.16.170.99",
+            "PcName": 7,
+            "PcSide": 2
+        },
+        {
+            "EqId": 21,
+            "PcIp": "172.16.170.109",
+            "PcName": 7,
+            "PcSide": 2
+        },
+        {
+            "EqId": 22,
+            "PcIp": "172.16.170.119",
+            "PcName": 7,
+            "PcSide": 2
+        },
+        {
+            "EqId": 23,
+            "PcIp": "172.16.180.19",
+            "PcName": 7,
+            "PcSide": 2
+        },
+        {
+            "EqId": 24,
+            "PcIp": "172.16.180.29",
+            "PcName": 7,
+            "PcSide": 2
+        },
+        {
+            "EqId": 25,
+            "PcIp": "172.16.180.39",
+            "PcName": 7,
+            "PcSide": 2
+        },
+        {
+            "EqId": 26,
+            "PcIp": "172.16.180.49",
+            "PcName": 7,
+            "PcSide": 2
+        },
+        {
+            "EqId": 27,
+            "PcIp": "172.16.180.59",
+            "PcName": 7,
+            "PcSide": 2
+        },
+        {
+            "EqId": 28,
+            "PcIp": "172.16.180.69",
+            "PcName": 7,
+            "PcSide": 2
+        },
+        {
+            "EqId": 29,
+            "PcIp": "172.16.180.79",
+            "PcName": 7,
+            "PcSide": 2
+        },
+        {
+            "EqId": 30,
+            "PcIp": "172.16.180.89",
+            "PcName": 7,
+            "PcSide": 2
+        },
+        {
+            "EqId": 31,
+            "PcIp": "172.16.180.99",
+            "PcName": 7,
+            "PcSide": 2
+        },
+        {
+            "EqId": 32,
+            "PcIp": "172.16.180.109",
+            "PcName": 7,
+            "PcSide": 2
         }
     ]
 }

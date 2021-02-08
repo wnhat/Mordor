@@ -31,7 +31,7 @@ namespace Sauron
                 FileManager file_container = new FileManager(ip_tr);
                 MissionManager TheMissionManager = new MissionManager(sqlserver, file_container);
                 // wait the async process finish;
-                Thread.Sleep(TimeSpan.FromSeconds(150));
+                Thread.Sleep(TimeSpan.FromSeconds(200));
                 TheMissionManager.AddMisionByServer();
                 Console.WriteLine("add mission finished.");
 
@@ -96,7 +96,7 @@ namespace Sauron
                 timer.Elapsed += (s, a) =>
                 {
                     Console.WriteLine("start refresh the panel list");
-                    file_container.Refresh_file_list();
+                    file_container.RefreshFileList();
                 };
 
                 poller.Run();
