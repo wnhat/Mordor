@@ -113,7 +113,6 @@ namespace Sauron
                     {
                         Log.Information("result or image file not exist; panel id : {0}; path: {1}", item.Substring(item.Length - 17), item);
                     }
-
                 }
 
                 catch (Exception e)

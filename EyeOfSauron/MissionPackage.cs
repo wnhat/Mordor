@@ -95,7 +95,7 @@ namespace EyeOfSauron
             missionInfo = missioninfo;
             ImageNameList = imageNameList;
             SavePath = savePath;
-            Container = new DirContainer(MissionInfo.PanelPath.Result_path);
+            Container = new DirContainer(MissionInfo.AviPanelPath.Result_path);
         }
         public void ChangeSavePath(string newsavepath)
         {

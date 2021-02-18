@@ -11,34 +11,30 @@ namespace Sauron
 {
     class IP_TR
     {
-        public List<PC> pc_list_all;
-        public IP_TR()
+        public List<PC> PcListAll;
+        public IP_TR(){}
+        public IP_TR(string ippath)
         {
-            string ip_path = @"D:\1218180\program2\c#\Mordor\Sauron\IP.json";
-            StreamReader file = new StreamReader(ip_path);
+            StreamReader file = new StreamReader(ippath);
             StringReader file_string = new StringReader(file.ReadToEnd());
             JsonSerializer file_serial = new JsonSerializer();
-            pc_list_all = ((PcContainer)file_serial.Deserialize(new JsonTextReader(file_string), typeof(PcContainer))).PcListAll;
+            PcListAll = ((IP_TR)file_serial.Deserialize(new JsonTextReader(file_string), typeof(IP_TR))).PcListAll;
         }
-
         public List<PC> name_to_ip(List<int> eq_id_list, InspectSection[] pc_name_list, Side[] pc_side_list)
         {
-            return pc_list_all.Where(x => { return x.IsPcInType(eq_id_list, pc_name_list, pc_side_list); }).ToList();
+            return PcListAll.Where(x => { return x.IsPcInType(eq_id_list, pc_name_list, pc_side_list); }).ToList();
         }
-
         public List<PC> name_to_ip(List<int> eq_id_list, InspectSection[] pc_name_list)
         {
             Side[] pc_side_list = (Side[])Enum.GetValues(typeof(Side));
             return name_to_ip(eq_id_list, pc_name_list, pc_side_list);
         }
-
         public List<PC> name_to_ip(List<int> eq_id_list)
         {
             Side[] pc_side_list = (Side[])Enum.GetValues(typeof(Side));
             InspectSection[] pc_name_list = (InspectSection[])Enum.GetValues(typeof(InspectSection));
             return name_to_ip(eq_id_list, pc_name_list, pc_side_list);
         }
-
         public List<PC> name_to_ip(InspectSection[] pc_name_list)
         {
             // GROUP BY PC name;

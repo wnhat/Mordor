@@ -60,5 +60,11 @@ namespace EyeOfSauron
             TheInspectForm.SetInspectSection(InspectSection.SVI);
             UserCheckIn(TheInspectForm);
         }
+
+        private void Evilbutton_Click(object sender, EventArgs e)
+        {
+            TheInspectForm.SetInspectSection(InspectSection.SVI);
+            UserCheckIn(TheInspectForm);
+        }
     }
 }

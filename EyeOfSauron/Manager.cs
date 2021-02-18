@@ -52,11 +52,7 @@ namespace EyeOfSauron
             }
             return null;
         }
-        public void SaveParameter()
-        {
-
-        }
-
+        public void SaveParameter(){}
         public void InspectStart()
         {
             TheMissionPackage.NewMission();
@@ -71,17 +67,15 @@ namespace EyeOfSauron
                 AddMission();
             }
         }
-
         public Bitmap[] GetOnInspectPanelImage()
         {
-            Bitmap[] returnarray = new Bitmap[SystemParameter.ImageNameList.Count()];
-            for (int i = 0; i < SystemParameter.ImageNameList.Count(); i++)
+            Bitmap[] returnarray = new Bitmap[SystemParameter.AviImageNameList.Count()];
+            for (int i = 0; i < SystemParameter.AviImageNameList.Count(); i++)
             {
                 returnarray[i] = new Bitmap(TheMissionPackage.OnInspectedMission.GetFileFromMemory(SystemParameter.ImageNameList[i]));
             }
             return returnarray;
         }
-
         public string GetOnInspectPanelId()
         {
             return TheMissionPackage.OnInspectedMission.MissionInfo.PanelId;

@@ -26,13 +26,10 @@ namespace Sauron
             //using (var req = new RequestSocket(">tcp://127.0.0.1:5555"))
             using (var poller = new NetMQPoller { responseSocket, timer })
             {
-                SqlServerConnector sqlserver = new SqlServerConnector();
-                IP_TR ip_tr = new IP_TR();
-                FileManager file_container = new FileManager(ip_tr);
-                MissionManager TheMissionManager = new MissionManager(sqlserver, file_container);
+                MissionManager TheMissionManager = new MissionManager();
                 // wait the async process finish;
-                Thread.Sleep(TimeSpan.FromSeconds(200));
-                TheMissionManager.AddMisionByServer();
+                Thread.Sleep(TimeSpan.FromSeconds(250));
+                TheMissionManager.AddMissionByServer();
                 Console.WriteLine("add mission finished.");
 
                 responseSocket.ReceiveReady += (s, a) =>
@@ -71,7 +68,7 @@ namespace Sauron
                             break;
                         case MessageType.CONTROLER_ADD_MISSION:
                             Console.WriteLine("start add mission");
-                            TheMissionManager.AddMisionByServer();
+                            TheMissionManager.AddMissionByServer();
                             BaseMessage addMissionMessage = new BaseMessage(MessageType.SERVER_SEND_FINISH);
                             a.Socket.SendMultipartMessage(addMissionMessage);
                             break;
@@ -96,7 +93,7 @@ namespace Sauron
                 timer.Elapsed += (s, a) =>
                 {
                     Console.WriteLine("start refresh the panel list");
-                    file_container.RefreshFileList();
+                    TheMissionManager.RefreshFileContainer();
                 };
 
                 poller.Run();

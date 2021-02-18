@@ -12,32 +12,35 @@ namespace Sauron
 {
     class MissionManager
     {
-        SqlServerConnector Thesqlserver;
-        FileManager Thefilecontainer;
-        public Queue<PanelMission> MissionQueue;
-        ILogger Logger;
-        public Queue<long> MissionNumberQueue;
-        Dictionary<long, PanelMission> OninspectMissionContainer;
-        Queue<PanelMission> AviOnInspectMissionQueue;
-        Queue<PanelMission> SviOnInspectMissionQueue;
-        Queue<PanelMission> AppOnInspectMissionQueue;
-        Queue<PanelMission> FinishedMissionQueue;
+        SqlServerConnector              Thesqlserver;
+        FileManager                     Thefilecontainer;
+        public Queue<PanelMission>      MissionQueue;
+        ILogger                         Logger;
+        public Queue<long>              MissionNumberQueue;
+        Dictionary<long, PanelMission>  OninspectMissionContainer;
+        Queue<PanelMission>             AviOnInspectMissionQueue;
+        Queue<PanelMission>             SviOnInspectMissionQueue;
+        Queue<PanelMission>             AppOnInspectMissionQueue;
+        Queue<PanelMission>             FinishedMissionQueue;
 
-        public MissionManager(SqlServerConnector theSqlserver, FileManager theFileContainer)
+        public MissionManager()
         {
-            this.Thefilecontainer = theFileContainer;
-            this.Thesqlserver = theSqlserver;
+            string ip_path = @"D:\1218180\program2\c#\Mordor\Sauron\IP.json";
+            IP_TR ip_tr = new IP_TR(ip_path);
+            this.Thefilecontainer = new FileManager(ip_tr);
+            this.Thesqlserver = new SqlServerConnector();
             Logger = new LoggerConfiguration()
                 .WriteTo.File(@"D:\eye of sauron\log\missionmanager\log-.txt",rollingInterval:RollingInterval.Day)
                 .WriteTo.Console()
                 .CreateLogger();
 
-            MissionQueue = new Queue<PanelMission>();
-            MissionNumberQueue = new Queue<long>();
-            AviOnInspectMissionQueue = new Queue<PanelMission>();
-            SviOnInspectMissionQueue = new Queue<PanelMission>();
-            AppOnInspectMissionQueue = new Queue<PanelMission>();
-            FinishedMissionQueue = new Queue<PanelMission>();
+            MissionQueue                =   new Queue<PanelMission>();
+            MissionNumberQueue          =   new Queue<long>();
+            AviOnInspectMissionQueue    =   new Queue<PanelMission>();
+            SviOnInspectMissionQueue    =   new Queue<PanelMission>();
+            AppOnInspectMissionQueue    =   new Queue<PanelMission>();
+            FinishedMissionQueue        =   new Queue<PanelMission>();
+            OninspectMissionContainer   =   new Dictionary<long, PanelMission>();
 
             long newmissionnumber = new Random().Next();
             for (int i = 0; i < 1000000; i++)
@@ -45,22 +48,23 @@ namespace Sauron
                 MissionNumberQueue.Enqueue(newmissionnumber);
                 newmissionnumber += 1;
             }
-
-            OninspectMissionContainer = new Dictionary<long, PanelMission>();
         }
-
-        public void AddMisionByServer()
+        
+        public void AddMissionByServer()
         {
-            // 获取SQL server近一小时的C52000N站点近一小时E级产品添加任务
+            // 获取SQL server近一小时的C52000N站点近一小时E级产品添加任务；
             List<string> missionDataSet = Thesqlserver.GetInputPanelMission();
             foreach (var missionid in missionDataSet)
             {
-                // TODO: 当一张屏多次进入设备时返回的列表将不是单一值；
                 // TODO: 调查无法找到的id原因；
-                var mission = Thefilecontainer.GetPanel(missionid);
-                if (mission != null)
+                List<PanelPathContainer> pathList = Thefilecontainer.GetPanelPathList(missionid);
+                if (pathList != null)
                 {
-                    MissionQueue.Enqueue(new PanelMission(missionid, MissionType.PRODUCITVE, mission,MissionNumberQueue.Dequeue()));
+                    // TODO: 当一张屏多次进入设备时返回的列表将不是单一值；
+                    var avipath = pathList.Where(x => x.PcSection == InspectSection.AVI).ToArray()[0];
+                    var svipath = pathList.Where(x => x.PcSection == InspectSection.AVI).ToArray()[0];
+                    // TODO: ADD Section app;
+                    MissionQueue.Enqueue(new PanelMission(missionid, MissionType.PRODUCITVE,MissionNumberQueue.Dequeue(),avipath,svipath));
                 }
                 else
                 {
@@ -119,6 +123,9 @@ namespace Sauron
                 Thesqlserver.InsertFinishedMission(thePanelMission);
             }
         }
+        public void RefreshFileContainer()
+        {
+            Thefilecontainer.RefreshFileList();
+        }
     }
-
 }
