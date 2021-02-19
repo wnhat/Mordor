@@ -39,7 +39,7 @@ namespace EyeOfSauron
 
         public bool FinishMission(PanelMission finishedMission)
         {
-            // TODO: check is themission finished,if not log the mission;
+            // TODO: 
             PanelMissionMessage newMessage = new PanelMissionMessage(MessageType.CLIENT_SEND_MISSION_RESULT, finishedMission);
             request.SendMultipartMessage(newMessage);
             bool returnbool = request.ReceiveSignal();

@@ -39,6 +39,7 @@ namespace Container
         MAIN,
         PRE,
         POST,
+        EXAM,
     }
     public enum Side
     {
@@ -124,13 +125,12 @@ namespace Container
     }
     public class PanelMissionResult
     {
-        public string PanelId;
-        public long MissionNumber;
         public JudgeGrade Judge;
         public Defect defect;
         public InspectSection Section; // AVI OR SVI OR APP;
         public Operator Op;
     }
+
     public class PanelMission
     {
         public string PanelId;

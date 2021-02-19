@@ -17,6 +17,7 @@ namespace EyeOfSauron
         MissionPackage TheMissionPackage;
         public Parameter SystemParameter;
         bool StopToCellFlag;
+        InspectSection Section;
         public Manager()
         {
             SystemParameter = GetParameter();
@@ -52,14 +53,21 @@ namespace EyeOfSauron
             }
             return null;
         }
-        public void SaveParameter(){}
+        public void SaveParameter() { }
+
+        public void SetInspectSection(InspectSection section)
+        {
+            Section = section;
+        }
+
         public void InspectStart()
         {
             TheMissionPackage.NewMission();
         }
-        public void InspectFinished(string defectName)
+        public void InspectFinished(Defect defect)
         {
-            var finishedMission = TheMissionPackage.OnInspectedMission.Finish(defectName);
+            PanelMissionResult newresult  = new PanelMissionResult();
+            var finishedMission = TheMissionPackage.OnInspectedMission.Finish(newresult);
             TheServerConnecter.FinishMission(finishedMission);
             TheMissionPackage.NewMission();
             if (!StopToCellFlag)
@@ -103,14 +111,20 @@ namespace EyeOfSauron
         {
             TheMissionPackage.PreDownloadFile(TheServerConnecter.GetMission());
         }
+        public void GetExamMission()
+        {
+        }
         public void SendUnfinishedMissionBackToServer(InspectSection section)
         {
-            Queue<PanelMission> returnmissionqueue = TheMissionPackage.GetUnfinishedMission();
-            while (returnmissionqueue.Count == 0)
+            if (section != InspectSection.EXAM)
             {
-                TheServerConnecter.SendUnfinishedMissionBack(section, returnmissionqueue.Dequeue());
+                Queue<PanelMission> returnmissionqueue = TheMissionPackage.GetUnfinishedMission();
+                while (returnmissionqueue.Count == 0)
+                {
+                    TheServerConnecter.SendUnfinishedMissionBack(section, returnmissionqueue.Dequeue());
+                }
+                TheMissionPackage.CleanMission();
             }
-            TheMissionPackage.CleanMission();
         }
     }
 }

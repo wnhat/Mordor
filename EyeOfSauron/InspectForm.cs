@@ -67,7 +67,7 @@ namespace EyeOfSauron
             Button sender_button = (Button)sender;
             string defectname = sender_button.Text;
             string defectcode = defect_translator.name2code(sender_button.Text);
-
+            Defect newdefect = new Defect();
             get_next_panel();
         }
         private void get_next_panel()
