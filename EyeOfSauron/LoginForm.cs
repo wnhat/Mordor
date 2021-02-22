@@ -40,7 +40,7 @@ namespace EyeOfSauron
 
         private void UserCheckIn(Form form)
         {
-            User newoperater = new User(this.userid_box.Text, "");
+            Operator newoperater = new Operator(this.userid_box.Text, "");
             if (TheManager.CheckUser(newoperater))
             {
                 TheManager.OperaterCheckIn(newoperater);

@@ -29,18 +29,22 @@ namespace EyeOfSauron
             return returnMessage.ThePanelMission;
         }
 
-        public bool check_user_password(string userId,string passWord)
+        public bool check_user_password(Operator theuser)
         {
-            UserCheckMessage newMessage = new UserCheckMessage(userId, passWord);
+            UserCheckMessage newMessage = new UserCheckMessage(theuser.Id, theuser.PassWord);
+#if !DEBUG
             request.SendMultipartMessage(newMessage);
             bool returnbool = request.ReceiveSignal();
             return returnbool;
+#else
+            return true;
+#endif
         }
 
-        public bool FinishMission(PanelMission finishedMission)
+        public bool FinishMission(PanelMissionResult finishedMission)
         {
             // TODO: 
-            PanelMissionMessage newMessage = new PanelMissionMessage(MessageType.CLIENT_SEND_MISSION_RESULT, finishedMission);
+            PanelResultMessage newMessage = new PanelResultMessage(MessageType.CLIENT_SEND_MISSION_RESULT, finishedMission);
             request.SendMultipartMessage(newMessage);
             bool returnbool = request.ReceiveSignal();
             return returnbool;

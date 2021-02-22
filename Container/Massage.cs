@@ -61,27 +61,27 @@ namespace Container.Message
 
         public PanelMissionMessage(BaseMessage theMessage):base(theMessage)
         {
-            ThePanelMission = Transferstring2Mission(theMessage[1].ConvertToString());
+            ThePanelMission = TransferToMission(theMessage[1].ConvertToString());
         }
 
         public PanelMissionMessage(NetMQMessage theMessage)
         {
             TheMessageType = (MessageType)theMessage[0].ConvertToInt32();
-            ThePanelMission = Transferstring2Mission(theMessage[1].ConvertToString());
+            ThePanelMission = TransferToMission(theMessage[1].ConvertToString());
         }
 
-        public PanelMissionMessage(MessageType messageType,PanelMission panelMission) : base(messageType)
+        public PanelMissionMessage(MessageType messageType, PanelMission panelMission) : base(messageType)
         {
             ThePanelMission = panelMission;
-            this.Append(TransferMission2string(ThePanelMission));
+            this.Append(TransferToString(ThePanelMission));
         }
 
-        string TransferMission2string(PanelMission panelMission)
+        string TransferToString(PanelMission panelMission)
         {
             return JsonConvert.SerializeObject(panelMission);
         }
 
-        PanelMission Transferstring2Mission(string missionstring)
+        PanelMission TransferToMission(string missionstring)
         {
             return JsonConvert.DeserializeObject<PanelMission>(missionstring);
         }
@@ -89,7 +89,7 @@ namespace Container.Message
 
     public class UserCheckMessage:BaseMessage
     {
-        private string UserId;
+        public string UserId;
         public string PassWord;
 
         public UserCheckMessage(string userId,string passWord):base(MessageType.CLINET_CHECK_USER)
@@ -114,6 +114,15 @@ namespace Container.Message
         public PanelResultMessage(MessageType type,PanelMissionResult result):base(type)
         {
             TheResult = result;
+        }
+
+        string TransferToString(PanelMissionResult result)
+        {
+            return JsonConvert.SerializeObject(result);
+        }
+        PanelMissionResult TransferToResult(string resultstring)
+        {
+            return JsonConvert.DeserializeObject<PanelMissionResult>(resultstring);
         }
     }
 }
