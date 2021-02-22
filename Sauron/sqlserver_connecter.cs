@@ -11,46 +11,23 @@ namespace Sauron
 {
     class SqlServerConnector
     {
-        SqlConnection data_base;
-        DateTime last_date;
-
+        SqlConnection TheDataBase;
+        DateTime LastDate;
         public SqlServerConnector()
         {
-            data_base = new SqlConnection("server=172.16.150.200;UID=sa;PWD=1qaz@WSX;Database=EDIAS_DB;Trusted_connection=False");
+            TheDataBase = new SqlConnection("server=172.16.150.200;UID=sa;PWD=1qaz@WSX;Database=EDIAS_DB;Trusted_connection=False");
             //last_date = new DateTime();
-            last_date = DateTime.Now.AddHours(-1);
+            LastDate = DateTime.Now.AddHours(-2);
         }
-
-        string get_date_span_sqlstring_last()
-        {
-            return FormateDateString(last_date);
-        }
-
-        string get_date_span_sqlstring_now()
-        {
-            return FormateDateString(last_date.AddHours(1));
-        }
-
         string FormateDateString(DateTime thedate)
         {
             return thedate.ToString("yyyyMMddHH0000");
         }
-
-        DataSet get_input_panel(string commandstring)
-        {
-            SqlCommand newcommand = new SqlCommand(commandstring, data_base);
-            SqlDataAdapter selectadapter = new SqlDataAdapter();
-            selectadapter.SelectCommand = newcommand;
-            DataSet newdata = new DataSet();
-            data_base.Open();
-            selectadapter.SelectCommand.ExecuteNonQuery();
-            selectadapter.Fill(newdata);
-            data_base.Close();
-            return newdata;
-        }
-
         public List<string> GetInputPanelMission()
         {
+            string datestart = FormateDateString(LastDate);
+            LastDate = LastDate.AddHours(1);
+            string dateend = FormateDateString(LastDate);
             string commandstring = string.Format(@"SELECT[EqpID],
                                     [InspDate]
                                     ,[ModelID]
@@ -69,7 +46,7 @@ namespace Sauron
                                     FROM[EDIAS_DB].[dbo].[TAX_PRODUCT_TEST]
                                     WHERE InspDate BETWEEN '{0}' AND '{1}'
                                     AND OperationID = 'C52000N' AND LastJudge = 'E'",
-                                    get_date_span_sqlstring_last(), get_date_span_sqlstring_now());
+                                    datestart, dateend);
             commandstring = @"SELECT[EqpID],
                                     [InspDate]
                                     ,[ModelID]
@@ -89,8 +66,8 @@ namespace Sauron
         WHERE InspDate BETWEEN '20210120000000' AND '20210125230000' AND EqpID = '7CTCT27' AND OperationID = 'C52000N' AND LastJudge = 'E'";
 
             List<string> newPanelList = new List<string>();
-            SqlCommand newcommand = new SqlCommand(commandstring, data_base);
-            data_base.Open();
+            SqlCommand newcommand = new SqlCommand(commandstring, TheDataBase);
+            TheDataBase.Open();
             SqlDataReader newDataReader = newcommand.ExecuteReader();
             if (newDataReader.HasRows)
             {
@@ -99,10 +76,9 @@ namespace Sauron
                     newPanelList.Add(newDataReader["VcrID"].ToString());
                 }
             }
-            data_base.Close();
+            TheDataBase.Close();
             return newPanelList;
         }
-
         public void InsertFinishedMission(PanelMission panel)
         {
             string commandstring = string.Format(@"USE [EDIAS_DB] GO
@@ -161,9 +137,26 @@ GO", new object[] {
                 panel.AllDefect,
                 panel.AviPanelPath.EqId,
             });
-            SqlCommand newcommand = new SqlCommand(commandstring, data_base);
-            data_base.Open();
+            SqlCommand newcommand = new SqlCommand(commandstring, TheDataBase);
+            TheDataBase.Open();
             newcommand.ExecuteNonQuery();
+        }
+        public List<ExamMission> GetExamMission()
+        {
+            string commandstring = string.Format(@"SELECT[EqpID],");
+            List<ExamMission> newPanelList = new List<ExamMission>();
+            SqlCommand newcommand = new SqlCommand(commandstring, TheDataBase);
+            TheDataBase.Open();
+            SqlDataReader newDataReader = newcommand.ExecuteReader();
+            if (newDataReader.HasRows)
+            {
+                while (newDataReader.Read())
+                {
+                    newPanelList.Add(new ExamMission());
+                }
+            }
+            TheDataBase.Close();
+            return newPanelList;
         }
     }
 }

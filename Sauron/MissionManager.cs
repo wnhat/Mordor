@@ -7,21 +7,23 @@ using System.Threading.Tasks;
 using Container;
 using Serilog;
 using System.Threading;
+using System.IO;
 
 namespace Sauron
 {
     class MissionManager
     {
-        SqlServerConnector              Thesqlserver;
-        FileManager                     Thefilecontainer;
-        public Queue<PanelMission>      MissionQueue;
-        ILogger                         Logger;
-        public Queue<long>              MissionNumberQueue;
-        Dictionary<long, PanelMission>  OninspectMissionContainer;
-        Queue<PanelMission>             AviOnInspectMissionQueue;
-        Queue<PanelMission>             SviOnInspectMissionQueue;
-        Queue<PanelMission>             AppOnInspectMissionQueue;
-        Queue<PanelMission>             FinishedMissionQueue;
+        SqlServerConnector Thesqlserver;
+        FileManager Thefilecontainer;
+        public Queue<PanelMission> MissionQueue;
+        ILogger Logger;
+        public Queue<long> MissionNumberQueue;
+        Dictionary<long, PanelMission> OninspectMissionContainer;
+        Queue<PanelMission> AviOnInspectMissionQueue;
+        Queue<PanelMission> SviOnInspectMissionQueue;
+        Queue<PanelMission> AppOnInspectMissionQueue;
+        Queue<PanelMission> FinishedMissionQueue;
+        Queue<ExamMission> ExamMissionQueue;
 
         public MissionManager()
         {
@@ -30,17 +32,17 @@ namespace Sauron
             this.Thefilecontainer = new FileManager(ip_tr);
             this.Thesqlserver = new SqlServerConnector();
             Logger = new LoggerConfiguration()
-                .WriteTo.File(@"D:\eye of sauron\log\missionmanager\log-.txt",rollingInterval:RollingInterval.Day)
+                .WriteTo.File(@"D:\eye of sauron\log\missionmanager\log-.txt", rollingInterval: RollingInterval.Day)
                 .WriteTo.Console()
                 .CreateLogger();
 
-            MissionQueue                =   new Queue<PanelMission>();
-            MissionNumberQueue          =   new Queue<long>();
-            AviOnInspectMissionQueue    =   new Queue<PanelMission>();
-            SviOnInspectMissionQueue    =   new Queue<PanelMission>();
-            AppOnInspectMissionQueue    =   new Queue<PanelMission>();
-            FinishedMissionQueue        =   new Queue<PanelMission>();
-            OninspectMissionContainer   =   new Dictionary<long, PanelMission>();
+            MissionQueue = new Queue<PanelMission>();
+            MissionNumberQueue = new Queue<long>();
+            AviOnInspectMissionQueue = new Queue<PanelMission>();
+            SviOnInspectMissionQueue = new Queue<PanelMission>();
+            AppOnInspectMissionQueue = new Queue<PanelMission>();
+            FinishedMissionQueue = new Queue<PanelMission>();
+            OninspectMissionContainer = new Dictionary<long, PanelMission>();
 
             long newmissionnumber = new Random().Next();
             for (int i = 0; i < 1000000; i++)
@@ -48,8 +50,10 @@ namespace Sauron
                 MissionNumberQueue.Enqueue(newmissionnumber);
                 newmissionnumber += 1;
             }
+            ExamMissionQueue = new Queue<ExamMission>();
+            RefreshExamQueue();
         }
-        
+
         public void AddMissionByServer()
         {
             // 获取SQL server近一小时的C52000N站点近一小时E级产品添加任务；
@@ -64,7 +68,7 @@ namespace Sauron
                     var avipath = pathList.Where(x => x.PcSection == InspectSection.AVI).ToArray()[0];
                     var svipath = pathList.Where(x => x.PcSection == InspectSection.AVI).ToArray()[0];
                     // TODO: ADD Section app;
-                    MissionQueue.Enqueue(new PanelMission(missionid, MissionType.PRODUCITVE,MissionNumberQueue.Dequeue(),avipath,svipath));
+                    MissionQueue.Enqueue(new PanelMission(missionid, MissionType.PRODUCITVE, MissionNumberQueue.Dequeue(), avipath, svipath));
                 }
                 else
                 {
@@ -72,7 +76,36 @@ namespace Sauron
                 }
             }
         }
-
+        public void RefreshExamQueue()
+        {
+            Queue<ExamMission> newexammissionqueue = new Queue<ExamMission>();
+            var missionlist = Thesqlserver.GetExamMission();
+            string[] aviexamfilelist = GetExamFileList("aviexamplefile", InspectSection.AVI); // TODO:
+            string[] sviexamfilelist = GetExamFileList("sviexamplefile", InspectSection.SVI); // TODO:
+            foreach (var item in missionlist)
+            {
+                switch (item.PcSection)
+                {
+                    case InspectSection.AVI:
+                        if (aviexamfilelist.Contains(item.PanelId))
+                        {
+                            newexammissionqueue.Enqueue(new ExamMission(item.PanelId,aviexamfilelist.First(),item.PcSection));
+                        }
+                        break;
+                    case InspectSection.SVI:
+                        if (sviexamfilelist.Contains(item.PanelId))
+                        {
+                            newexammissionqueue.Enqueue();
+                        }
+                        break;
+                }
+            }
+        }
+        string[] GetExamFileList(string path, InspectSection section)
+        {
+            string[] image_directory_list = Directory.GetDirectories(path);
+            return image_directory_list;
+        }
         public PanelMission GetAviMission()
         {
             if (AviOnInspectMissionQueue.Count == 0)

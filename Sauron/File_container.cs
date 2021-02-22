@@ -73,7 +73,10 @@ namespace Sauron
 
         }
     }
-
+    class ExamManager
+    {
+        
+    }
     class INS_pc_manage
     {
         ILogger Log;

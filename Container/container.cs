@@ -64,7 +64,6 @@ namespace Container
         R_Drive,
         S_Drive,
     }
-
     public struct Disk_part
     {
         string F_DRIVE { get { return "F_Drive"; } }
@@ -90,13 +89,11 @@ namespace Container
             }
         }
     }
-
     public class PanelPathContainer
     {
         public string PanelId { get; }
         PC PcInfo;
         DiskPart diskName;
-
         public PanelPathContainer(string panel_id, PC pc, DiskPart diskName)
         {
             PanelId = panel_id;
@@ -125,12 +122,30 @@ namespace Container
     }
     public class PanelMissionResult
     {
+        public string PanelId;
+        public long MissionNumber;
         public JudgeGrade Judge;
         public Defect defect;
         public InspectSection Section; // AVI OR SVI OR APP;
         public Operator Op;
     }
+    public class ExamMission
+    {
+        public string PanelId;
+        public string Result_path { get;}
+        public InspectSection PcSection  { get;}
+        public Defect Defect;
+        public JudgeGrade Judge;
 
+        public ExamMission(string panelId, string result_path, InspectSection pcSection, Defect defect, JudgeGrade judge)
+        {
+            PanelId = panelId;
+            Result_path = result_path;
+            PcSection = pcSection;
+            Defect = defect;
+            Judge = judge;
+        }
+    }
     public class PanelMission
     {
         public string PanelId;
