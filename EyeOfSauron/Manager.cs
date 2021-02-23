@@ -13,7 +13,7 @@ namespace EyeOfSauron
     public class Manager
     {
         Serverconnecter TheServerConnecter;
-        User Operater;
+        Operator Operater;
         MissionPackage TheMissionPackage;
         public Parameter SystemParameter;
         bool StopToCellFlag;
@@ -27,11 +27,11 @@ namespace EyeOfSauron
             TheMissionPackage = new MissionPackage(SystemParameter);
         }
 
-        public bool CheckUser(User newUser)
+        public bool CheckUser(Operator newUser)
         {
-            return TheServerConnecter.check_user_password(newUser.UserId, newUser.PassWord);
+            return TheServerConnecter.check_user_password(newUser);
         }
-        public void OperaterCheckIn(User newUser)
+        public void OperaterCheckIn(Operator newUser)
         {
             Operater = newUser;
         }
@@ -67,8 +67,7 @@ namespace EyeOfSauron
         public void InspectFinished(Defect defect)
         {
             PanelMissionResult newresult  = new PanelMissionResult();
-            var finishedMission = TheMissionPackage.OnInspectedMission.Finish(newresult);
-            TheServerConnecter.FinishMission(finishedMission);
+            TheServerConnecter.FinishMission(newresult);
             TheMissionPackage.NewMission();
             if (!StopToCellFlag)
             {

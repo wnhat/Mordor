@@ -112,15 +112,6 @@ namespace EyeOfSauron
                 return missionInfo;
             }
         }
-        public PanelMissionResult Finish(string defectName)
-        {
-            
-            PanelMissionResult newresult = new PanelMissionResult();
-            MissionInfo.AddResult(newresult);
-            // add defect in to the panelmission`s defect table;
-            SaveFileInDisk();
-            return missionInfo;
-        }
         public MemoryStream GetFileFromMemory(string filename)
         {
             return Container.GetFileFromMemory(filename);

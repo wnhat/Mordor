@@ -128,6 +128,14 @@ namespace Container
         public Defect defect;
         public InspectSection Section; // AVI OR SVI OR APP;
         public Operator Op;
+
+        public PanelMissionResult(JudgeGrade judge, Defect defect, InspectSection section, Operator op)
+        {
+            Judge = judge;
+            this.defect = defect;
+            Section = section;
+            Op = op;
+        }
     }
     public class ExamMission
     {
@@ -264,17 +272,21 @@ namespace Container
         public string DefectName;
         public string DefectCode;
         public InspectSection Section;     // where the defect generated(like "AVI" OR "SVI");
-        public int[] Position;
     }
     public class Operator
     {
-        public Operator(string name, string id)
+        public string Name { get; }
+        public string Id { get; }
+        public string PassWord { get; }
+        public int MissionFinished { get; set; }
+
+        public Operator(string passWord, string name, string id)
         {
+            PassWord = passWord;
+            MissionFinished = 0;
             Name = name;
             Id = id;
         }
-        public string Name { get; }
-        public string Id { get; }
     }
     public class PC
     {
