@@ -16,7 +16,6 @@ namespace Sauron
         public SqlServerConnector()
         {
             TheDataBase = new SqlConnection("server=172.16.150.200;UID=sa;PWD=1qaz@WSX;Database=EDIAS_DB;Trusted_connection=False");
-            //last_date = new DateTime();
             LastDate = DateTime.Now.AddHours(-2);
         }
         string FormateDateString(DateTime thedate)

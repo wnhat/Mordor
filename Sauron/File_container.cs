@@ -110,7 +110,6 @@ namespace Sauron
                     {
                         PanelPathContainer this_panel = new PanelPathContainer(item.Substring(item.Length - 17), PcInfo, search_disk);
                         panel_list.PanelPathAdd(this_panel);
-
                     }
                     foreach (var item in image_directory_list.Except(result_directory_list))
                     {

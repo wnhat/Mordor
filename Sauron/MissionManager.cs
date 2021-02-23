@@ -23,7 +23,7 @@ namespace Sauron
         Queue<PanelMission> SviOnInspectMissionQueue;
         Queue<PanelMission> AppOnInspectMissionQueue;
         Queue<PanelMission> FinishedMissionQueue;
-        Queue<ExamMission> ExamMissionQueue;
+        List<ExamMission> ExamMissionList;
 
         public MissionManager()
         {
@@ -50,8 +50,8 @@ namespace Sauron
                 MissionNumberQueue.Enqueue(newmissionnumber);
                 newmissionnumber += 1;
             }
-            ExamMissionQueue = new Queue<ExamMission>();
-            RefreshExamQueue();
+            ExamMissionList = new List<ExamMission>();
+            RefreshExamList();
         }
 
         public void AddMissionByServer()
@@ -76,9 +76,9 @@ namespace Sauron
                 }
             }
         }
-        public void RefreshExamQueue()
+        public void RefreshExamList()
         {
-            Queue<ExamMission> newexammissionqueue = new Queue<ExamMission>();
+            List<ExamMission> newexammissionList = new List<ExamMission>();
             var missionlist = Thesqlserver.GetExamMission();
             string[] aviexamfilelist = GetExamFileList("aviexamplefile", InspectSection.AVI); // TODO:
             string[] sviexamfilelist = GetExamFileList("sviexamplefile", InspectSection.SVI); // TODO:
@@ -89,13 +89,15 @@ namespace Sauron
                     case InspectSection.AVI:
                         if (aviexamfilelist.Contains(item.PanelId))
                         {
-                            newexammissionqueue.Enqueue(new ExamMission(item.PanelId,aviexamfilelist.First(),item.PcSection));
+                            var filepath = aviexamfilelist.Where(x => x.Substring(x.Length - 17) == item.PanelId).First();
+                            var defect = new Defect();
+                            newexammissionList.Add(new ExamMission(item.PanelId, filepath, item.PcSection,defect,item.Judge));
                         }
                         break;
                     case InspectSection.SVI:
                         if (sviexamfilelist.Contains(item.PanelId))
                         {
-                            newexammissionqueue.Enqueue();
+                            newexammissionList.Add();
                         }
                         break;
                 }

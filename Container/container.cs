@@ -140,11 +140,10 @@ namespace Container
     public class ExamMission
     {
         public string PanelId;
-        public string Result_path { get;}
+        public string Result_path;
         public InspectSection PcSection  { get;}
         public Defect Defect;
         public JudgeGrade Judge;
-
         public ExamMission(string panelId, string result_path, InspectSection pcSection, Defect defect, JudgeGrade judge)
         {
             PanelId = panelId;
@@ -152,6 +151,17 @@ namespace Container
             PcSection = pcSection;
             Defect = defect;
             Judge = judge;
+        }
+        public ExamMission(string panelId, InspectSection pcSection, Defect defect, JudgeGrade judge)
+        {
+            PanelId = panelId;
+            PcSection = pcSection;
+            Defect = defect;
+            Judge = judge;
+        }
+        public void SetPath(string path)
+        {
+            Result_path = path;
         }
     }
     public class PanelMission
@@ -165,7 +175,6 @@ namespace Container
         public PanelPathContainer AviPanelPath;
         public PanelPathContainer SviPanelPath;
         public PanelPathContainer AppPanelPath;
-
         public long MissionNumber;
         public bool AviFinished;
         public bool SviFinished;
@@ -272,6 +281,13 @@ namespace Container
         public string DefectName;
         public string DefectCode;
         public InspectSection Section;     // where the defect generated(like "AVI" OR "SVI");
+
+        public Defect(string defectName, string defectCode, InspectSection section)
+        {
+            DefectName = defectName;
+            DefectCode = defectCode;
+            Section = section;
+        }
     }
     public class Operator
     {

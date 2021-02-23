@@ -39,12 +39,10 @@ namespace Sauron
                     switch (switchmessage.TheMessageType)
                     {
                         case MessageType.CLIENT_GET_PANEL_GREAD:
-
                             break;
                         case MessageType.CLIENT_SEND_MISSION_RESULT:
                             // TODO:
                             PanelMissionMessage finishedMission = new PanelMissionMessage(messageIn);
-
                             break;
                         case MessageType.CLINET_GET_MISSION_AVI:
                             PanelMissionMessage newavimission = new PanelMissionMessage(MessageType.SERVER_SEND_MISSION, TheMissionManager.GetAviMission());
