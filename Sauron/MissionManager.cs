@@ -50,10 +50,8 @@ namespace Sauron
                 MissionNumberQueue.Enqueue(newmissionnumber);
                 newmissionnumber += 1;
             }
-            ExamMissionList = new List<ExamMission>();
             RefreshExamList();
         }
-
         public void AddMissionByServer()
         {
             // 获取SQL server近一小时的C52000N站点近一小时E级产品添加任务；
@@ -64,7 +62,7 @@ namespace Sauron
                 List<PanelPathContainer> pathList = Thefilecontainer.GetPanelPathList(missionid);
                 if (pathList != null)
                 {
-                    // TODO: 当一张屏多次进入设备时返回的列表将不是单一值；
+                    // TODO: 当一张屏多次进入设备时返回的列表将不是单一值； 设备上无该图片时会发生错误；
                     var avipath = pathList.Where(x => x.PcSection == InspectSection.AVI).ToArray()[0];
                     var svipath = pathList.Where(x => x.PcSection == InspectSection.AVI).ToArray()[0];
                     // TODO: ADD Section app;
@@ -78,35 +76,49 @@ namespace Sauron
         }
         public void RefreshExamList()
         {
-            List<ExamMission> newexammissionList = new List<ExamMission>();
+            List<ExamMission> newExamMissionList = new List<ExamMission>();
             var missionlist = Thesqlserver.GetExamMission();
-            string[] aviexamfilelist = GetExamFileList("aviexamplefile", InspectSection.AVI); // TODO:
-            string[] sviexamfilelist = GetExamFileList("sviexamplefile", InspectSection.SVI); // TODO:
+            string[] aviExamFileList = Directory.GetDirectories("\\\\172.16.145.22\\NetworkDrive\\D_Drive\\Mordor\\ExamSimple\\AVI"); // TODO:
+            string[] sviExamFileList = Directory.GetDirectories("\\\\172.16.145.22\\NetworkDrive\\D_Drive\\Mordor\\ExamSimple\\SVI"); // TODO:
+            string[] aviid = new string[aviExamFileList.Length];
+            for (int i = 0; i < aviExamFileList.Length; i++)
+            {
+                aviid[i] = aviExamFileList[i].Substring(aviExamFileList[i].Length -17);
+            }
+            string[] sviid = new string[sviExamFileList.Length];
+            for (int i = 0; i < sviExamFileList.Length; i++)
+            {
+                aviid[i] = sviExamFileList[i].Substring(sviExamFileList[i].Length -17);
+            }
             foreach (var item in missionlist)
             {
                 switch (item.PcSection)
                 {
                     case InspectSection.AVI:
-                        if (aviexamfilelist.Contains(item.PanelId))
+                        if (aviid.Contains(item.PanelId))
                         {
-                            var filepath = aviexamfilelist.Where(x => x.Substring(x.Length - 17) == item.PanelId).First();
-                            var defect = new Defect();
-                            newexammissionList.Add(new ExamMission(item.PanelId, filepath, item.PcSection,defect,item.Judge));
+                            var filepath = aviExamFileList.Where(x => x.Substring(x.Length - 17) == item.PanelId).First();
+                            newExamMissionList.Add(new ExamMission(item.PanelId, filepath, item.PcSection, item.Defect, item.Judge));
+                        }
+                        else
+                        {
+                            Logger.Error("panel ID: {0} ,do not have result file in {1}",item.PanelId); // TODO:ADD FILE path
                         }
                         break;
                     case InspectSection.SVI:
-                        if (sviexamfilelist.Contains(item.PanelId))
+                        if (sviid.Contains(item.PanelId))
                         {
-                            newexammissionList.Add();
+                            var filepath = sviExamFileList.Where(x => x.Substring(x.Length - 17) == item.PanelId).First();
+                            newExamMissionList.Add(new ExamMission(item.PanelId, filepath, item.PcSection, item.Defect, item.Judge));
+                        }
+                        else
+                        {
+                            Logger.Error("panel ID: {0} ,do not have result file in {1}",item.PanelId); // TODO:ADD FILE path
                         }
                         break;
                 }
             }
-        }
-        string[] GetExamFileList(string path, InspectSection section)
-        {
-            string[] image_directory_list = Directory.GetDirectories(path);
-            return image_directory_list;
+            ExamMissionList = newExamMissionList;
         }
         public PanelMission GetAviMission()
         {
@@ -135,7 +147,10 @@ namespace Sauron
             PanelMission newpanelmission = AppOnInspectMissionQueue.Dequeue();
             return newpanelmission;
         }
-
+        public List<ExamMission> GetExamMission()
+        {
+            return ExamMissionList;
+        }
         private void AddMissionInQueue()
         {
             PanelMission newmission = MissionQueue.Dequeue();
@@ -144,7 +159,6 @@ namespace Sauron
             SviOnInspectMissionQueue.Enqueue(newmission);
             //AppOnInspectMissionQueue.Enqueue(newmission);
         }
-
         public void SendResult(PanelMissionResult newresult)
         {
             // Add result sended form the clint,if finished add to queue waitting for insert to database;
@@ -161,6 +175,24 @@ namespace Sauron
         public void RefreshFileContainer()
         {
             Thefilecontainer.RefreshFileList();
+        }
+        public Operator CheckUser(Operator op)
+        {
+            var opdict = Thesqlserver.GetOperatorDict();
+            if (opdict.ContainsKey(op.Id))
+            {
+                var newop = opdict[op.Id];
+                if (newop.CheckPassWord(op.PassWord))
+                {
+                    return newop;
+                }
+                else
+                    return null;
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 }

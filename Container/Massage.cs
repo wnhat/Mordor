@@ -15,8 +15,7 @@ namespace Container.Message
         CLINET_GET_MISSION_AVI,
         CLINET_GET_MISSION_SVI,
         CLINET_GET_MISSION_APP,
-
-        CLINET_GET_MISSION_LIST,
+        CLINET_GET_EXAM_MISSION_LIST,
         CLINET_CHECK_USER,
         CLINET_SEND_UNFINISHED_MISSION_AVI,
         CLINET_SEND_UNFINISHED_MISSION_SVI,
@@ -29,9 +28,10 @@ namespace Container.Message
         SERVER_SEND_FINISH,
         SERVER_SEND_EORRO,
         SERVER_SEND_PANEL_GREAD,
+        SERVER_SEND_USER_FLASE,
+        SERVER_SEND_USER_TRUE,
     }
-
-    public class BaseMessage:NetMQMessage
+    public class BaseMessage : NetMQMessage
     {
         public MessageType TheMessageType;
         public BaseMessage(MessageType messageType)
@@ -39,27 +39,19 @@ namespace Container.Message
             TheMessageType = messageType;
             this.Append((int)TheMessageType);
         }
-
         public BaseMessage(NetMQMessage message)
         {
             TheMessageType = (MessageType)message[0].ConvertToInt32();
         }
-
         public BaseMessage()
         {
         }
-
-        string TransferMission2string(PanelMission panelMission)
-        {
-            return JsonConvert.SerializeObject(panelMission);
-        }
     }
-
-    public class PanelMissionMessage:BaseMessage
+    public class PanelMissionMessage : BaseMessage
     {
         public PanelMission ThePanelMission;
 
-        public PanelMissionMessage(BaseMessage theMessage):base(theMessage)
+        public PanelMissionMessage(BaseMessage theMessage) : base(theMessage)
         {
             ThePanelMission = TransferToMission(theMessage[1].ConvertToString());
         }
@@ -86,36 +78,34 @@ namespace Container.Message
             return JsonConvert.DeserializeObject<PanelMission>(missionstring);
         }
     }
-
-    public class UserCheckMessage:BaseMessage
+    public class UserCheckMessage : BaseMessage
     {
-        public string UserId;
-        public string PassWord;
-
-        public UserCheckMessage(string userId,string passWord):base(MessageType.CLINET_CHECK_USER)
+        public Operator TheOperator;
+        public UserCheckMessage(MessageType type, Operator op) : base(type)
         {
-            UserId = userId;
-            this.Append(userId);
-            PassWord = passWord;
-            this.Append(passWord);
+            this.Append(TransferToString(TheOperator));
         }
         public UserCheckMessage(NetMQMessage theMessage)
         {
             TheMessageType = (MessageType)theMessage[0].ConvertToInt32();
-            UserId = theMessage[1].ConvertToString();
-            PassWord = theMessage[2].ConvertToString();
+            TheOperator = TransferToOp(theMessage[1].ConvertToString());
         }
-
+        string TransferToString(Operator op)
+        {
+            return JsonConvert.SerializeObject(op);
+        }
+        Operator TransferToOp(string opstring)
+        {
+            return JsonConvert.DeserializeObject<Operator>(opstring);
+        }
     }
-
-    public class PanelResultMessage:BaseMessage
+    public class PanelResultMessage : BaseMessage
     {
         PanelMissionResult TheResult;
-        public PanelResultMessage(MessageType type,PanelMissionResult result):base(type)
+        public PanelResultMessage(MessageType type, PanelMissionResult result) : base(type)
         {
             TheResult = result;
         }
-
         string TransferToString(PanelMissionResult result)
         {
             return JsonConvert.SerializeObject(result);
@@ -123,6 +113,22 @@ namespace Container.Message
         PanelMissionResult TransferToResult(string resultstring)
         {
             return JsonConvert.DeserializeObject<PanelMissionResult>(resultstring);
+        }
+    }
+    public class ExamMissionMessage : BaseMessage
+    {
+        List<ExamMission> ExamMissionList;
+        public ExamMissionMessage(MessageType messageType, List<ExamMission> examMissionList) : base(messageType)
+        {
+            ExamMissionList = examMissionList;
+        }
+        string TransferToString(List<ExamMission> result)
+        {
+            return JsonConvert.SerializeObject(result);
+        }
+        List<ExamMission> TransferToResult(string resultstring)
+        {
+            return JsonConvert.DeserializeObject<List<ExamMission>>(resultstring);
         }
     }
 }

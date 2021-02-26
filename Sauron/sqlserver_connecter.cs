@@ -142,7 +142,12 @@ GO", new object[] {
         }
         public List<ExamMission> GetExamMission()
         {
-            string commandstring = string.Format(@"SELECT[EqpID],");
+            string commandstring = string.Format(@"SELECT ALL [PanelID]
+      ,[Judge]
+      ,[DefectCode]
+      ,[DefectName]
+      ,[Section]
+  FROM [EDIAS_DB].[dbo].[AET_IMAGE_EXAM]");
             List<ExamMission> newPanelList = new List<ExamMission>();
             SqlCommand newcommand = new SqlCommand(commandstring, TheDataBase);
             TheDataBase.Open();
@@ -151,11 +156,38 @@ GO", new object[] {
             {
                 while (newDataReader.Read())
                 {
-                    newPanelList.Add(new ExamMission());
+                    string panelid = newDataReader["PanelId"].ToString();
+                    InspectSection section = (InspectSection) Enum.Parse(typeof(InspectSection),newDataReader["Section"].ToString(),false);
+                    Defect newdefect = new Defect(newDataReader["DefectName"].ToString(),newDataReader["DefectCode"].ToString(),section);
+                    JudgeGrade newjudge = (JudgeGrade) Enum.Parse(typeof(JudgeGrade),newDataReader["Judge"].ToString(),true);
+                    newPanelList.Add(new ExamMission(panelid,section,newdefect,newjudge));
                 }
             }
             TheDataBase.Close();
             return newPanelList;
+        }
+        public Dictionary<string, Operator> GetOperatorDict()
+        {
+            string commandstring = string.Format(@"SELECT ALL [UserId]
+      ,[PassWord]
+      ,[UserName]
+  FROM [EDIAS_DB].[dbo].[AET_IMAGE_USER]");
+            SqlCommand newcommand = new SqlCommand(commandstring, TheDataBase);
+            TheDataBase.Open();
+            SqlDataReader newDataReader = newcommand.ExecuteReader();
+            Dictionary<string, Operator> newdict = new Dictionary<string, Operator>();
+            if (newDataReader.HasRows)
+            {
+                while (newDataReader.Read())
+                {
+                    string userid = newDataReader["UserId"].ToString(); 
+                    string password = newDataReader["PassWord"].ToString();
+                    string username = newDataReader["UserName"].ToString();
+                    newdict.Add(userid, new Operator(userid, password, username));
+                }
+            }
+            TheDataBase.Close();
+            return newdict;
         }
     }
 }

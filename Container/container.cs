@@ -303,6 +303,17 @@ namespace Container
             Name = name;
             Id = id;
         }
+        public bool CheckPassWord(string pw)
+        {
+            if (pw == PassWord)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
     public class PC
     {

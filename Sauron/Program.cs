@@ -56,7 +56,9 @@ namespace Sauron
                             PanelMissionMessage newappmission = new PanelMissionMessage(MessageType.SERVER_SEND_MISSION, TheMissionManager.GetAppMission());
                             a.Socket.SendMultipartMessage(newappmission);
                             break;
-                        case MessageType.CLINET_GET_MISSION_LIST:
+                        case MessageType.CLINET_GET_EXAM_MISSION_LIST:
+                            ExamMissionMessage newexammission = new ExamMissionMessage(MessageType.SERVER_SEND_MISSION, TheMissionManager.GetExamMission());
+                            a.Socket.SendMultipartMessage(newexammission);
                             break;
                         case MessageType.CONTROLER_CLEAR_MISSION:
                             Console.WriteLine("start clean mission queue;");
@@ -73,13 +75,16 @@ namespace Sauron
                         case MessageType.CLINET_CHECK_USER:
                             UserCheckMessage userInfo = new UserCheckMessage(messageIn);
                             // TODO:check user Password & ID；
-                            if (true)
+                            var op = TheMissionManager.CheckUser(userInfo.TheOperator);
+                            if (op != null)
                             {
-                                a.Socket.SignalOK();
+                                UserCheckMessage newmessage = new UserCheckMessage(MessageType.SERVER_SEND_USER_TRUE,op);
+                                a.Socket.SendMultipartMessage(newmessage);
                             }
                             else
                             {
-                                a.Socket.SignalError();
+                                UserCheckMessage newmessage = new UserCheckMessage(MessageType.SERVER_SEND_USER_FLASE, null);
+                                a.Socket.SendMultipartMessage(newmessage);
                             }
                             break;
                         default:
@@ -87,7 +92,6 @@ namespace Sauron
                     }
                     Console.WriteLine("finish");
                 };
-
                 timer.Elapsed += (s, a) =>
                 {
                     Console.WriteLine("start refresh the panel list");
