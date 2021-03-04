@@ -128,7 +128,6 @@ namespace Container
         public Defect defect;
         public InspectSection Section; // AVI OR SVI OR APP;
         public Operator Op;
-
         public PanelMissionResult(JudgeGrade judge, Defect defect, InspectSection section, Operator op)
         {
             Judge = judge;
@@ -141,7 +140,7 @@ namespace Container
     {
         public string PanelId;
         public string Result_path;
-        public InspectSection PcSection  { get;}
+        public InspectSection PcSection { get; }
         public Defect Defect;
         public JudgeGrade Judge;
         public ExamMission(string panelId, string result_path, InspectSection pcSection, Defect defect, JudgeGrade judge)
@@ -221,7 +220,6 @@ namespace Container
                 }
             }
         }
-
         public PanelMission(string panelId, MissionType type, long missionnumber, PanelPathContainer AvipanelPath, PanelPathContainer SvipanelPath = null, PanelPathContainer ApppanelPath = null)
         {
             PanelId = panelId;
@@ -281,7 +279,6 @@ namespace Container
         public string DefectName;
         public string DefectCode;
         public InspectSection Section;     // where the defect generated(like "AVI" OR "SVI");
-
         public Defect(string defectName, string defectCode, InspectSection section)
         {
             DefectName = defectName;
@@ -295,12 +292,17 @@ namespace Container
         public string Id { get; }
         public string PassWord { get; }
         public int MissionFinished { get; set; }
-
         public Operator(string passWord, string name, string id)
         {
             PassWord = passWord;
             MissionFinished = 0;
             Name = name;
+            Id = id;
+        }
+        public Operator(string passWord, string id)
+        {
+            PassWord = passWord;
+            MissionFinished = 0;
             Id = id;
         }
         public bool CheckPassWord(string pw)
@@ -331,6 +333,160 @@ namespace Container
             {
                 return false;
             }
+        }
+    }
+    public class InspectMission : BaseMission
+    {
+        private PanelMission missionInfo;
+        string[] ImageNameList;                         // The image name in reuslt file which we need to inspect
+        public InspectMission(PanelMission missioninfo, string[] imageNameList, string savePath) : base(missioninfo.AviPanelPath.Result_path, savePath)
+        {
+            missionInfo = missioninfo;
+            ImageNameList = imageNameList;
+        }
+        public PanelMission MissionInfo
+        {
+            get
+            {
+                return missionInfo;
+            }
+        }
+    }
+    public class BaseMission
+    {
+        DirContainer Container;
+        string SavePath;
+        public BaseMission(string filepath, string savePath)
+        {
+            SavePath = savePath;
+            Container = new DirContainer(filepath);
+        }
+        public void ChangeSavePath(string newsavepath)
+        {
+            SavePath = newsavepath;
+        }
+        public void SaveFileInDisk()
+        {
+            Container.SaveDirInDisk(SavePath);
+        }
+        public MemoryStream GetFileFromMemory(string filename)
+        {
+            return Container.GetFileFromMemory(filename);
+        }
+    }
+    class FileContainer
+    {
+        FileInfo FileInformation;
+        MemoryStream FileMemory;
+        public FileContainer(FileInfo fileInformation)
+        {
+            FileInformation = fileInformation;
+            FileMemory = new MemoryStream();
+            ReadFileInMemory();
+        }
+        public void ReadFileInMemory()
+        {
+            // TODO: ADD TRY, if read file error,log it;
+            FileInformation.OpenRead().CopyTo(FileMemory);
+        }
+        public void SaveFileInDisk(string savePath)
+        {
+            // TODO：async process;
+            FileInfo newsavefile = new FileInfo(Path.Combine(savePath, FileInformation.Name));
+            var writestream = newsavefile.OpenWrite();
+            FileMemory.CopyTo(writestream);
+        }
+        public MemoryStream FileFromMemory
+        {
+            get
+            {
+                return FileMemory;
+            }
+        }
+        public string Name
+        {
+            get
+            {
+                return FileInformation.Name;
+            }
+        }
+    }
+    /// <summary>
+    /// copy the giving path dir(and it`s subdir) to local memory;
+    /// </summary>
+    class DirContainer
+    {
+        DirectoryInfo DirInfo;
+        FileContainer[] FileContainerArray;
+        DirContainer[] DirContainerArray;
+        public DirContainer(string dirPath)
+        {
+            DirInfo = new DirectoryInfo(dirPath);
+            Initial();
+        }
+
+        public void Initial()
+        {
+            InitialFile();
+            InitialDir();
+        }
+        public void InitialFile()
+        {
+            FileInfo[] filearray = DirInfo.GetFiles();
+            FileContainerArray = new FileContainer[filearray.Count()];
+            for (int i = 0; i < FileContainerArray.Count(); i++)
+            {
+                FileContainerArray[i] = new FileContainer(filearray[i]);
+            }
+        }
+        public void InitialDir()
+        {
+            DirectoryInfo[] dirarray = DirInfo.GetDirectories();
+            if (dirarray.Count() > 0)
+            {
+                DirContainerArray = new DirContainer[dirarray.Count()];
+                for (int i = 0; i < FileContainerArray.Count(); i++)
+                {
+                    DirContainerArray[i] = new DirContainer(dirarray[i].FullName);
+                }
+            }
+            else
+            {
+                DirContainerArray = null;
+            }
+        }
+        public void SaveDirInDisk(string savePath)
+        {
+            DirectoryInfo savetarget = new DirectoryInfo(savePath);
+            DirectoryInfo subDir = savetarget.CreateSubdirectory(DirInfo.Name);
+            foreach (var file in FileContainerArray)
+            {
+                file.SaveFileInDisk(subDir.FullName);
+            }
+
+            foreach (var Dir in DirContainerArray)
+            {
+                Dir.SaveDirInDisk(subDir.FullName);
+            }
+        }
+        public MemoryStream GetFileFromMemory(string fileName)
+        {
+            foreach (var file in FileContainerArray)
+            {
+                if (file.Name == fileName)
+                {
+                    return file.FileFromMemory;
+                }
+            }
+            foreach (var Dir in DirContainerArray)
+            {
+                var returnvalue = Dir.GetFileFromMemory(fileName);
+                if (returnvalue != null)
+                {
+                    return returnvalue;
+                }
+            }
+            return null;
         }
     }
 }

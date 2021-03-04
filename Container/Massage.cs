@@ -55,19 +55,15 @@ namespace Container.Message
         {
             ThePanelMission = TransferToMission(theMessage[1].ConvertToString());
         }
-
-        public PanelMissionMessage(NetMQMessage theMessage)
+        public PanelMissionMessage(NetMQMessage theMessage):base()
         {
-            TheMessageType = (MessageType)theMessage[0].ConvertToInt32();
             ThePanelMission = TransferToMission(theMessage[1].ConvertToString());
         }
-
         public PanelMissionMessage(MessageType messageType, PanelMission panelMission) : base(messageType)
         {
             ThePanelMission = panelMission;
             this.Append(TransferToString(ThePanelMission));
         }
-
         string TransferToString(PanelMission panelMission)
         {
             return JsonConvert.SerializeObject(panelMission);
@@ -105,6 +101,11 @@ namespace Container.Message
         public PanelResultMessage(MessageType type, PanelMissionResult result) : base(type)
         {
             TheResult = result;
+            this.Append(TransferToString(result));
+        }
+        public PanelResultMessage(NetMQMessage massage):base()
+        {
+            TheResult = TransferToResult(massage[1].ConvertToString());
         }
         string TransferToString(PanelMissionResult result)
         {
@@ -117,10 +118,15 @@ namespace Container.Message
     }
     public class ExamMissionMessage : BaseMessage
     {
-        List<ExamMission> ExamMissionList;
+        public List<ExamMission> ExamMissionList;
         public ExamMissionMessage(MessageType messageType, List<ExamMission> examMissionList) : base(messageType)
         {
             ExamMissionList = examMissionList;
+            this.Append(TransferToString(ExamMissionList));
+        }
+        public ExamMissionMessage(NetMQMessage message):base()
+        {
+            ExamMissionList = TransferToResult(message[1].ConvertToString());
         }
         string TransferToString(List<ExamMission> result)
         {

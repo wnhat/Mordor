@@ -86,7 +86,6 @@ namespace Sauron
             PcInfo = input_pc;
             Log = log;
         }
-
         public void Serch_file(PanelPathManager new_panel_list)
         {
             PanelPathManager panel_list = new PanelPathManager();

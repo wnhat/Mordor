@@ -19,7 +19,6 @@ namespace EyeOfSauron
             request = new RequestSocket();
             request.Connect("tcp://localhost:5555");
         }
-
         public PanelMission GetMission()
         {
             // get new panel mission from server;
@@ -28,19 +27,20 @@ namespace EyeOfSauron
             PanelMissionMessage returnMessage = new PanelMissionMessage(request.ReceiveMultipartMessage());
             return returnMessage.ThePanelMission;
         }
-
-        public bool check_user_password(Operator theuser)
+        public Operator CheckPassWord(Operator theuser)
         {
-            UserCheckMessage newMessage = new UserCheckMessage(theuser.Id, theuser.PassWord);
 #if !DEBUG
+            UserCheckMessage newMessage = new UserCheckMessage(MessageType.CLINET_CHECK_USER,theuser);
             request.SendMultipartMessage(newMessage);
-            bool returnbool = request.ReceiveSignal();
-            return returnbool;
+            UserCheckMessage returnUser = new UserCheckMessage(request.ReceiveMultipartMessage());
+            if (returnUser.TheMessageType == MessageType.SERVER_SEND_USER_TRUE)
+                return returnUser.TheOperator;
+            else
+                return null;
 #else
-            return true;
+            return new Operator("password","testop","testid");
 #endif
         }
-
         public bool FinishMission(PanelMissionResult finishedMission)
         {
             // TODO: 
@@ -49,7 +49,6 @@ namespace EyeOfSauron
             bool returnbool = request.ReceiveSignal();
             return returnbool;
         }
-
         public void SendUnfinishedMissionBack(InspectSection section,PanelMission mission)
         {
             MessageType missionsection = MessageType.CLINET_SEND_UNFINISHED_MISSION_AVI;
@@ -67,6 +66,13 @@ namespace EyeOfSauron
             }
             PanelMissionMessage message = new PanelMissionMessage(missionsection, mission);
             request.SendMultipartMessage(message);
+        }
+        public List<ExamMission> GetExamMissions()
+        {
+            BaseMessage newmessage = new BaseMessage(MessageType.CLINET_GET_EXAM_MISSION_LIST);
+            request.SendMultipartMessage(newmessage);
+            var returnmessage = new ExamMissionMessage(request.ReceiveMultipartMessage());
+            return returnmessage.ExamMissionList;
         }
     }
 }

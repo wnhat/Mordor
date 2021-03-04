@@ -42,7 +42,7 @@ namespace Sauron
                             break;
                         case MessageType.CLIENT_SEND_MISSION_RESULT:
                             // TODO:
-                            PanelMissionMessage finishedMission = new PanelMissionMessage(messageIn);
+                            PanelResultMessage finishedMission = new PanelResultMessage(messageIn);
                             break;
                         case MessageType.CLINET_GET_MISSION_AVI:
                             PanelMissionMessage newavimission = new PanelMissionMessage(MessageType.SERVER_SEND_MISSION, TheMissionManager.GetAviMission());
@@ -78,7 +78,7 @@ namespace Sauron
                             var op = TheMissionManager.CheckUser(userInfo.TheOperator);
                             if (op != null)
                             {
-                                UserCheckMessage newmessage = new UserCheckMessage(MessageType.SERVER_SEND_USER_TRUE,op);
+                                UserCheckMessage newmessage = new UserCheckMessage(MessageType.SERVER_SEND_USER_TRUE, op);
                                 a.Socket.SendMultipartMessage(newmessage);
                             }
                             else
@@ -97,7 +97,6 @@ namespace Sauron
                     Console.WriteLine("start refresh the panel list");
                     TheMissionManager.RefreshFileContainer();
                 };
-
                 poller.Run();
             }
         }

@@ -41,9 +41,10 @@ namespace EyeOfSauron
         private void UserCheckIn(Form form)
         {
             Operator newoperater = new Operator(this.userid_box.Text, "");
-            if (TheManager.CheckUser(newoperater))
+            var user = TheManager.CheckUser(newoperater);
+            if (user != null)
             {
-                TheManager.OperaterCheckIn(newoperater);
+                TheManager.SetOperater(newoperater);
                 this.Hide();
                 ProcessForm newDownloadProcess = new ProcessForm(TheManager);
                 newDownloadProcess.ShowDialog();

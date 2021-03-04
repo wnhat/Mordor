@@ -18,8 +18,9 @@ namespace EyeOfSauron
         LoginForm TheParentForm;
         Defectcode defect_translator = new Defectcode();
         Manager TheManager;
-        InspectSection Section;     // AVI\SVI\APP 
-
+        InspectSection Section;     // AVI\SVI\APP
+        Bitmap[] ImageArray;
+        string[] ImageNameArray;
         public InspectForm(LoginForm parentForm,Manager theManager)
         {
             // initial AviInspectForm；
@@ -27,13 +28,11 @@ namespace EyeOfSauron
             TheParentForm = parentForm;
             TheManager = theManager;
         }
-
         public void SetInspectSection(InspectSection section)
         {
             switch (section)
             {
                 case InspectSection.AVI:
-                    
                     imagelabel1.Text = TheManager.SystemParameter.AviImageNameList[0];
                     imagelabel2.Text = TheManager.SystemParameter.AviImageNameList[1];
                     imagelabel3.Text = TheManager.SystemParameter.AviImageNameList[2];
@@ -45,14 +44,12 @@ namespace EyeOfSauron
                     imagelabel3.Text = TheManager.SystemParameter.SviImageNameList[2];
                     break;
                 case InspectSection.APP:
-
                     break;
                 default:
                     Section = section;
                     break;
             }
         }
-
         private void logout(object sender, EventArgs e)
         {
             login_button.Text = "用户登录";
@@ -67,7 +64,7 @@ namespace EyeOfSauron
             Button sender_button = (Button)sender;
             string defectname = sender_button.Text;
             string defectcode = defect_translator.name2code(sender_button.Text);
-            Defect newdefect = new Defect();
+            Defect newdefect = new Defect(defectname, defectcode, Section);
             get_next_panel();
         }
         private void get_next_panel()

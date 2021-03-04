@@ -20,18 +20,17 @@ namespace EyeOfSauron
         InspectSection Section;
         public Manager()
         {
-            SystemParameter = GetParameter();
+            SystemParameter = InitParameter();
             TheServerConnecter = new Serverconnecter();
             Operater = null;
             StopToCellFlag = false;
             TheMissionPackage = new MissionPackage(SystemParameter);
         }
-
-        public bool CheckUser(Operator newUser)
+        public Operator CheckUser(Operator newUser)
         {
-            return TheServerConnecter.check_user_password(newUser);
+            return TheServerConnecter.CheckPassWord(newUser);
         }
-        public void OperaterCheckIn(Operator newUser)
+        public void SetOperater(Operator newUser)
         {
             Operater = newUser;
         }
@@ -39,8 +38,7 @@ namespace EyeOfSauron
         {
             Operater = null;
         }
-
-        public Parameter GetParameter()
+        public Parameter InitParameter()
         {
             string sysconfig_path = @"D:\1218180\program2\c#\Mordor\EyeOfSauron\sysconfig.json";
             FileInfo sysconfig = new FileInfo(sysconfig_path);
@@ -54,12 +52,10 @@ namespace EyeOfSauron
             return null;
         }
         public void SaveParameter() { }
-
         public void SetInspectSection(InspectSection section)
         {
             Section = section;
         }
-
         public void InspectStart()
         {
             TheMissionPackage.NewMission();
