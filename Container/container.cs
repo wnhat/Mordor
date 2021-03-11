@@ -188,7 +188,6 @@ namespace Container
         public JudgeGrade SviJudge;
         public JudgeGrade AppJudge;
         public JudgeGrade LastJudge;
-
         public bool finished { get { return AviFinished & SviFinished & AppFinished; } }
         public string AllDefect;
         // TODO: Add Defect rank later;
@@ -335,31 +334,20 @@ namespace Container
             }
         }
     }
-    public class InspectMission : BaseMission
+    public class InspectMission
     {
-        private PanelMission missionInfo;
         string[] ImageNameList;                         // The image name in reuslt file which we need to inspect
-        public InspectMission(PanelMission missioninfo, string[] imageNameList, string savePath) : base(missioninfo.AviPanelPath.Result_path, savePath)
-        {
-            missionInfo = missioninfo;
-            ImageNameList = imageNameList;
-        }
-        public PanelMission MissionInfo
-        {
-            get
-            {
-                return missionInfo;
-            }
-        }
-    }
-    public class BaseMission
-    {
         DirContainer Container;
         string SavePath;
-        public BaseMission(string filepath, string savePath)
+        public InspectMission(PanelMission missioninfo, string[] imageNameList, string savePath)
         {
-            SavePath = savePath;
-            Container = new DirContainer(filepath);
+
+            ImageNameList = imageNameList;
+        }
+        public InspectMission(ExamMission missioninfo, string[] imageNameList, string savePath)
+        {
+            Container = new DirContainer(missioninfo.Result_path);
+            ImageNameList = imageNameList;
         }
         public void ChangeSavePath(string newsavepath)
         {

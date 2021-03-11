@@ -12,7 +12,7 @@ namespace EyeOfSauron
     class MissionPackage
     {
         public InspectMission OnInspectedMission { get; set; }
-        private Queue<PanelMission> UnDownloadedMissionQueue;       //待加载文件队列
+        // private Queue<PanelMission> UnDownloadedMissionQueue;       //待加载文件队列
         private Queue<InspectMission> PreDownloadedMissionQueue;    //已加载的文件队列
         private int DownloadQuantity;                               //预加载图像文件的个数
         public string ImageSavingPath { get; set; }
@@ -20,13 +20,13 @@ namespace EyeOfSauron
         /// <summary>
         /// 剩余未检查任务数
         /// </summary>
-        public int Count { get { return UnDownloadedMissionQueue.Count + PreDownloadedMissionQueue.Count; } }
+        public int Count { get { return PreDownloadedMissionQueue.Count; } }
 
         private string[] ImageNameList;
 
         public MissionPackage(int downloadQuantity, string imageSavingPath, string[] imageNameList)
         {
-            UnDownloadedMissionQueue = new Queue<PanelMission>();
+            //UnDownloadedMissionQueue = new Queue<PanelMission>();
             PreDownloadedMissionQueue = new Queue<InspectMission>();
             DownloadQuantity = downloadQuantity;
             ImageSavingPath = imageSavingPath;
@@ -36,13 +36,13 @@ namespace EyeOfSauron
 
         public void CleanMission()
         {
-            UnDownloadedMissionQueue = new Queue<PanelMission>();
+            //UnDownloadedMissionQueue = new Queue<PanelMission>();
             PreDownloadedMissionQueue = new Queue<InspectMission>();
             OnInspectedMission = null;
         }
         public void AddMission(PanelMission newmission)
         {
-            UnDownloadedMissionQueue.Enqueue(newmission);
+            PreDownloadedMissionQueue.Enqueue(new InspectMission(newmission));
         }
         public void AddMissionList(List<PanelMission> newmissionlist)
         {

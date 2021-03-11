@@ -15,14 +15,12 @@ namespace EyeOfSauron
     {
         private Manager TheManager;
         private InspectForm TheInspectForm;
-
         public LoginForm()
         {
             InitializeComponent();
             TheManager = new Manager();
             TheInspectForm = new InspectForm(this,TheManager);
         }
-
         private void userid_box_KeyDown(object sender, KeyEventArgs e)
         {
             // binding with the keyboard enter .
@@ -31,13 +29,6 @@ namespace EyeOfSauron
                 Avibutton_Click(sender, e);
             }
         }
-
-        private void Avibutton_Click(object sender, EventArgs e)
-        {
-            TheInspectForm.SetInspectSection(InspectSection.AVI);
-            UserCheckIn(TheInspectForm);
-        }
-
         private void UserCheckIn(Form form)
         {
             Operator newoperater = new Operator(this.userid_box.Text, "");
@@ -55,16 +46,19 @@ namespace EyeOfSauron
                 MessageBox.Show("用户名密码错误");
             }
         }
-
-        private void Svibutton_Click(object sender, EventArgs e)
+        private void Avibutton_Click(object sender, EventArgs e)
         {
-            TheInspectForm.SetInspectSection(InspectSection.SVI);
+            TheManager.SetInspectSection(InspectSection.AVI);
             UserCheckIn(TheInspectForm);
         }
-
+        private void Svibutton_Click(object sender, EventArgs e)
+        {
+            TheManager.SetInspectSection(InspectSection.SVI);
+            UserCheckIn(TheInspectForm);
+        }
         private void Evilbutton_Click(object sender, EventArgs e)
         {
-            TheInspectForm.SetInspectSection(InspectSection.SVI);
+            TheManager.SetInspectSection(InspectSection.EXAM);
             UserCheckIn(TheInspectForm);
         }
     }

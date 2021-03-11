@@ -17,7 +17,7 @@ namespace EyeOfSauron
         MissionPackage TheMissionPackage;
         public Parameter SystemParameter;
         bool StopToCellFlag;
-        InspectSection Section;
+        public InspectSection Section {get;set;}
         public Manager()
         {
             SystemParameter = InitParameter();
@@ -109,14 +109,14 @@ namespace EyeOfSauron
         public void GetExamMission()
         {
         }
-        public void SendUnfinishedMissionBackToServer(InspectSection section)
+        public void SendUnfinishedMissionBackToServer()
         {
-            if (section != InspectSection.EXAM)
+            if (Section != InspectSection.EXAM)
             {
                 Queue<PanelMission> returnmissionqueue = TheMissionPackage.GetUnfinishedMission();
                 while (returnmissionqueue.Count == 0)
                 {
-                    TheServerConnecter.SendUnfinishedMissionBack(section, returnmissionqueue.Dequeue());
+                    TheServerConnecter.SendUnfinishedMissionBack(Section, returnmissionqueue.Dequeue());
                 }
                 TheMissionPackage.CleanMission();
             }

@@ -18,44 +18,50 @@ namespace EyeOfSauron
         LoginForm TheParentForm;
         Defectcode defect_translator = new Defectcode();
         Manager TheManager;
-        InspectSection Section;     // AVI\SVI\APP
+        int Refreshflag;
         Bitmap[] ImageArray;
         string[] ImageNameArray;
-        public InspectForm(LoginForm parentForm,Manager theManager)
+        public InspectForm(LoginForm parentForm, Manager theManager)
         {
             // initial AviInspectForm；
             InitializeComponent();
             TheParentForm = parentForm;
             TheManager = theManager;
+            Refreshflag = 0;
         }
-        public void SetInspectSection(InspectSection section)
+        public void SetImageLabel(string[] imagenamelist)
         {
-            switch (section)
+            imagelabel1.Text = imagenamelist[0];
+            imagelabel2.Text = imagenamelist[1];
+            imagelabel3.Text = imagenamelist[2];
+        }
+        public void SetImage(Bitmap[] imagearray)
+        {
+            pictureBox1.Image = imagearray[0];
+            pictureBox2.Image = imagearray[1];
+            pictureBox3.Image = imagearray[2];
+        }
+        public void SetPanelId(string panelid)
+        {
+            cell_id_label.Text = panelid;
+        }
+        public void RefreshForm()
+        {
+            if((Refreshflag)*3 < ImageArray.Count())
             {
-                case InspectSection.AVI:
-                    imagelabel1.Text = TheManager.SystemParameter.AviImageNameList[0];
-                    imagelabel2.Text = TheManager.SystemParameter.AviImageNameList[1];
-                    imagelabel3.Text = TheManager.SystemParameter.AviImageNameList[2];
-                    break;
-                case InspectSection.SVI:
-
-                    imagelabel1.Text = TheManager.SystemParameter.SviImageNameList[0];
-                    imagelabel2.Text = TheManager.SystemParameter.SviImageNameList[1];
-                    imagelabel3.Text = TheManager.SystemParameter.SviImageNameList[2];
-                    break;
-                case InspectSection.APP:
-                    break;
-                default:
-                    Section = section;
-                    break;
+                SetImageLabel(ImageNameArray.Skip((Refreshflag)*3).Take(3).ToArray());
+                Refreshflag++;
+            }
+            else
+            {
+                Refreshflag = 0;
+                RefreshForm();
             }
         }
         private void logout(object sender, EventArgs e)
         {
             login_button.Text = "用户登录";
             login_button.BackColor = System.Drawing.Color.SandyBrown;
-            // do someting else;
-            // send unfinished mission bak to the server;
             this.Close();
             TheParentForm.Show();
         }
@@ -64,22 +70,19 @@ namespace EyeOfSauron
             Button sender_button = (Button)sender;
             string defectname = sender_button.Text;
             string defectcode = defect_translator.name2code(sender_button.Text);
-            Defect newdefect = new Defect(defectname, defectcode, Section);
-            get_next_panel();
+            Defect newdefect = new Defect(defectname, defectcode, TheManager.Section);
+            GetNextPanel();
         }
-        private void get_next_panel()
+        private void GetNextPanel()
         {
             TheManager.InspectStart();
-            Bitmap[] imagearray = TheManager.GetOnInspectPanelImage();
-            pictureBox1.Image = imagearray[0];
-            pictureBox2.Image = imagearray[1];
-            pictureBox3.Image = imagearray[2];
-            cell_id_label.Text = TheManager.GetOnInspectPanelId();
+            ImageArray = TheManager.GetOnInspectPanelImage();
+            SetPanelId(TheManager.GetOnInspectPanelId());
             remain_label.Text = TheManager.RemainMissionCount.ToString();
         }
         protected override void OnFormClosed(FormClosedEventArgs e)
         {
-            TheManager.SendUnfinishedMissionBackToServer(Section);
+            TheManager.SendUnfinishedMissionBackToServer();
             TheParentForm.Show();
             base.OnFormClosed(e);
         }
