@@ -14,12 +14,16 @@ namespace EyeOfSauron
     class Serverconnecter
     {
         private RequestSocket request;
-        public Serverconnecter()
+        Queue<PanelMission> panelMissionList;
+        Queue<ExamMission> examMissionList;
+        Parameter SystemParameter;
+        public Serverconnecter(Parameter systemParameter)
         {
             request = new RequestSocket();
             request.Connect("tcp://localhost:5555");
+            SystemParameter = systemParameter;
         }
-        public PanelMission GetMission()
+        PanelMission GetPanelMission()
         {
             // get new panel mission from server;
             BaseMessage newMessage = new BaseMessage(MessageType.CLINET_GET_MISSION_AVI);
@@ -38,18 +42,17 @@ namespace EyeOfSauron
             else
                 return null;
 #else
-            return new Operator("password","testop","testid");
+            return new Operator("password", "testop", "testid");
 #endif
         }
         public bool FinishMission(PanelMissionResult finishedMission)
         {
-            // TODO: 
             PanelResultMessage newMessage = new PanelResultMessage(MessageType.CLIENT_SEND_MISSION_RESULT, finishedMission);
             request.SendMultipartMessage(newMessage);
             bool returnbool = request.ReceiveSignal();
             return returnbool;
         }
-        public void SendUnfinishedMissionBack(InspectSection section,PanelMission mission)
+        public void SendUnfinishedMissionBack(InspectSection section, PanelMission mission)
         {
             MessageType missionsection = MessageType.CLINET_SEND_UNFINISHED_MISSION_AVI;
             switch (section)
@@ -73,6 +76,43 @@ namespace EyeOfSauron
             request.SendMultipartMessage(newmessage);
             var returnmessage = new ExamMissionMessage(request.ReceiveMultipartMessage());
             return returnmessage.ExamMissionList;
+        }
+        public InspectMission GetMission(InspectSection section)
+        {
+            string[] imagenamelist = SystemParameter.AviImageNameList;
+            if (section == InspectSection.AVI)
+            {
+                PanelMission newmission = panelMissionList.Dequeue();
+                return new InspectMission(newmission, section, SystemParameter.AviImageNameList);
+            }
+            else if (section == InspectSection.SVI)
+            {
+                PanelMission newmission = panelMissionList.Dequeue();
+                return new InspectMission(newmission, section, SystemParameter.SviImageNameList);
+            }
+            else if (section == InspectSection.APP)
+            {
+                PanelMission newmission = panelMissionList.Dequeue();
+                return new InspectMission(newmission, section, SystemParameter.AppImageNameList);
+            }
+            else
+            {
+                ExamMission newExamMission = examMissionList.Dequeue();
+                switch (newExamMission.PcSection)
+                {
+                    case InspectSection.AVI:
+                        imagenamelist = SystemParameter.AviImageNameList;
+                        break;
+                    case InspectSection.SVI:
+                        imagenamelist = SystemParameter.SviImageNameList;
+                        break;
+                    case InspectSection.APP:
+                        imagenamelist = SystemParameter.AppImageNameList;
+                        break;
+                }
+                InspectMission newinspectmission = new InspectMission(newExamMission, imagenamelist);
+                return newinspectmission;
+            }
         }
     }
 }

@@ -14,17 +14,44 @@ namespace EyeOfSauron
     {
         Serverconnecter TheServerConnecter;
         Operator Operater;
-        MissionPackage TheMissionPackage;
         public Parameter SystemParameter;
-        bool StopToCellFlag;
-        public InspectSection Section {get;set;}
+        public InspectSection Section { get; set; }
+        public InspectMission OnInspectedMission { get; set; }
+        private Queue<InspectMission> PreDownloadedMissionQueue;        //已加载的文件队列
+        private int DownloadQuantity;                                   //预加载图像文件的个数
+        public string ImageSavingPath { get; set; }
+        public int Count { get { return PreDownloadedMissionQueue.Count; } }
+        public int RemainMissionCount { get { return PreDownloadedMissionQueue.Count; } }
+        string[] ImageNameList
+        {
+            get
+            {
+                if (Section == InspectSection.AVI)
+                {
+                    return SystemParameter.AviImageNameList;
+                }
+                else if (Section == InspectSection.SVI)
+                {
+                    return SystemParameter.SviImageNameList;
+                }
+                else
+                {
+                    return SystemParameter.AppImageNameList;
+                }
+            }
+        }
         public Manager()
         {
             SystemParameter = InitParameter();
-            TheServerConnecter = new Serverconnecter();
+            TheServerConnecter = new Serverconnecter(SystemParameter);
             Operater = null;
-            StopToCellFlag = false;
-            TheMissionPackage = new MissionPackage(SystemParameter);
+            DownloadQuantity = SystemParameter.PreLoadQuantity;
+            ImageSavingPath = SystemParameter.SavePath;
+        }
+        public void CleanMission()
+        {
+            PreDownloadedMissionQueue = new Queue<InspectMission>();
+            OnInspectedMission = null;
         }
         public Operator CheckUser(Operator newUser)
         {
@@ -56,70 +83,15 @@ namespace EyeOfSauron
         {
             Section = section;
         }
-        public void InspectStart()
+        public String InspectFinished(Defect defect, JudgeGrade judge)
         {
-            TheMissionPackage.NewMission();
-        }
-        public void InspectFinished(Defect defect)
-        {
-            PanelMissionResult newresult  = new PanelMissionResult();
+            PanelMissionResult newresult = new PanelMissionResult(judge, defect, this.Section, this.Operater);
             TheServerConnecter.FinishMission(newresult);
-            TheMissionPackage.NewMission();
-            if (!StopToCellFlag)
-            {
-                AddMission();
-            }
-        }
-        public Bitmap[] GetOnInspectPanelImage()
-        {
-            Bitmap[] returnarray = new Bitmap[SystemParameter.AviImageNameList.Count()];
-            for (int i = 0; i < SystemParameter.AviImageNameList.Count(); i++)
-            {
-                returnarray[i] = new Bitmap(TheMissionPackage.OnInspectedMission.GetFileFromMemory(SystemParameter.ImageNameList[i]));
-            }
-            return returnarray;
-        }
-        public string GetOnInspectPanelId()
-        {
-            return TheMissionPackage.OnInspectedMission.MissionInfo.PanelId;
-        }
-        public int RemainMissionCount { get { return TheMissionPackage.Count; } }
-        void CheckRemainMissionCount()
-        {
-            for (int i = 0; i < 20; i++)
-            {
-                AddOneMission();
-            }
-        }
-        public void AddMission()
-        {
-            for (int i = 0; i < 20; i++)
-            {
-                AddOneMission();
-            }
-        }
-        public void AddOneMission()
-        {
-            TheMissionPackage.AddMission(TheServerConnecter.GetMission());
-        }
-        public void PreLoadOneMission()
-        {
-            TheMissionPackage.PreDownloadFile(TheServerConnecter.GetMission());
-        }
-        public void GetExamMission()
-        {
+            AddMission();
         }
         public void SendUnfinishedMissionBackToServer()
         {
-            if (Section != InspectSection.EXAM)
-            {
-                Queue<PanelMission> returnmissionqueue = TheMissionPackage.GetUnfinishedMission();
-                while (returnmissionqueue.Count == 0)
-                {
-                    TheServerConnecter.SendUnfinishedMissionBack(Section, returnmissionqueue.Dequeue());
-                }
-                TheMissionPackage.CleanMission();
-            }
+            //TODO
         }
     }
 }

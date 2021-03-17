@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Container;
 
 namespace EyeOfSauron
 {
@@ -29,6 +30,22 @@ namespace EyeOfSauron
         {
             string return_code = translate_table[defect_name];
             return return_code;
+        }
+
+        public JudgeGrade name2judge(string defect_name)
+        {
+            if (defect_name == "S")
+            {
+                return JudgeGrade.S;
+            }
+            else if(defect_name == "E")
+            {
+                return JudgeGrade.E;
+            }
+            else
+            {
+                return JudgeGrade.F;
+            }
         }
 
     }

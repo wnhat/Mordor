@@ -50,6 +50,7 @@ namespace EyeOfSauron
             if((Refreshflag)*3 < ImageArray.Count())
             {
                 SetImageLabel(ImageNameArray.Skip((Refreshflag)*3).Take(3).ToArray());
+                SetImage(ImageArray.Skip((Refreshflag)*3).Take(3).ToArray());
                 Refreshflag++;
             }
             else
@@ -58,27 +59,38 @@ namespace EyeOfSauron
                 RefreshForm();
             }
         }
+        private void judge_function(object sender, EventArgs e)
+        {
+            Button sender_button = (Button)sender;
+            string defectname = sender_button.Text;
+            string defectcode = defect_translator.name2code(sender_button.Text);
+            JudgeGrade newjudge = defect_translator.name2judge(sender_button.Text);
+            Defect newdefect = new Defect(defectname, defectcode, TheManager.Section);
+            var getNextPanelMessage = TheManager.InspectFinished(newdefect,newjudge);
+            if (getNextPanelMessage != null)
+            {
+                MessageBox.Show(getNextPanelMessage);
+            }
+            else
+            {
+                ReadData();
+            }
+        }
+        private void ReadData()
+        {
+            ImageNameArray = TheManager.OnInspectedMission.ImageNameList;
+            Bitmap[] ImageArray = new Bitmap[ImageNameArray.Length];
+            for (int i = 0; i < ImageNameArray.Length; i++)
+            {
+                ImageArray[i] = new Bitmap(TheManager.OnInspectedMission.GetFileFromMemory(ImageNameArray[i]));
+            }
+        }
         private void logout(object sender, EventArgs e)
         {
             login_button.Text = "用户登录";
             login_button.BackColor = System.Drawing.Color.SandyBrown;
             this.Close();
             TheParentForm.Show();
-        }
-        private void judge_function(object sender, EventArgs e)
-        {
-            Button sender_button = (Button)sender;
-            string defectname = sender_button.Text;
-            string defectcode = defect_translator.name2code(sender_button.Text);
-            Defect newdefect = new Defect(defectname, defectcode, TheManager.Section);
-            GetNextPanel();
-        }
-        private void GetNextPanel()
-        {
-            TheManager.InspectStart();
-            ImageArray = TheManager.GetOnInspectPanelImage();
-            SetPanelId(TheManager.GetOnInspectPanelId());
-            remain_label.Text = TheManager.RemainMissionCount.ToString();
         }
         protected override void OnFormClosed(FormClosedEventArgs e)
         {

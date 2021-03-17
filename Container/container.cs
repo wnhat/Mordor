@@ -128,12 +128,14 @@ namespace Container
         public Defect defect;
         public InspectSection Section; // AVI OR SVI OR APP;
         public Operator Op;
-        public PanelMissionResult(JudgeGrade judge, Defect defect, InspectSection section, Operator op)
+        public PanelMissionResult(JudgeGrade judge, Defect defect, InspectSection section, Operator op, string panelId, long missionNumber)
         {
             Judge = judge;
             this.defect = defect;
             Section = section;
             Op = op;
+            PanelId = panelId;
+            MissionNumber = missionNumber;
         }
     }
     public class ExamMission
@@ -336,24 +338,37 @@ namespace Container
     }
     public class InspectMission
     {
-        string[] ImageNameList;                         // The image name in reuslt file which we need to inspect
+        string PanelId;
+        public string[] ImageNameList;                         // The image name in reuslt file which we need to inspect
         DirContainer Container;
-        string SavePath;
-        public InspectMission(PanelMission missioninfo, string[] imageNameList, string savePath)
+        public long MissionNumber;
+        public InspectMission(PanelMission missioninfo, InspectSection section, string[] imageNameList)
         {
-
+            PanelId = missioninfo.PanelId;
+            switch (section)
+            {
+                case InspectSection.AVI:
+                    Container = new DirContainer(missioninfo.AviPanelPath.Result_path);
+                    break;
+                case InspectSection.SVI:
+                    Container = new DirContainer(missioninfo.SviPanelPath.Result_path);
+                    break;
+                case InspectSection.APP:
+                    Container = new DirContainer(missioninfo.AppPanelPath.Result_path);
+                    break;
+                default:
+                    break;
+            }
             ImageNameList = imageNameList;
+            MissionNumber = missioninfo.MissionNumber;
         }
-        public InspectMission(ExamMission missioninfo, string[] imageNameList, string savePath)
+        public InspectMission(ExamMission missioninfo, string[] imageNameList)
         {
+            PanelId = missioninfo.PanelId;
             Container = new DirContainer(missioninfo.Result_path);
             ImageNameList = imageNameList;
         }
-        public void ChangeSavePath(string newsavepath)
-        {
-            SavePath = newsavepath;
-        }
-        public void SaveFileInDisk()
+        public void SaveFileInDisk(string SavePath)
         {
             Container.SaveDirInDisk(SavePath);
         }
