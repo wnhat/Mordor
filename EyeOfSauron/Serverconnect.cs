@@ -8,6 +8,7 @@ using NetMQ.Sockets;
 using System.IO;
 using Container;
 using Container.Message;
+using System.Data;
 
 namespace EyeOfSauron
 {
@@ -16,20 +17,15 @@ namespace EyeOfSauron
         private RequestSocket request;
         Queue<PanelMission> panelMissionList;
         Queue<ExamMission> examMissionList;
+        ExamManager theExamManager;
         Parameter SystemParameter;
         public Serverconnecter(Parameter systemParameter)
         {
             request = new RequestSocket();
             request.Connect("tcp://localhost:5555");
             SystemParameter = systemParameter;
-        }
-        PanelMission GetPanelMission()
-        {
-            // get new panel mission from server;
-            BaseMessage newMessage = new BaseMessage(MessageType.CLINET_GET_MISSION_AVI);
-            request.SendMultipartMessage(newMessage);
-            PanelMissionMessage returnMessage = new PanelMissionMessage(request.ReceiveMultipartMessage());
-            return returnMessage.ThePanelMission;
+            panelMissionList = new Queue<PanelMission>();
+            examMissionList = new Queue<ExamMission>();
         }
         public Operator CheckPassWord(Operator theuser)
         {
@@ -45,14 +41,22 @@ namespace EyeOfSauron
             return new Operator("password", "testop", "testid");
 #endif
         }
-        public bool FinishMission(PanelMissionResult finishedMission)
+        public void FinishMission(PanelMissionResult finishedMission)
         {
-            PanelResultMessage newMessage = new PanelResultMessage(MessageType.CLIENT_SEND_MISSION_RESULT, finishedMission);
-            request.SendMultipartMessage(newMessage);
-            bool returnbool = request.ReceiveSignal();
-            return returnbool;
+            switch (finishedMission.Section)
+            {
+                case InspectSection.AVI:
+                case InspectSection.SVI:
+                case InspectSection.APP:
+                    PanelResultMessage newMessage = new PanelResultMessage(MessageType.CLIENT_SEND_MISSION_RESULT, finishedMission);
+                    request.SendMultipartMessage(newMessage);
+                    break;
+                case InspectSection.EXAM:
+                    theExamManager.FinishMission(finishedMission);
+                    break;
+            }
         }
-        public void SendUnfinishedMissionBack(InspectSection section, PanelMission mission)
+        public void SendUnfinishedMissionBack(InspectSection section)
         {
             MessageType missionsection = MessageType.CLINET_SEND_UNFINISHED_MISSION_AVI;
             switch (section)
@@ -67,14 +71,27 @@ namespace EyeOfSauron
                     missionsection = MessageType.CLINET_SEND_UNFINISHED_MISSION_APP;
                     break;
             }
-            PanelMissionMessage message = new PanelMissionMessage(missionsection, mission);
-            request.SendMultipartMessage(message);
+            for (int i = 0; i < panelMissionList.Count; i++)
+            {
+                PanelMission mission = panelMissionList.Dequeue();
+                PanelMissionMessage message = new PanelMissionMessage(missionsection, mission);
+                request.SendMultipartMessage(message);
+            }
+        }
+        PanelMission GetPanelMission()
+        {
+            // get new panel mission from server;
+            BaseMessage newMessage = new BaseMessage(MessageType.CLINET_GET_MISSION_AVI);
+            request.SendMultipartMessage(newMessage);
+            PanelMissionMessage returnMessage = new PanelMissionMessage(request.ReceiveMultipartMessage());
+            return returnMessage.ThePanelMission;
         }
         public List<ExamMission> GetExamMissions()
         {
             BaseMessage newmessage = new BaseMessage(MessageType.CLINET_GET_EXAM_MISSION_LIST);
             request.SendMultipartMessage(newmessage);
             var returnmessage = new ExamMissionMessage(request.ReceiveMultipartMessage());
+            theExamManager = new ExamManager(returnmessage.ExamMissionList);
             return returnmessage.ExamMissionList;
         }
         public InspectMission GetMission(InspectSection section)
@@ -82,17 +99,20 @@ namespace EyeOfSauron
             string[] imagenamelist = SystemParameter.AviImageNameList;
             if (section == InspectSection.AVI)
             {
-                PanelMission newmission = panelMissionList.Dequeue();
+                PanelMission newmission = GetPanelMission();
+                panelMissionList.Enqueue(newmission);
                 return new InspectMission(newmission, section, SystemParameter.AviImageNameList);
             }
             else if (section == InspectSection.SVI)
             {
-                PanelMission newmission = panelMissionList.Dequeue();
+                PanelMission newmission = GetPanelMission();
+                panelMissionList.Enqueue(newmission);
                 return new InspectMission(newmission, section, SystemParameter.SviImageNameList);
             }
             else if (section == InspectSection.APP)
             {
-                PanelMission newmission = panelMissionList.Dequeue();
+                PanelMission newmission = GetPanelMission();
+                panelMissionList.Enqueue(newmission);
                 return new InspectMission(newmission, section, SystemParameter.AppImageNameList);
             }
             else
@@ -112,6 +132,37 @@ namespace EyeOfSauron
                 }
                 InspectMission newinspectmission = new InspectMission(newExamMission, imagenamelist);
                 return newinspectmission;
+            }
+        }
+    }
+    class ExamManager
+    {
+        Queue<ExamMission> ExamMissionQueue;
+        DataTable ExamResult;
+        int right;
+        int wrong;
+        public ExamManager(List<ExamMission> missionlist)
+        {
+            ExamMissionQueue = new Queue<ExamMission>();
+            ExamResult = new DataTable();
+            foreach (var mission in missionlist)
+            {
+                ExamMissionQueue.Enqueue(mission);
+            }
+
+            this.right = 0;
+            this.wrong = 0;
+        }
+        public void FinishMission(PanelMissionResult missionresult)
+        {
+            var mission = ExamMissionQueue.Dequeue();
+            if (mission.Defect == missionresult.defect)
+            {
+                right++;
+            }
+            else
+            {
+                wrong++;
             }
         }
     }

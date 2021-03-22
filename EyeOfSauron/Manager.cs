@@ -40,6 +40,12 @@ namespace EyeOfSauron
                 }
             }
         }
+
+        internal void PreLoadOneMission()
+        {
+            throw new NotImplementedException();
+        }
+
         public Manager()
         {
             SystemParameter = InitParameter();
@@ -83,15 +89,14 @@ namespace EyeOfSauron
         {
             Section = section;
         }
-        public String InspectFinished(Defect defect, JudgeGrade judge)
+        public void InspectFinished(Defect defect, JudgeGrade judge)
         {
-            PanelMissionResult newresult = new PanelMissionResult(judge, defect, this.Section, this.Operater);
+            PanelMissionResult newresult = new PanelMissionResult(judge, defect, this.Section, this.Operater,OnInspectedMission.PanelId,OnInspectedMission.MissionNumber);
             TheServerConnecter.FinishMission(newresult);
-            AddMission();
         }
         public void SendUnfinishedMissionBackToServer()
         {
-            //TODO
+            TheServerConnecter.SendUnfinishedMissionBack(Section);
         }
     }
 }

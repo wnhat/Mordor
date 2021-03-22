@@ -23,7 +23,7 @@ namespace EyeOfSauron
         }
         private void userid_box_KeyDown(object sender, KeyEventArgs e)
         {
-            // binding with the keyboard enter .
+            // binding with the keyboard enter.
             if (e.KeyCode == Keys.Enter)
             {
                 Avibutton_Click(sender, e);

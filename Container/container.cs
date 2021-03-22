@@ -266,9 +266,9 @@ namespace Container
                     AppDefect = newresult.defect;
                     break;
                 default:
-                    AllDefect += newresult.defect.DefectName;
                     break;
             }
+            AllDefect += newresult.defect.DefectName;
             if (finished)
             {
                 FinishTime = DateTime.Now;
@@ -338,7 +338,7 @@ namespace Container
     }
     public class InspectMission
     {
-        string PanelId;
+        public string PanelId;
         public string[] ImageNameList;                         // The image name in reuslt file which we need to inspect
         DirContainer Container;
         public long MissionNumber;

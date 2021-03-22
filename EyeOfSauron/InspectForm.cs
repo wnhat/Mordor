@@ -23,7 +23,7 @@ namespace EyeOfSauron
         string[] ImageNameArray;
         public InspectForm(LoginForm parentForm, Manager theManager)
         {
-            // initial AviInspectForm；
+            // initial AviInspectForm:
             InitializeComponent();
             TheParentForm = parentForm;
             TheManager = theManager;
@@ -66,15 +66,8 @@ namespace EyeOfSauron
             string defectcode = defect_translator.name2code(sender_button.Text);
             JudgeGrade newjudge = defect_translator.name2judge(sender_button.Text);
             Defect newdefect = new Defect(defectname, defectcode, TheManager.Section);
-            var getNextPanelMessage = TheManager.InspectFinished(newdefect,newjudge);
-            if (getNextPanelMessage != null)
-            {
-                MessageBox.Show(getNextPanelMessage);
-            }
-            else
-            {
-                ReadData();
-            }
+            TheManager.InspectFinished(newdefect,newjudge);
+            ReadData();  // TODO:if there is no mission left will ocuer error;
         }
         private void ReadData()
         {
