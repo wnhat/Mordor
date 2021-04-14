@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Container;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,5 +14,6 @@ namespace EyeOfSauron
         public string[]     SviImageNameList;
         public string[]     AppImageNameList;
         public int          PreLoadQuantity;
+        public Defect[]     CodeNameList;
     }
 }

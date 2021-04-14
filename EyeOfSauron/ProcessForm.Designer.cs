@@ -51,7 +51,6 @@
             this.label1.Size = new System.Drawing.Size(510, 38);
             this.label1.TabIndex = 1;
             this.label1.Text = "正在进行文件下载与预处理，请稍等；";
-            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // ProcessForm
             // 

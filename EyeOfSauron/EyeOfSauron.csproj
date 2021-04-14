@@ -105,7 +105,6 @@
       <DependentUpon>LoginForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Manager.cs" />
-    <Compile Include="MissionPackage.cs" />
     <Compile Include="InspectForm.cs">
       <SubType>Form</SubType>
     </Compile>

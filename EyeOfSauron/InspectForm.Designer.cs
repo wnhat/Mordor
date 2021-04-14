@@ -29,12 +29,18 @@
         private void InitializeComponent()
         {
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.blot_defect_button = new System.Windows.Forms.Button();
-            this.vertical_defect_button = new System.Windows.Forms.Button();
-            this.horizontal_defect_button = new System.Windows.Forms.Button();
-            this.ETC_defect_button = new System.Windows.Forms.Button();
-            this.dark_defect_button = new System.Windows.Forms.Button();
-            this.bright_defect_button = new System.Windows.Forms.Button();
+            this.defect_button_11 = new System.Windows.Forms.Button();
+            this.defect_button_12 = new System.Windows.Forms.Button();
+            this.defect_button_10 = new System.Windows.Forms.Button();
+            this.defect_button_9 = new System.Windows.Forms.Button();
+            this.defect_button_8 = new System.Windows.Forms.Button();
+            this.defect_button_7 = new System.Windows.Forms.Button();
+            this.defect_button_1 = new System.Windows.Forms.Button();
+            this.defect_button_2 = new System.Windows.Forms.Button();
+            this.defect_button_3 = new System.Windows.Forms.Button();
+            this.defect_button_4 = new System.Windows.Forms.Button();
+            this.defect_button_5 = new System.Windows.Forms.Button();
+            this.defect_button_6 = new System.Windows.Forms.Button();
             this.s_grade_button = new System.Windows.Forms.Button();
             this.e_grade_button = new System.Windows.Forms.Button();
             this.virtual_image_Box = new System.Windows.Forms.PictureBox();
@@ -49,6 +55,7 @@
             this.imagelabel1 = new System.Windows.Forms.Label();
             this.imagelabel3 = new System.Windows.Forms.Label();
             this.imagelabel2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.virtual_image_Box)).BeginInit();
             this.tableLayoutPanel3.SuspendLayout();
@@ -60,106 +67,191 @@
             // tableLayoutPanel1
             // 
             this.tableLayoutPanel1.ColumnCount = 3;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33332F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33334F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33334F));
-            this.tableLayoutPanel1.Controls.Add(this.blot_defect_button, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.vertical_defect_button, 1, 0);
-            this.tableLayoutPanel1.Controls.Add(this.horizontal_defect_button, 2, 0);
-            this.tableLayoutPanel1.Controls.Add(this.ETC_defect_button, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.dark_defect_button, 1, 1);
-            this.tableLayoutPanel1.Controls.Add(this.bright_defect_button, 2, 1);
-            this.tableLayoutPanel1.Controls.Add(this.s_grade_button, 1, 2);
-            this.tableLayoutPanel1.Controls.Add(this.e_grade_button, 0, 2);
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(1363, 787);
+            this.tableLayoutPanel1.Controls.Add(this.defect_button_11, 1, 3);
+            this.tableLayoutPanel1.Controls.Add(this.defect_button_12, 2, 3);
+            this.tableLayoutPanel1.Controls.Add(this.defect_button_10, 0, 3);
+            this.tableLayoutPanel1.Controls.Add(this.defect_button_9, 2, 2);
+            this.tableLayoutPanel1.Controls.Add(this.defect_button_8, 1, 2);
+            this.tableLayoutPanel1.Controls.Add(this.defect_button_7, 0, 2);
+            this.tableLayoutPanel1.Controls.Add(this.defect_button_1, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.defect_button_2, 1, 0);
+            this.tableLayoutPanel1.Controls.Add(this.defect_button_3, 2, 0);
+            this.tableLayoutPanel1.Controls.Add(this.defect_button_4, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.defect_button_5, 1, 1);
+            this.tableLayoutPanel1.Controls.Add(this.defect_button_6, 2, 1);
+            this.tableLayoutPanel1.Controls.Add(this.s_grade_button, 1, 4);
+            this.tableLayoutPanel1.Controls.Add(this.e_grade_button, 0, 4);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(1365, 669);
             this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(2);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 3;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 13F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 13F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(521, 227);
+            this.tableLayoutPanel1.RowCount = 5;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(521, 347);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
-            // blot_defect_button
+            // defect_button_11
             // 
-            this.blot_defect_button.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.blot_defect_button.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.blot_defect_button.Location = new System.Drawing.Point(2, 2);
-            this.blot_defect_button.Margin = new System.Windows.Forms.Padding(2);
-            this.blot_defect_button.Name = "blot_defect_button";
-            this.blot_defect_button.Size = new System.Drawing.Size(169, 71);
-            this.blot_defect_button.TabIndex = 0;
-            this.blot_defect_button.Text = "污渍";
-            this.blot_defect_button.UseVisualStyleBackColor = true;
-            this.blot_defect_button.Click += new System.EventHandler(this.judge_function);
+            this.defect_button_11.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.defect_button_11.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Bold);
+            this.defect_button_11.Location = new System.Drawing.Point(175, 209);
+            this.defect_button_11.Margin = new System.Windows.Forms.Padding(2);
+            this.defect_button_11.Name = "defect_button_11";
+            this.defect_button_11.Size = new System.Drawing.Size(169, 65);
+            this.defect_button_11.TabIndex = 13;
+            this.defect_button_11.Text = "XXXX";
+            this.defect_button_11.UseVisualStyleBackColor = true;
+            this.defect_button_11.Click += new System.EventHandler(this.judge_function);
             // 
-            // vertical_defect_button
+            // defect_button_12
             // 
-            this.vertical_defect_button.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.vertical_defect_button.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Bold);
-            this.vertical_defect_button.Location = new System.Drawing.Point(175, 2);
-            this.vertical_defect_button.Margin = new System.Windows.Forms.Padding(2);
-            this.vertical_defect_button.Name = "vertical_defect_button";
-            this.vertical_defect_button.Size = new System.Drawing.Size(169, 71);
-            this.vertical_defect_button.TabIndex = 1;
-            this.vertical_defect_button.Text = "竖-条纹";
-            this.vertical_defect_button.UseVisualStyleBackColor = true;
-            this.vertical_defect_button.Click += new System.EventHandler(this.judge_function);
+            this.defect_button_12.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.defect_button_12.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Bold);
+            this.defect_button_12.Location = new System.Drawing.Point(348, 209);
+            this.defect_button_12.Margin = new System.Windows.Forms.Padding(2);
+            this.defect_button_12.Name = "defect_button_12";
+            this.defect_button_12.Size = new System.Drawing.Size(171, 65);
+            this.defect_button_12.TabIndex = 12;
+            this.defect_button_12.Text = "XXXX";
+            this.defect_button_12.UseVisualStyleBackColor = true;
+            this.defect_button_12.Click += new System.EventHandler(this.judge_function);
             // 
-            // horizontal_defect_button
+            // defect_button_10
             // 
-            this.horizontal_defect_button.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.horizontal_defect_button.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Bold);
-            this.horizontal_defect_button.Location = new System.Drawing.Point(348, 2);
-            this.horizontal_defect_button.Margin = new System.Windows.Forms.Padding(2);
-            this.horizontal_defect_button.Name = "horizontal_defect_button";
-            this.horizontal_defect_button.Size = new System.Drawing.Size(171, 71);
-            this.horizontal_defect_button.TabIndex = 2;
-            this.horizontal_defect_button.Text = "横-条纹";
-            this.horizontal_defect_button.UseVisualStyleBackColor = true;
-            this.horizontal_defect_button.Click += new System.EventHandler(this.judge_function);
+            this.defect_button_10.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.defect_button_10.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Bold);
+            this.defect_button_10.Location = new System.Drawing.Point(2, 209);
+            this.defect_button_10.Margin = new System.Windows.Forms.Padding(2);
+            this.defect_button_10.Name = "defect_button_10";
+            this.defect_button_10.Size = new System.Drawing.Size(169, 65);
+            this.defect_button_10.TabIndex = 11;
+            this.defect_button_10.Text = "XXXX";
+            this.defect_button_10.UseVisualStyleBackColor = true;
+            this.defect_button_10.Click += new System.EventHandler(this.judge_function);
             // 
-            // ETC_defect_button
+            // defect_button_9
             // 
-            this.ETC_defect_button.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ETC_defect_button.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Bold);
-            this.ETC_defect_button.Location = new System.Drawing.Point(2, 77);
-            this.ETC_defect_button.Margin = new System.Windows.Forms.Padding(2);
-            this.ETC_defect_button.Name = "ETC_defect_button";
-            this.ETC_defect_button.Size = new System.Drawing.Size(169, 71);
-            this.ETC_defect_button.TabIndex = 3;
-            this.ETC_defect_button.Text = "ETC";
-            this.ETC_defect_button.UseVisualStyleBackColor = true;
-            this.ETC_defect_button.Click += new System.EventHandler(this.judge_function);
+            this.defect_button_9.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.defect_button_9.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Bold);
+            this.defect_button_9.Location = new System.Drawing.Point(348, 140);
+            this.defect_button_9.Margin = new System.Windows.Forms.Padding(2);
+            this.defect_button_9.Name = "defect_button_9";
+            this.defect_button_9.Size = new System.Drawing.Size(171, 65);
+            this.defect_button_9.TabIndex = 10;
+            this.defect_button_9.Text = "XXXX";
+            this.defect_button_9.UseVisualStyleBackColor = true;
+            this.defect_button_9.Click += new System.EventHandler(this.judge_function);
             // 
-            // dark_defect_button
+            // defect_button_8
             // 
-            this.dark_defect_button.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dark_defect_button.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Bold);
-            this.dark_defect_button.Location = new System.Drawing.Point(175, 77);
-            this.dark_defect_button.Margin = new System.Windows.Forms.Padding(2);
-            this.dark_defect_button.Name = "dark_defect_button";
-            this.dark_defect_button.Size = new System.Drawing.Size(169, 71);
-            this.dark_defect_button.TabIndex = 4;
-            this.dark_defect_button.Text = "暗团";
-            this.dark_defect_button.UseVisualStyleBackColor = true;
-            this.dark_defect_button.Click += new System.EventHandler(this.judge_function);
+            this.defect_button_8.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.defect_button_8.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Bold);
+            this.defect_button_8.Location = new System.Drawing.Point(175, 140);
+            this.defect_button_8.Margin = new System.Windows.Forms.Padding(2);
+            this.defect_button_8.Name = "defect_button_8";
+            this.defect_button_8.Size = new System.Drawing.Size(169, 65);
+            this.defect_button_8.TabIndex = 9;
+            this.defect_button_8.Text = "XXXX";
+            this.defect_button_8.UseVisualStyleBackColor = true;
+            this.defect_button_8.Click += new System.EventHandler(this.judge_function);
             // 
-            // bright_defect_button
+            // defect_button_7
             // 
-            this.bright_defect_button.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.bright_defect_button.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Bold);
-            this.bright_defect_button.Location = new System.Drawing.Point(348, 77);
-            this.bright_defect_button.Margin = new System.Windows.Forms.Padding(2);
-            this.bright_defect_button.Name = "bright_defect_button";
-            this.bright_defect_button.Size = new System.Drawing.Size(171, 71);
-            this.bright_defect_button.TabIndex = 5;
-            this.bright_defect_button.Text = "亮团";
-            this.bright_defect_button.UseVisualStyleBackColor = true;
-            this.bright_defect_button.Click += new System.EventHandler(this.judge_function);
+            this.defect_button_7.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.defect_button_7.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Bold);
+            this.defect_button_7.Location = new System.Drawing.Point(2, 140);
+            this.defect_button_7.Margin = new System.Windows.Forms.Padding(2);
+            this.defect_button_7.Name = "defect_button_7";
+            this.defect_button_7.Size = new System.Drawing.Size(169, 65);
+            this.defect_button_7.TabIndex = 8;
+            this.defect_button_7.Text = "XXXX";
+            this.defect_button_7.UseVisualStyleBackColor = true;
+            this.defect_button_7.Click += new System.EventHandler(this.judge_function);
+            // 
+            // defect_button_1
+            // 
+            this.defect_button_1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.defect_button_1.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.defect_button_1.Location = new System.Drawing.Point(2, 2);
+            this.defect_button_1.Margin = new System.Windows.Forms.Padding(2);
+            this.defect_button_1.Name = "defect_button_1";
+            this.defect_button_1.Size = new System.Drawing.Size(169, 65);
+            this.defect_button_1.TabIndex = 0;
+            this.defect_button_1.Text = "XXXX";
+            this.defect_button_1.UseVisualStyleBackColor = true;
+            this.defect_button_1.Click += new System.EventHandler(this.judge_function);
+            // 
+            // defect_button_2
+            // 
+            this.defect_button_2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.defect_button_2.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Bold);
+            this.defect_button_2.Location = new System.Drawing.Point(175, 2);
+            this.defect_button_2.Margin = new System.Windows.Forms.Padding(2);
+            this.defect_button_2.Name = "defect_button_2";
+            this.defect_button_2.Size = new System.Drawing.Size(169, 65);
+            this.defect_button_2.TabIndex = 1;
+            this.defect_button_2.Text = "XXXX";
+            this.defect_button_2.UseVisualStyleBackColor = true;
+            this.defect_button_2.Click += new System.EventHandler(this.judge_function);
+            // 
+            // defect_button_3
+            // 
+            this.defect_button_3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.defect_button_3.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Bold);
+            this.defect_button_3.Location = new System.Drawing.Point(348, 2);
+            this.defect_button_3.Margin = new System.Windows.Forms.Padding(2);
+            this.defect_button_3.Name = "defect_button_3";
+            this.defect_button_3.Size = new System.Drawing.Size(171, 65);
+            this.defect_button_3.TabIndex = 2;
+            this.defect_button_3.Text = "XXXX";
+            this.defect_button_3.UseVisualStyleBackColor = true;
+            this.defect_button_3.Click += new System.EventHandler(this.judge_function);
+            // 
+            // defect_button_4
+            // 
+            this.defect_button_4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.defect_button_4.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Bold);
+            this.defect_button_4.Location = new System.Drawing.Point(2, 71);
+            this.defect_button_4.Margin = new System.Windows.Forms.Padding(2);
+            this.defect_button_4.Name = "defect_button_4";
+            this.defect_button_4.Size = new System.Drawing.Size(169, 65);
+            this.defect_button_4.TabIndex = 3;
+            this.defect_button_4.Text = "XXXX";
+            this.defect_button_4.UseVisualStyleBackColor = true;
+            this.defect_button_4.Click += new System.EventHandler(this.judge_function);
+            // 
+            // defect_button_5
+            // 
+            this.defect_button_5.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.defect_button_5.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Bold);
+            this.defect_button_5.Location = new System.Drawing.Point(175, 71);
+            this.defect_button_5.Margin = new System.Windows.Forms.Padding(2);
+            this.defect_button_5.Name = "defect_button_5";
+            this.defect_button_5.Size = new System.Drawing.Size(169, 65);
+            this.defect_button_5.TabIndex = 4;
+            this.defect_button_5.Text = "XXXX";
+            this.defect_button_5.UseVisualStyleBackColor = true;
+            this.defect_button_5.Click += new System.EventHandler(this.judge_function);
+            // 
+            // defect_button_6
+            // 
+            this.defect_button_6.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.defect_button_6.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Bold);
+            this.defect_button_6.Location = new System.Drawing.Point(348, 71);
+            this.defect_button_6.Margin = new System.Windows.Forms.Padding(2);
+            this.defect_button_6.Name = "defect_button_6";
+            this.defect_button_6.Size = new System.Drawing.Size(171, 65);
+            this.defect_button_6.TabIndex = 5;
+            this.defect_button_6.Text = "XXXX";
+            this.defect_button_6.UseVisualStyleBackColor = true;
+            this.defect_button_6.Click += new System.EventHandler(this.judge_function);
             // 
             // s_grade_button
             // 
@@ -167,10 +259,10 @@
             this.s_grade_button.Dock = System.Windows.Forms.DockStyle.Fill;
             this.s_grade_button.Font = new System.Drawing.Font("Microsoft YaHei", 28F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.s_grade_button.ForeColor = System.Drawing.Color.ForestGreen;
-            this.s_grade_button.Location = new System.Drawing.Point(175, 152);
+            this.s_grade_button.Location = new System.Drawing.Point(175, 278);
             this.s_grade_button.Margin = new System.Windows.Forms.Padding(2);
             this.s_grade_button.Name = "s_grade_button";
-            this.s_grade_button.Size = new System.Drawing.Size(344, 73);
+            this.s_grade_button.Size = new System.Drawing.Size(344, 67);
             this.s_grade_button.TabIndex = 6;
             this.s_grade_button.Text = "S";
             this.s_grade_button.UseVisualStyleBackColor = true;
@@ -181,10 +273,10 @@
             this.e_grade_button.Dock = System.Windows.Forms.DockStyle.Fill;
             this.e_grade_button.Font = new System.Drawing.Font("Microsoft YaHei", 26F, System.Drawing.FontStyle.Bold);
             this.e_grade_button.ForeColor = System.Drawing.SystemColors.Highlight;
-            this.e_grade_button.Location = new System.Drawing.Point(2, 152);
+            this.e_grade_button.Location = new System.Drawing.Point(2, 278);
             this.e_grade_button.Margin = new System.Windows.Forms.Padding(2);
             this.e_grade_button.Name = "e_grade_button";
-            this.e_grade_button.Size = new System.Drawing.Size(169, 73);
+            this.e_grade_button.Size = new System.Drawing.Size(169, 67);
             this.e_grade_button.TabIndex = 7;
             this.e_grade_button.Text = "E";
             this.e_grade_button.UseVisualStyleBackColor = true;
@@ -206,7 +298,7 @@
             this.defect_Listview.Location = new System.Drawing.Point(951, 517);
             this.defect_Listview.Margin = new System.Windows.Forms.Padding(2);
             this.defect_Listview.Name = "defect_Listview";
-            this.defect_Listview.Size = new System.Drawing.Size(725, 266);
+            this.defect_Listview.Size = new System.Drawing.Size(408, 266);
             this.defect_Listview.TabIndex = 3;
             this.defect_Listview.UseCompatibleStateImageBehavior = false;
             // 
@@ -217,7 +309,7 @@
             this.tableLayoutPanel3.Controls.Add(this.login_button, 0, 2);
             this.tableLayoutPanel3.Controls.Add(this.cell_id_label, 0, 0);
             this.tableLayoutPanel3.Controls.Add(this.remain_label, 0, 1);
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(1680, 514);
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(1713, 514);
             this.tableLayoutPanel3.Margin = new System.Windows.Forms.Padding(2);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.RowCount = 3;
@@ -225,7 +317,7 @@
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33334F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33334F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 27F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(206, 269);
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(173, 151);
             this.tableLayoutPanel3.TabIndex = 4;
             // 
             // login_button
@@ -233,10 +325,10 @@
             this.login_button.BackColor = System.Drawing.Color.SandyBrown;
             this.login_button.Dock = System.Windows.Forms.DockStyle.Fill;
             this.login_button.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Bold);
-            this.login_button.Location = new System.Drawing.Point(2, 180);
+            this.login_button.Location = new System.Drawing.Point(2, 102);
             this.login_button.Margin = new System.Windows.Forms.Padding(2);
             this.login_button.Name = "login_button";
-            this.login_button.Size = new System.Drawing.Size(202, 87);
+            this.login_button.Size = new System.Drawing.Size(169, 47);
             this.login_button.TabIndex = 1;
             this.login_button.Text = "用户登录";
             this.login_button.UseVisualStyleBackColor = false;
@@ -246,10 +338,10 @@
             // 
             this.cell_id_label.AutoSize = true;
             this.cell_id_label.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cell_id_label.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Bold);
+            this.cell_id_label.Font = new System.Drawing.Font("Microsoft YaHei", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.cell_id_label.Location = new System.Drawing.Point(3, 0);
             this.cell_id_label.Name = "cell_id_label";
-            this.cell_id_label.Size = new System.Drawing.Size(200, 89);
+            this.cell_id_label.Size = new System.Drawing.Size(167, 50);
             this.cell_id_label.TabIndex = 2;
             this.cell_id_label.Text = "CELL ID";
             this.cell_id_label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -258,12 +350,12 @@
             // 
             this.remain_label.AutoSize = true;
             this.remain_label.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.remain_label.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Bold);
-            this.remain_label.Location = new System.Drawing.Point(3, 89);
+            this.remain_label.Font = new System.Drawing.Font("Microsoft YaHei", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.remain_label.Location = new System.Drawing.Point(3, 50);
             this.remain_label.Name = "remain_label";
-            this.remain_label.Size = new System.Drawing.Size(200, 89);
+            this.remain_label.Size = new System.Drawing.Size(167, 50);
             this.remain_label.TabIndex = 3;
-            this.remain_label.Text = "剩余任务数：";
+            this.remain_label.Text = "已进行：";
             this.remain_label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // pictureBox1
@@ -326,10 +418,21 @@
             this.imagelabel2.TabIndex = 10;
             this.imagelabel2.Text = "label1";
             // 
-            // AviInspectForm
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft YaHei", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label1.Location = new System.Drawing.Point(1487, 565);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(66, 38);
+            this.label1.TabIndex = 11;
+            this.label1.Text = "AVI";
+            // 
+            // InspectForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(1902, 1024);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.imagelabel2);
             this.Controls.Add(this.imagelabel3);
             this.Controls.Add(this.imagelabel1);
@@ -343,7 +446,7 @@
             this.Margin = new System.Windows.Forms.Padding(2);
             this.MaximumSize = new System.Drawing.Size(1920, 1080);
             this.MinimumSize = new System.Drawing.Size(1918, 1038);
-            this.Name = "AviInspectForm";
+            this.Name = "InspectForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Form1";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
@@ -362,12 +465,12 @@
         #endregion
 
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.Button blot_defect_button;
-        private System.Windows.Forms.Button vertical_defect_button;
-        private System.Windows.Forms.Button horizontal_defect_button;
-        private System.Windows.Forms.Button ETC_defect_button;
-        private System.Windows.Forms.Button dark_defect_button;
-        private System.Windows.Forms.Button bright_defect_button;
+        private System.Windows.Forms.Button defect_button_1;
+        private System.Windows.Forms.Button defect_button_2;
+        private System.Windows.Forms.Button defect_button_3;
+        private System.Windows.Forms.Button defect_button_4;
+        private System.Windows.Forms.Button defect_button_5;
+        private System.Windows.Forms.Button defect_button_6;
         private System.Windows.Forms.Button s_grade_button;
         private System.Windows.Forms.Button e_grade_button;
         private System.Windows.Forms.PictureBox virtual_image_Box;
@@ -382,6 +485,13 @@
         private System.Windows.Forms.Label imagelabel1;
         private System.Windows.Forms.Label imagelabel3;
         private System.Windows.Forms.Label imagelabel2;
+        private System.Windows.Forms.Button defect_button_7;
+        private System.Windows.Forms.Button defect_button_11;
+        private System.Windows.Forms.Button defect_button_12;
+        private System.Windows.Forms.Button defect_button_10;
+        private System.Windows.Forms.Button defect_button_9;
+        private System.Windows.Forms.Button defect_button_8;
+        private System.Windows.Forms.Label label1;
     }
 }
 

@@ -12,6 +12,7 @@ namespace Container.Message
     {
         CLIENT_GET_PANEL_GREAD,
         CLIENT_SEND_MISSION_RESULT,
+        CLIENT_SEND_EXAM_RESULT,
         CLINET_GET_MISSION_AVI,
         CLINET_GET_MISSION_SVI,
         CLINET_GET_MISSION_APP,
@@ -66,12 +67,12 @@ namespace Container.Message
         }
         string TransferToString(PanelMission panelMission)
         {
-            return JsonConvert.SerializeObject(panelMission);
+            return JsonConvert.SerializeObject(panelMission, new JsonSerializerSettings() { StringEscapeHandling = StringEscapeHandling.EscapeNonAscii });
         }
 
         PanelMission TransferToMission(string missionstring)
         {
-            return JsonConvert.DeserializeObject<PanelMission>(missionstring);
+            return JsonConvert.DeserializeObject<PanelMission>(missionstring, new JsonSerializerSettings() { StringEscapeHandling = StringEscapeHandling.EscapeNonAscii });
         }
     }
     public class UserCheckMessage : BaseMessage
@@ -79,6 +80,7 @@ namespace Container.Message
         public Operator TheOperator;
         public UserCheckMessage(MessageType type, Operator op) : base(type)
         {
+            TheOperator = op;
             this.Append(TransferToString(TheOperator));
         }
         public UserCheckMessage(NetMQMessage theMessage)
@@ -88,11 +90,11 @@ namespace Container.Message
         }
         string TransferToString(Operator op)
         {
-            return JsonConvert.SerializeObject(op);
+            return JsonConvert.SerializeObject(op, new JsonSerializerSettings() { StringEscapeHandling = StringEscapeHandling.EscapeNonAscii });
         }
         Operator TransferToOp(string opstring)
         {
-            return JsonConvert.DeserializeObject<Operator>(opstring);
+            return JsonConvert.DeserializeObject<Operator>(opstring, new JsonSerializerSettings() { StringEscapeHandling = StringEscapeHandling.EscapeNonAscii });
         }
     }
     public class PanelResultMessage : BaseMessage
@@ -109,11 +111,11 @@ namespace Container.Message
         }
         string TransferToString(PanelMissionResult result)
         {
-            return JsonConvert.SerializeObject(result);
+            return JsonConvert.SerializeObject(result, new JsonSerializerSettings() { StringEscapeHandling = StringEscapeHandling.EscapeNonAscii });
         }
         PanelMissionResult TransferToResult(string resultstring)
         {
-            return JsonConvert.DeserializeObject<PanelMissionResult>(resultstring);
+            return JsonConvert.DeserializeObject<PanelMissionResult>(resultstring, new JsonSerializerSettings() { StringEscapeHandling = StringEscapeHandling.EscapeNonAscii });
         }
     }
     public class ExamMissionMessage : BaseMessage
@@ -130,11 +132,11 @@ namespace Container.Message
         }
         string TransferToString(List<ExamMission> result)
         {
-            return JsonConvert.SerializeObject(result);
+            return JsonConvert.SerializeObject(result, new JsonSerializerSettings() { StringEscapeHandling = StringEscapeHandling.EscapeNonAscii });
         }
         List<ExamMission> TransferToResult(string resultstring)
         {
-            return JsonConvert.DeserializeObject<List<ExamMission>>(resultstring);
+            return JsonConvert.DeserializeObject<List<ExamMission>>(resultstring, new JsonSerializerSettings(){StringEscapeHandling = StringEscapeHandling.EscapeNonAscii });
         }
     }
 }

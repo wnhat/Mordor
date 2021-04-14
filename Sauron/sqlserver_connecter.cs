@@ -62,7 +62,7 @@ namespace Sauron
                                     ,[MergeToolJudge]
                                     ,[DefectName]
         FROM[EDIAS_DB].[dbo].[TAX_PRODUCT_TEST]
-        WHERE InspDate BETWEEN '20210120000000' AND '20210125230000' AND EqpID = '7CTCT27' AND OperationID = 'C52000N' AND LastJudge = 'E'";
+        WHERE InspDate BETWEEN '20210320000000' AND '20210325230000' AND EqpID = '7CTCT27' AND OperationID = 'C52000N' AND LastJudge = 'E'";
 
             List<string> newPanelList = new List<string>();
             SqlCommand newcommand = new SqlCommand(commandstring, TheDataBase);
@@ -100,23 +100,23 @@ INSERT INTO [dbo].[AET_IMAGE_INSPECT_RESULT]
            ,[AllDefect]
            ,[ImageEqpID])
      VALUES
-           ({0}
-           ,{1}
-           ,{2}
-           ,{3}
-           ,{4}
-           ,{5}
-           ,{6}
-           ,{7}
-           ,{8}
-           ,{9}
-           ,{10}
-           ,{11}
-           ,{12}
-           ,{13}
-           ,{14}
-           ,{15}
-           ,{16}
+           (‘{0}’
+           ,‘{1}’
+           ,N‘{2}’
+           ,‘{3}’
+           ,N‘{4}’
+           ,‘{5}’
+           ,N’{6}’
+           ,‘{7}‘
+           ,’{8}’
+           ,‘{9}’
+           ,’{10}‘
+           ,‘{11}’
+           ,N’{12}‘
+           ,‘{13}’
+           ,’{14}‘
+           ,N‘{15}’
+           ,’{16})
 GO", new object[] {
                 panel.PanelId,
                 panel.AviOp.Id,
@@ -133,7 +133,7 @@ GO", new object[] {
                 panel.DefectName,
                 FormateDateString(panel.AddTime),
                 FormateDateString(panel.FinishTime),
-                panel.AllDefect,
+                panel.DefectName,
                 panel.AviPanelPath.EqId,
             });
             SqlCommand newcommand = new SqlCommand(commandstring, TheDataBase);
@@ -157,13 +157,14 @@ GO", new object[] {
                 while (newDataReader.Read())
                 {
                     string panelid = newDataReader["PanelId"].ToString();
-                    InspectSection section = (InspectSection) Enum.Parse(typeof(InspectSection),newDataReader["Section"].ToString(),false);
-                    Defect newdefect = new Defect(newDataReader["DefectName"].ToString(),newDataReader["DefectCode"].ToString(),section);
-                    JudgeGrade newjudge = (JudgeGrade) Enum.Parse(typeof(JudgeGrade),newDataReader["Judge"].ToString(),true);
-                    newPanelList.Add(new ExamMission(panelid,section,newdefect,newjudge));
+                    InspectSection section = (InspectSection)Enum.Parse(typeof(InspectSection), newDataReader["Section"].ToString(), false);
+                    Defect newdefect = new Defect(newDataReader["DefectName"].ToString(), newDataReader["DefectCode"].ToString(), section);
+                    JudgeGrade newjudge = (JudgeGrade)Enum.Parse(typeof(JudgeGrade), newDataReader["Judge"].ToString(), true);
+                    newPanelList.Add(new ExamMission(panelid, section, newdefect, newjudge));
                 }
             }
             TheDataBase.Close();
+            newPanelList.Sort();
             return newPanelList;
         }
         public Dictionary<string, Operator> GetOperatorDict()
@@ -180,14 +181,56 @@ GO", new object[] {
             {
                 while (newDataReader.Read())
                 {
-                    string userid = newDataReader["UserId"].ToString(); 
+                    string userid = newDataReader["UserId"].ToString();
                     string password = newDataReader["PassWord"].ToString();
                     string username = newDataReader["UserName"].ToString();
-                    newdict.Add(userid, new Operator(userid, password, username));
+                    newdict.Add(userid, new Operator(password, username, userid));
                 }
             }
             TheDataBase.Close();
             return newdict;
+        }
+        public void InsertExamResult(ExamMission mission)
+        {
+            string commandstring = string.Format(@"INSERT INTO [dbo].[AET_IMAGE_EXAM_RESULT]
+         VALUES
+               ('{0}'
+           ,'{1}'
+           ,'{2}'
+           ,N'{3}'
+           ,'{4}'
+           ,'{5}'
+           ,N'{6}'
+           ,'{7}'
+           ,'{8}'
+           ,N'{9}'
+           ,'{10}'
+)",
+               new object[]
+               {
+                   mission.PanelId,
+                   mission.Judge,
+                   mission.Defect.DefectCode,
+                   mission.Defect.DefectName,
+                   mission.PcSection,
+                   mission.Op.Id,
+                   mission.Op.Name,
+                   mission.JudgeU,
+                   mission.DefectU.DefectCode,
+                   mission.DefectU.DefectName,
+                   mission.FinishTime.ToString()
+               });
+            SqlCommand newcommand = new SqlCommand(commandstring, TheDataBase);
+            TheDataBase.Open();
+            newcommand.ExecuteNonQuery();
+            TheDataBase.Close();
+        }
+        public void InsertExamResult(List<ExamMission> missionlist)
+        {
+            foreach (var item in missionlist)
+            {
+                InsertExamResult(item);
+            }
         }
     }
 }

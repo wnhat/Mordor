@@ -21,17 +21,16 @@ namespace Sauron
 
         static void Server()
         {
-            var timer = new NetMQTimer(TimeSpan.FromSeconds(1800));
-            ResponseSocket responseSocket = new ResponseSocket("@tcp://*:5555");
+            var timer = new NetMQTimer(TimeSpan.FromSeconds(3600));
+            ResponseSocket responseSocket = new ResponseSocket("@tcp://172.16.145.22:5555");
             //using (var req = new RequestSocket(">tcp://127.0.0.1:5555"))
             using (var poller = new NetMQPoller { responseSocket, timer })
             {
                 MissionManager TheMissionManager = new MissionManager();
                 // wait the async process finish;
-                Thread.Sleep(TimeSpan.FromSeconds(250));
+                // Thread.Sleep(TimeSpan.FromSeconds(180));
                 TheMissionManager.AddMissionByServer();
                 Console.WriteLine("add mission finished.");
-
                 responseSocket.ReceiveReady += (s, a) =>
                 {
                     NetMQMessage messageIn = a.Socket.ReceiveMultipartMessage();
@@ -43,6 +42,13 @@ namespace Sauron
                         case MessageType.CLIENT_SEND_MISSION_RESULT:
                             // TODO:
                             PanelResultMessage finishedMission = new PanelResultMessage(messageIn);
+                            a.Socket.SignalOK();
+                            break;
+                        case MessageType.CLIENT_SEND_EXAM_RESULT:
+                            // TODO:
+                            ExamMissionMessage finishedExam = new ExamMissionMessage(messageIn);
+                            TheMissionManager.FinishExam(finishedExam.ExamMissionList);
+                            a.Socket.SignalOK();
                             break;
                         case MessageType.CLINET_GET_MISSION_AVI:
                             PanelMissionMessage newavimission = new PanelMissionMessage(MessageType.SERVER_SEND_MISSION, TheMissionManager.GetAviMission());

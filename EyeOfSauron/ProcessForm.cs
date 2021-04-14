@@ -17,36 +17,37 @@ namespace EyeOfSauron
         {
             TheManager = theManager;
             InitializeComponent();
+            // 进度条事件；
             backgroundWorkerForDownload.WorkerReportsProgress = true;
             backgroundWorkerForDownload.DoWork += DownloadWork;
             backgroundWorkerForDownload.ProgressChanged += AddProcessBarValue;
             backgroundWorkerForDownload.RunWorkerCompleted += Finished;
+            // 异步运行加载，保证画面不假死；
             backgroundWorkerForDownload.RunWorkerAsync();
         }
-
         private void DownloadWork(object sender, EventArgs e)
         {
             for (int i = 0; i < TheManager.SystemParameter.PreLoadQuantity; i++)
             {
-                TheManager.PreLoadOneMission();
-                int percentage = i * 100 / TheManager.SystemParameter.PreLoadQuantity;
-                backgroundWorkerForDownload.ReportProgress(percentage);
+                if (TheManager.PreLoadOneMission())  // 调用 Manager.PreLoadOneMission()完成图像加载；
+                {
+                    int percentage = i * 100 / TheManager.SystemParameter.PreLoadQuantity;
+                    backgroundWorkerForDownload.ReportProgress(percentage);
+                }
+                else
+                {
+                    break;
+                }
             }
         }
-
         private void AddProcessBarValue(object sender, ProgressChangedEventArgs e)
         {
+            // 更新进度条
             progressBar1.Value = e.ProgressPercentage;
         }
-
         private void Finished(object sender, EventArgs e)
         {
-            this.Close();
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
+            this.Close();  // 完成后关闭该窗口；
         }
     }
 }

@@ -91,9 +91,9 @@ namespace Container
     }
     public class PanelPathContainer
     {
-        public string PanelId { get; }
-        PC PcInfo;
-        DiskPart diskName;
+        public string PanelId { get; set; }
+        public PC PcInfo;
+        public DiskPart diskName;
         public PanelPathContainer(string panel_id, PC pc, DiskPart diskName)
         {
             PanelId = panel_id;
@@ -107,7 +107,7 @@ namespace Container
         {
             get
             {   // \\172.16.180.83\NetworkDrive\F_Drive\Defect Info\Origin
-                string returnstring = "\\\\" + PcInfo.PcIp + "\\NetworkDrive\\" + DiskName + "\\Origin\\" + PanelId;
+                string returnstring = "\\\\" + PcInfo.PcIp + "\\NetworkDrive\\" + DiskName + "\\Defect Info\\Origin\\" + PanelId;
                 return returnstring;
             }
         }
@@ -115,7 +115,7 @@ namespace Container
         {
             get
             {   // \\172.16.180.83\NetworkDrive\F_Drive\Defect Info\Origin
-                string returnstring = "\\\\" + PcInfo.PcIp + "\\NetworkDrive\\" + DiskName + "\\Result\\" + PanelId;
+                string returnstring = "\\\\" + PcInfo.PcIp + "\\NetworkDrive\\" + DiskName + "\\Defect Info\\Result\\" + PanelId;
                 return returnstring;
             }
         }
@@ -128,6 +128,7 @@ namespace Container
         public Defect defect;
         public InspectSection Section; // AVI OR SVI OR APP;
         public Operator Op;
+        public PanelMissionResult(){ }
         public PanelMissionResult(JudgeGrade judge, Defect defect, InspectSection section, Operator op, string panelId, long missionNumber)
         {
             Judge = judge;
@@ -138,13 +139,22 @@ namespace Container
             MissionNumber = missionNumber;
         }
     }
-    public class ExamMission
+    public class ExamMission:IComparable
     {
         public string PanelId;
         public string Result_path;
-        public InspectSection PcSection { get; }
+        public InspectSection PcSection { get; set; }
         public Defect Defect;
         public JudgeGrade Judge;
+        public Defect DefectU;                          // op JUDGE;
+        public JudgeGrade JudgeU;                       // op JUDGE;
+        public Operator Op;
+        public DateTime FinishTime;
+        public int sortint;
+        public ExamMission()
+        {
+
+        }
         public ExamMission(string panelId, string result_path, InspectSection pcSection, Defect defect, JudgeGrade judge)
         {
             PanelId = panelId;
@@ -152,6 +162,7 @@ namespace Container
             PcSection = pcSection;
             Defect = defect;
             Judge = judge;
+            sortint = new Random().Next();
         }
         public ExamMission(string panelId, InspectSection pcSection, Defect defect, JudgeGrade judge)
         {
@@ -159,10 +170,23 @@ namespace Container
             PcSection = pcSection;
             Defect = defect;
             Judge = judge;
+            sortint = new Random().Next();
         }
         public void SetPath(string path)
         {
             Result_path = path;
+        }
+        public void FinishExam(PanelMissionResult result)
+        {
+            this.DefectU = result.defect;
+            this.JudgeU = result.Judge;
+            this.Op = result.Op;
+            this.FinishTime = DateTime.Now;
+        }
+        public int CompareTo(object obj)
+        {
+            ExamMission other = (ExamMission)obj;
+            return sortint.CompareTo(other.sortint);
         }
     }
     public class PanelMission
@@ -197,13 +221,18 @@ namespace Container
         {
             get
             {
-                if (DefectList.Count != 0)
+                if (DefectList.Count == 0)
                 {
-                    return DefectList[0].DefectCode;
+                    return "";
                 }
                 else
                 {
-                    return null;
+                    string returnstring = "";
+                    foreach (var item in DefectList)
+                    {
+                        returnstring = returnstring + item.DefectCode;
+                    }
+                    return returnstring;
                 }
             }
         }
@@ -211,30 +240,36 @@ namespace Container
         {
             get
             {
-                if (DefectList.Count != 0)
+                if (DefectList.Count == 0)
                 {
-                    return DefectList[0].DefectName;
+                    return "";
                 }
                 else
                 {
-                    return null;
+                    string returnstring = "";
+                    foreach (var item in DefectList)
+                    {
+                        returnstring = returnstring + item.DefectName;
+                    }
+                    return returnstring;
                 }
             }
         }
         public PanelMission(string panelId, MissionType type, long missionnumber, PanelPathContainer AvipanelPath, PanelPathContainer SvipanelPath = null, PanelPathContainer ApppanelPath = null)
         {
             PanelId = panelId;
-            Repetition = 1;                         // TODO:设置任务人员检查次数
+            Repetition = 1;                         // TODO:设置任务人员检查次数;
             Type = type;
             AddTime = DateTime.Now;
             AviFinished = SviFinished = AppFinished = false;
-            AppFinished = true;                     // 暂时不管；
+            AppFinished = true;                     // 暂时不管;
             AviOp = SviOp = AppOp = null;
             AviDefect = SviDefect = AppDefect = null;
             AviPanelPath = AvipanelPath;
             SviPanelPath = SvipanelPath;
             AppPanelPath = ApppanelPath;
             MissionNumber = missionnumber;
+            DefectList = new List<Defect>();
         }
         public bool Complete
         {
@@ -268,7 +303,6 @@ namespace Container
                 default:
                     break;
             }
-            AllDefect += newresult.defect.DefectName;
             if (finished)
             {
                 FinishTime = DateTime.Now;
@@ -286,13 +320,15 @@ namespace Container
             DefectCode = defectCode;
             Section = section;
         }
+        public Defect() { }
     }
     public class Operator
     {
-        public string Name { get; }
-        public string Id { get; }
-        public string PassWord { get; }
+        public string Name { get; set; }
+        public string Id { get; set; }
+        public string PassWord { get; set; }
         public int MissionFinished { get; set; }
+        public Operator() { }
         public Operator(string passWord, string name, string id)
         {
             PassWord = passWord;
@@ -342,6 +378,7 @@ namespace Container
         public string[] ImageNameList;                         // The image name in reuslt file which we need to inspect
         DirContainer Container;
         public long MissionNumber;
+        public Defect[] DefectJudgeList;
         public InspectMission(PanelMission missioninfo, InspectSection section, string[] imageNameList)
         {
             PanelId = missioninfo.PanelId;
@@ -436,10 +473,13 @@ namespace Container
         public void InitialFile()
         {
             FileInfo[] filearray = DirInfo.GetFiles();
-            FileContainerArray = new FileContainer[filearray.Count()];
-            for (int i = 0; i < FileContainerArray.Count(); i++)
+            if (filearray.Count()>0)
             {
-                FileContainerArray[i] = new FileContainer(filearray[i]);
+                FileContainerArray = new FileContainer[filearray.Count()];
+                for (int i = 0; i < FileContainerArray.Count(); i++)
+                {
+                    FileContainerArray[i] = new FileContainer(filearray[i]);
+                }
             }
         }
         public void InitialDir()
@@ -448,7 +488,7 @@ namespace Container
             if (dirarray.Count() > 0)
             {
                 DirContainerArray = new DirContainer[dirarray.Count()];
-                for (int i = 0; i < FileContainerArray.Count(); i++)
+                for (int i = 0; i < dirarray.Count(); i++)
                 {
                     DirContainerArray[i] = new DirContainer(dirarray[i].FullName);
                 }
@@ -474,19 +514,25 @@ namespace Container
         }
         public MemoryStream GetFileFromMemory(string fileName)
         {
-            foreach (var file in FileContainerArray)
+            if (FileContainerArray!= null)
             {
-                if (file.Name == fileName)
+                foreach (var file in FileContainerArray)
                 {
-                    return file.FileFromMemory;
+                    if (file.Name == fileName)
+                    {
+                        return file.FileFromMemory;
+                    }
                 }
             }
-            foreach (var Dir in DirContainerArray)
+            if (DirContainerArray != null)
             {
-                var returnvalue = Dir.GetFileFromMemory(fileName);
-                if (returnvalue != null)
+                foreach (var Dir in DirContainerArray)
                 {
-                    return returnvalue;
+                    var returnvalue = Dir.GetFileFromMemory(fileName);
+                    if (returnvalue != null)
+                    {
+                        return returnvalue;
+                    }
                 }
             }
             return null;

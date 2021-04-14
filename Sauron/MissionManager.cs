@@ -88,7 +88,7 @@ namespace Sauron
             string[] sviid = new string[sviExamFileList.Length];
             for (int i = 0; i < sviExamFileList.Length; i++)
             {
-                aviid[i] = sviExamFileList[i].Substring(sviExamFileList[i].Length -17);
+                sviid[i] = sviExamFileList[i].Substring(sviExamFileList[i].Length -17);
             }
             foreach (var item in missionlist)
             {
@@ -149,6 +149,12 @@ namespace Sauron
         }
         public List<ExamMission> GetExamMission()
         {
+            var rnd = new Random();
+            foreach (var item in ExamMissionList)
+            {
+                item.sortint = rnd.Next();
+            }
+            ExamMissionList.Sort();
             return ExamMissionList;
         }
         private void AddMissionInQueue()
@@ -193,6 +199,10 @@ namespace Sauron
             {
                 return null;
             }
+        }
+        public void FinishExam(List<ExamMission> missionlist)
+        {
+            Thesqlserver.InsertExamResult(missionlist);
         }
     }
 }

@@ -31,7 +31,6 @@ namespace Sauron
                 InsPCList.Add(new INS_pc_manage(pc, Logger));
             }
             RefreshFileList();
-
         }
         public async void RefreshFileList()
         {
@@ -46,6 +45,7 @@ namespace Sauron
             await Task.WhenAll(task_list);
             Logger.Information("finished Refresh, time is {0}", DateTime.Now);
             PathManager = newPanelPathManager;
+            GC.Collect();
         }
         public List<PanelPathContainer> GetPanelPathList(string panel_id)
         {
@@ -72,10 +72,6 @@ namespace Sauron
             }
 
         }
-    }
-    class ExamManager
-    {
-        
     }
     class INS_pc_manage
     {

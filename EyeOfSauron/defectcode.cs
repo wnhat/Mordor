@@ -7,23 +7,18 @@ using Container;
 
 namespace EyeOfSauron
 {
-    class Defectcode
+    public class Defectcode
     {
         Dictionary<string, string> translate_table;
-
-        public Defectcode()
+        public Defectcode(Defect[] defectlist)
         {
-            translate_table = new Dictionary<string, string>
+            translate_table = new Dictionary<string, string>();
+            foreach (var item in defectlist)
             {
-                {"污渍"       , "DE" },
-                {"竖-条纹"    , "DE" },
-                {"横-条纹"    , "DE" },
-                {"ETC"        , "DE" },
-                {"暗团"       , "DE" },
-                {"亮团"       , "DE" },
-                {"E"          , "" },
-                {"S"          , "" },
-            };
+                translate_table.Add(item.DefectName, item.DefectCode);
+            }
+            translate_table.Add("E", " ");
+            translate_table.Add("S", " ");
         }
 
         public string name2code(string defect_name)

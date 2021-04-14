@@ -15,14 +15,9 @@ namespace test
     {
         static void Main(string[] args)
         {
-            DateTime time1 = DateTime.Now;
-            for (int i = 0; i < 100000000; i++)
-            {
-                int[] a = { 2, 5, 86, 95 };
-                int[] b = { 5, 6, 31, 86 };
-                var c = a.Intersect(b);
-            }
-            DateTime time2 = DateTime.Now;
+            string a1 = "761L0Y0024B3BAH04";
+            string a2 = "761L0Y0024B3BAH04";
+            var result = a1.CompareTo(a2);
 
         }
     }
