@@ -16,6 +16,7 @@ namespace EyeOfSauron
 
         static void Main()
         {
+            // 添加；
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             LoginForm the_main_form = new LoginForm();
