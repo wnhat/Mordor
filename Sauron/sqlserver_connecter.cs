@@ -22,6 +22,7 @@ namespace Sauron
         {
             return thedate.ToString("yyyyMMddHH0000");
         }
+        /* 从服务器中获取近一小时N站点生产的cell数据 */
         public List<string> GetInputPanelMission()
         {
             string datestart = FormateDateString(LastDate);
@@ -46,6 +47,7 @@ namespace Sauron
                                     WHERE InspDate BETWEEN '{0}' AND '{1}'
                                     AND OperationID = 'C52000N' AND LastJudge = 'E'",
                                     datestart, dateend);
+            // 测试用↓
             commandstring = @"SELECT[EqpID],
                                     [InspDate]
                                     ,[ModelID]
@@ -140,6 +142,9 @@ GO", new object[] {
             TheDataBase.Open();
             newcommand.ExecuteNonQuery();
         }
+        /* 
+        从服务器中获取考试任务
+         */
         public List<ExamMission> GetExamMission()
         {
             string commandstring = string.Format(@"SELECT ALL [PanelID]
@@ -164,15 +169,15 @@ GO", new object[] {
                 }
             }
             TheDataBase.Close();
-            newPanelList.Sort();
             return newPanelList;
         }
+        /* 从服务器获取用户工号、姓名； */
         public Dictionary<string, Operator> GetOperatorDict()
         {
             string commandstring = string.Format(@"SELECT ALL [UserId]
-      ,[PassWord]
-      ,[UserName]
-  FROM [EDIAS_DB].[dbo].[AET_IMAGE_USER]");
+                    ,[PassWord]
+                    ,[UserName]
+                FROM [EDIAS_DB].[dbo].[AET_IMAGE_USER]");
             SqlCommand newcommand = new SqlCommand(commandstring, TheDataBase);
             TheDataBase.Open();
             SqlDataReader newDataReader = newcommand.ExecuteReader();

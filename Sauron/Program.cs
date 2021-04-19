@@ -16,36 +16,36 @@ namespace Sauron
     {
         static void Main(string[] args)
         {
-            Server();
+            Server(); //启动服务器；
         }
-
         static void Server()
         {
             var timer = new NetMQTimer(TimeSpan.FromSeconds(3600));
             ResponseSocket responseSocket = new ResponseSocket("@tcp://172.16.145.22:5555");
-            //using (var req = new RequestSocket(">tcp://127.0.0.1:5555"))
+            // using (var req = new RequestSocket(">tcp://127.0.0.1:5555"))
             using (var poller = new NetMQPoller { responseSocket, timer })
             {
                 MissionManager TheMissionManager = new MissionManager();
                 // wait the async process finish;
-                // Thread.Sleep(TimeSpan.FromSeconds(180));
+                //Thread.Sleep(TimeSpan.FromSeconds(180)); // TODO：使用事件
+                // 图像路径爬取完成后从数据库获取任务；
                 TheMissionManager.AddMissionByServer();
                 Console.WriteLine("add mission finished.");
                 responseSocket.ReceiveReady += (s, a) =>
                 {
+                    /* 对客户端发送的事件进行分Type响应（按照Message首位） */
                     NetMQMessage messageIn = a.Socket.ReceiveMultipartMessage();
+                    // 转换为自定义Message类型；
                     BaseMessage switchmessage = new BaseMessage(messageIn);
                     switch (switchmessage.TheMessageType)
                     {
                         case MessageType.CLIENT_GET_PANEL_GREAD:
                             break;
                         case MessageType.CLIENT_SEND_MISSION_RESULT:
-                            // TODO:
                             PanelResultMessage finishedMission = new PanelResultMessage(messageIn);
                             a.Socket.SignalOK();
                             break;
                         case MessageType.CLIENT_SEND_EXAM_RESULT:
-                            // TODO:
                             ExamMissionMessage finishedExam = new ExamMissionMessage(messageIn);
                             TheMissionManager.FinishExam(finishedExam.ExamMissionList);
                             a.Socket.SignalOK();
@@ -80,7 +80,6 @@ namespace Sauron
                             break;
                         case MessageType.CLINET_CHECK_USER:
                             UserCheckMessage userInfo = new UserCheckMessage(messageIn);
-                            // TODO:check user Password & ID；
                             var op = TheMissionManager.CheckUser(userInfo.TheOperator);
                             if (op != null)
                             {
@@ -96,14 +95,14 @@ namespace Sauron
                         default:
                             break;
                     }
-                    Console.WriteLine("finish");
                 };
                 timer.Elapsed += (s, a) =>
                 {
                     Console.WriteLine("start refresh the panel list");
                     TheMissionManager.RefreshFileContainer();
                 };
-                poller.Run();
+
+                poller.Run(); // 启动轮询器
             }
         }
     }

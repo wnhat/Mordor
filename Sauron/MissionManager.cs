@@ -11,14 +11,17 @@ using System.IO;
 
 namespace Sauron
 {
+    /* 
+    
+    */
     class MissionManager
     {
         SqlServerConnector Thesqlserver;
-        FileManager Thefilecontainer;
+        FileManager Thefilecontainer;  //管理设备文件路径；
         public Queue<PanelMission> MissionQueue;
         ILogger Logger;
-        public Queue<long> MissionNumberQueue;
-        Dictionary<long, PanelMission> OninspectMissionContainer;
+        public Queue<long> MissionNumberQueue; //Missionnumber是该任务在 OninspectMissionContainer 中的key，用于不同工位分时完成检查后进行结果的登录；
+        Dictionary<long, PanelMission> OninspectMissionContainer; //已被添加至任务队列的Panelmission储存器；
         Queue<PanelMission> AviOnInspectMissionQueue;
         Queue<PanelMission> SviOnInspectMissionQueue;
         Queue<PanelMission> AppOnInspectMissionQueue;
@@ -44,7 +47,7 @@ namespace Sauron
             FinishedMissionQueue = new Queue<PanelMission>();
             OninspectMissionContainer = new Dictionary<long, PanelMission>();
 
-            long newmissionnumber = new Random().Next();
+            long newmissionnumber = 0;
             for (int i = 0; i < 1000000; i++)
             {
                 MissionNumberQueue.Enqueue(newmissionnumber);
@@ -58,7 +61,7 @@ namespace Sauron
             List<string> missionDataSet = Thesqlserver.GetInputPanelMission();
             foreach (var missionid in missionDataSet)
             {
-                // TODO: 调查无法找到的id原因；
+                // TODO: 调查无法找到的id原因；新建异常类替换if语句；
                 List<PanelPathContainer> pathList = Thefilecontainer.GetPanelPathList(missionid);
                 if (pathList != null)
                 {
@@ -73,6 +76,7 @@ namespace Sauron
                     Logger.Information("can not find panel path in the PathContainer, PanelId : {0}", missionid);
                 }
             }
+            Logger.Information("Inspect mission add finished；");
         }
         public void RefreshExamList()
         {
