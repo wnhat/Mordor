@@ -22,12 +22,11 @@ namespace Sauron
         {
             var timer = new NetMQTimer(TimeSpan.FromSeconds(3600));
             ResponseSocket responseSocket = new ResponseSocket("@tcp://172.16.145.22:5555");
-            // using (var req = new RequestSocket(">tcp://127.0.0.1:5555"))
             using (var poller = new NetMQPoller { responseSocket, timer })
             {
                 MissionManager TheMissionManager = new MissionManager();
                 // wait the async process finish;
-                //Thread.Sleep(TimeSpan.FromSeconds(180)); // TODO：使用事件
+                // Thread.Sleep(TimeSpan.FromSeconds(180)); // TODO：使用事件
                 // 图像路径爬取完成后从数据库获取任务；
                 TheMissionManager.AddMissionByServer();
                 Console.WriteLine("add mission finished.");
