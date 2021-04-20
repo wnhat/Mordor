@@ -94,7 +94,10 @@
   <ItemGroup>
     <Compile Include="Class1.cs" />
     <Compile Include="container.cs" />
+    <Compile Include="ExceptionClass.cs" />
+    <Compile Include="FileClass.cs" />
     <Compile Include="Massage.cs" />
+    <Compile Include="MissionClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
