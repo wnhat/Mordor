@@ -17,6 +17,7 @@ namespace Sauron
         static void Main(string[] args)
         {
             Server(); //启动服务器；
+            // release test 2
         }
         static void Server()
         {
