@@ -92,7 +92,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
     <Compile Include="container.cs" />
     <Compile Include="ExceptionClass.cs" />
     <Compile Include="FileClass.cs" />

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Container
 {
-    class FileContainer
+    public class FileContainer
     {
         FileInfo FileInformation;
         MemoryStream FileMemory;
@@ -48,7 +48,7 @@ namespace Container
     /// <summary>
     /// copy the giving path dir(and it`s subdir) to local memory;
     /// </summary>
-    class DirContainer
+    public class DirContainer
     {
         DirectoryInfo DirInfo;
         FileContainer[] FileContainerArray;
@@ -56,6 +56,11 @@ namespace Container
         public DirContainer(string dirPath)
         {
             DirInfo = new DirectoryInfo(dirPath);
+            if (!DirInfo.Exists)
+            {
+                string errorstring = String.Format("Directory not exist, path:{0}",dirPath);
+                throw new FileContainerException(errorstring);
+            }
             Initial();
         }
         public void Initial()
@@ -128,6 +133,13 @@ namespace Container
                 }
             }
             return null;
+        }
+    }
+    public class FileContainerException : ApplicationException
+    {
+        public FileContainerException(string message) : base(message)
+        {
+            
         }
     }
 }

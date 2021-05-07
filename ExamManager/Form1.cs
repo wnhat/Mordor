@@ -154,12 +154,7 @@ namespace ExamManager
                 this.pictureBox2.Image = ExamManager.Properties.Resources.emptyImage;
                 this.pictureBox3.Image = ExamManager.Properties.Resources.emptyImage;
             }
-
-
-
-           
         }
-
         private void upToTopButton_Click(object sender, EventArgs e)
         {
             idNum = 0;

@@ -94,6 +94,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ExamMissionManager.cs" />
     <Compile Include="File_container.cs" />
     <Compile Include="IP_TR.cs" />
     <Compile Include="MissionManager.cs" />

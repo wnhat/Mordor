@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Container
 {
-    class ExceptionClass:Exception
+    class ExceptionClass:ApplicationException
     {
 
     }

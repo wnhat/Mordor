@@ -37,7 +37,7 @@ namespace Container
         public InspectMission(ExamMission missioninfo, string[] imageNameList)
         {
             PanelId = missioninfo.PanelId;
-            Container = new DirContainer(missioninfo.Result_path);
+            Container = new DirContainer(missioninfo.ResultPath);
             ImageNameList = imageNameList;
         }
         public void SaveFileInDisk(string SavePath)
@@ -169,18 +169,23 @@ namespace Container
             }
         }
     }
+    /// <summary>
+    /// 
+    /// </summary>
     public class ExamMission : IComparable
     {
         public string PanelId;
-        public string Result_path;
+        public string ResultPath;
+        public string MissionInfo;
         public InspectSection PcSection { get; set; }
+        public bool Exsit { get { return new DirectoryInfo(ResultPath).Exists; } }
         public Defect Defect;
         public JudgeGrade Judge;
         public Defect DefectU;                          // op JUDGE;
         public JudgeGrade JudgeU;                       // op JUDGE;
         public Operator Op;
         public DateTime FinishTime;
-        public int sortint;
+        public int sortint;                             // 用于任务随机排序；
         public ExamMission()
         {
 
@@ -188,7 +193,7 @@ namespace Container
         public ExamMission(string panelId, string result_path, InspectSection pcSection, Defect defect, JudgeGrade judge)
         {
             PanelId = panelId;
-            Result_path = result_path;
+            ResultPath = result_path;
             PcSection = pcSection;
             Defect = defect;
             Judge = judge;
@@ -204,7 +209,7 @@ namespace Container
         }
         public void SetPath(string path)
         {
-            Result_path = path;
+            ResultPath = path;
         }
         public void FinishExam(PanelMissionResult result)
         {

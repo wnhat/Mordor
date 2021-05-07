@@ -82,8 +82,8 @@ namespace Sauron
         {
             List<ExamMission> newExamMissionList = new List<ExamMission>();
             var missionlist = Thesqlserver.GetExamMission();
-            string[] aviExamFileList = Directory.GetDirectories("\\\\172.16.145.22\\NetworkDrive\\D_Drive\\Mordor\\ExamSimple\\AVI"); // TODO:
-            string[] sviExamFileList = Directory.GetDirectories("\\\\172.16.145.22\\NetworkDrive\\D_Drive\\Mordor\\ExamSimple\\SVI"); // TODO:
+            string[] aviExamFileList = Directory.GetDirectories("\\\\172.16.145.22\\NetworkDrive\\D_Drive\\Mordor\\ExamSimple\\AVI"); 
+            string[] sviExamFileList = Directory.GetDirectories("\\\\172.16.145.22\\NetworkDrive\\D_Drive\\Mordor\\ExamSimple\\SVI");
             string[] aviid = new string[aviExamFileList.Length];
             for (int i = 0; i < aviExamFileList.Length; i++)
             {

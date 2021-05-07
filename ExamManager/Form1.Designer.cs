@@ -182,7 +182,7 @@ namespace ExamManager
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(932, 563);
+            this.ClientSize = new System.Drawing.Size(1436, 794);
             this.Controls.Add(this.upToTopButton);
             this.Controls.Add(this.pictureBox3);
             this.Controls.Add(this.pictureBox2);
