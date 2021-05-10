@@ -9,12 +9,22 @@ using Serilog;
 using Container;
 using System.Data;
 using System.Data.SqlClient;
+using System.Windows.Forms;
 
 namespace test
 {
-    class Program
+    static class Program
     {
+        [STAThread]
         static void Main(string[] args)
+        {
+        // 添加；
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Form1 the_main_form = new Form1();
+            Application.Run(the_main_form);
+        }
+        static private void TestDB()
         {
             SqlConnection TheDataBase = new SqlConnection("server=172.16.150.200;UID=sa;PWD=1qaz@WSX;Database=EDIAS_DB;Trusted_connection=False");
             string path = @"D:\1218180\program2\c#\123";
@@ -39,7 +49,6 @@ namespace test
             var cmd = Builder.GetUpdateCommand();
             adp.Update(del);
         }
-
         static private void ChangeRows(DataSet dataSet)
         {
             // For each table in the DataSet, print the row values.

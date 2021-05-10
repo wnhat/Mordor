@@ -21,7 +21,16 @@ namespace Container
         public void ReadFileInMemory()
         {
             // TODO: ADD TRY, if read file error,log it;
-            FileInformation.OpenRead().CopyTo(FileMemory);
+            try
+            {
+                FileInformation.OpenRead().CopyTo(FileMemory);
+            }
+            catch
+            {
+                string errorstring = String.Format("file Read Error,path:{0}", FileInformation.FullName);
+                throw new FileContainerException(errorstring);
+            }
+            
         }
         public void SaveFileInDisk(string savePath)
         {

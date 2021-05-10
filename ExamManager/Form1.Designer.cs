@@ -122,27 +122,27 @@ namespace ExamManager
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Location = new System.Drawing.Point(253, 123);
+            this.pictureBox1.Location = new System.Drawing.Point(405, 123);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(335, 194);
+            this.pictureBox1.Size = new System.Drawing.Size(529, 266);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 9;
             this.pictureBox1.TabStop = false;
             // 
             // pictureBox2
             // 
-            this.pictureBox2.Location = new System.Drawing.Point(594, 123);
+            this.pictureBox2.Location = new System.Drawing.Point(940, 123);
             this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(335, 194);
+            this.pictureBox2.Size = new System.Drawing.Size(484, 266);
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox2.TabIndex = 10;
             this.pictureBox2.TabStop = false;
             // 
             // pictureBox3
             // 
-            this.pictureBox3.Location = new System.Drawing.Point(253, 323);
+            this.pictureBox3.Location = new System.Drawing.Point(405, 395);
             this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(335, 194);
+            this.pictureBox3.Size = new System.Drawing.Size(529, 242);
             this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox3.TabIndex = 10;
             this.pictureBox3.TabStop = false;
@@ -150,7 +150,7 @@ namespace ExamManager
             // button1
             // 
             this.button1.Font = new System.Drawing.Font("Microsoft YaHei", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.button1.Location = new System.Drawing.Point(195, 76);
+            this.button1.Location = new System.Drawing.Point(12, 557);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(40, 28);
             this.button1.TabIndex = 5;
@@ -182,7 +182,7 @@ namespace ExamManager
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1436, 794);
+            this.ClientSize = new System.Drawing.Size(1904, 1041);
             this.Controls.Add(this.upToTopButton);
             this.Controls.Add(this.pictureBox3);
             this.Controls.Add(this.pictureBox2);
