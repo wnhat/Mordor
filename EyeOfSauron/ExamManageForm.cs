@@ -21,22 +21,53 @@ namespace ExamManager
 {
     public partial class examManageForm : Form
     {
+        DataSet dataset;
+        BindingSource bdsource;
         LoginForm TheParentForm;
         Defectcode defect_translator;
         Manager TheManager;
         int idNum = 0;
         public examManageForm()
         {
+            dataset = new DataSet();
+            data();
+            bdsource = new BindingSource();
+            bdsource.DataSource = dataset.Tables[0];
             InitializeComponent();
+            this.ExamDBGridView.DataSource = bdsource;
         }
         public examManageForm(LoginForm parentForm, Manager theManager)
         {
+            dataset = new DataSet();
+            data();
+            bdsource = new BindingSource();
+            bdsource.DataSource = dataset.Tables[0];
             InitializeComponent();
+            this.ExamDBGridView.DataSource = bdsource;
             TheParentForm = parentForm;
             TheManager = theManager;
             defect_translator = new Defectcode(TheManager.SystemParameter.CodeNameList);
         }
+        private void data()
+        {
+            SqlConnection TheDataBase = new SqlConnection("server=172.16.150.200;UID=sa;PWD=1qaz@WSX;Database=EDIAS_DB;Trusted_connection=False");
+            string path = @"D:\1218180\program2\c#\123";
+            string querystring = @"SELECT [ID],[PanelID]
+      ,[Judge]
+      ,[DefectCode]
+      ,[DefectName]
+      ,[Section]
+      ,[Info]
+  FROM [EDIAS_DB].[dbo].[AET_IMAGE_EXAM]";
+            SqlCommand newcommand = new SqlCommand(querystring, TheDataBase);
+            TheDataBase.Open();
+            SqlDataAdapter adp = new SqlDataAdapter();
+            adp.SelectCommand = newcommand;
+            SqlCommandBuilder Builder = new SqlCommandBuilder(adp);
+            adp.Fill(dataset);
+            TheDataBase.Close();
 
+        }
         public static bool chcekIsTextFile(string fileName)
         {
             FileStream fs = new FileStream(fileName,FileMode.Open, FileAccess.Read);
@@ -76,11 +107,6 @@ namespace ExamManager
             //TODO:验证ID对应图片是否存在
             //TODO:获取图片并上传到数据库
         }
-        private void Form1_Load(object sender, EventArgs e)
-        {
-
-        }
-
         private void fileSelectButton_Click(object sender, EventArgs e)
         {
             //this.idTextBox.Text = "ID Input";
