@@ -25,6 +25,8 @@ namespace ExamManager
         Defectcode defect_translator;
         Manager TheManager;
         int idNum = 0;
+        List<string> idlist;
+
         public examManageForm()
         {
             InitializeComponent();
@@ -35,6 +37,7 @@ namespace ExamManager
             TheParentForm = parentForm;
             TheManager = theManager;
             defect_translator = new Defectcode(TheManager.SystemParameter.CodeNameList);
+            idlist = new List<string>();
         }
 
         public static bool chcekIsTextFile(string fileName)
@@ -68,117 +71,42 @@ namespace ExamManager
         }
         private void commitButton_Click(object sender, EventArgs e)
         {
-            //ArrayList list = new ArrayList();
-            //for (int i=0; i<this.idTextBox.Lines.Length; i++)
-            //{
-            //    list.Add(idTextBox.Lines[i]);
-            //}
-            //TODO:验证ID对应图片是否存在
-            //TODO:获取图片并上传到数据库
-        }
-        private void Form1_Load(object sender, EventArgs e)
-        {
-
+            //TODO: 1、保存内存中图像图片 ；
+            //      2、更新数据库；
         }
 
         private void fileSelectButton_Click(object sender, EventArgs e)
         {
             //this.idTextBox.Text = "ID Input";
             idNum = 0;
-
         }
         private void imageViewButton_Click(object sender, EventArgs e)
         {
             this.pictureBox1.Image = EyeOfSauron.Properties.Resources.emptyImage;
             this.pictureBox2.Image = EyeOfSauron.Properties.Resources.emptyImage;
             this.pictureBox3.Image = EyeOfSauron.Properties.Resources.emptyImage;
-        //    if (idNum < this.idTextBox.Lines.Length)
-        //    {
-        //        this.imageIDTextBox.Text = this.idTextBox.Lines[idNum];
-        //        idNum++;
-        //        List<PanelInfo> panelIdList = new List<PanelInfo>();
-        //        PanelInfo panelInfo;
-        //        string panelID = this.imageIDTextBox.Text;
-        //        this.Refresh();
-        //        Regex regex = new Regex(@"^7[A-Za-z0-9]{16}$");
-        //        if (regex.IsMatch(panelID))
-        //        {
-        //            //Sauron版
-        //            panelInfo = new PanelInfo(panelID, InspectSection.AVI);
-        //            panelIdList.Add(panelInfo);
-        //            panelInfo = TheManager.GetPanelInfo(panelIdList).Dequeue();
-        //            string imagePath = panelInfo.Image_path + @"\MNImg\";
-                     
-        //            //string imagePath = "";
-        //            //string connStr = "server = 172.16.150.100; uid = sa; pwd = 1qaz@WSX; database = AET_IMAGE_URL";
-        //            //SqlConnection conn = new SqlConnection(connStr);
-        //            //String sqlString = "SELECT [ImageURL] FROM dbo.AET_IMAGE_URL_AVI WHERE VcrID = '" + panelID + "'";
-        //            try
-        //            {
-        //                //conn.Open();
-        //                //SqlDataReader dr = null;
-        //                //SqlCommand sc = new SqlCommand(sqlString, conn);
-        //                //dr = sc.ExecuteReader();
-        //                //if (dr.Read())
-        //                //{
-        //                    //imagePath = dr[0].ToString().Replace("Origin", "Result") + @"MNImg\";
-        //                    if (File.Exists(imagePath + "04_WHITE_Pre-Input.jpg"))
-        //                    {
-        //                        this.pictureBox1.Image = Image.FromFile(imagePath + "04_WHITE_Pre-Input.jpg");
-        //                    }
-        //                    else
-        //                    {
-        //                        this.pictureBox1.Image = EyeOfSauron.Properties.Resources.emptyImage;
-        //                    }
-        //                    if (File.Exists(imagePath + "06_G64_Pre-Input.jpg"))
-        //                    {
-        //                        this.pictureBox2.Image = Image.FromFile(imagePath + "06_G64_Pre-Input.jpg");
-        //                    }
-        //                    else
-        //                    {
-        //                        this.pictureBox2.Image = EyeOfSauron.Properties.Resources.emptyImage;
-        //                    }
-        //                    if (File.Exists(imagePath + "08_G64-2_Pre-Input.jpg"))
-        //                    {
-        //                        this.pictureBox3.Image = Image.FromFile(imagePath + "08_G64-2_Pre-Input.jpg");
-        //                    }
-        //                    else
-        //                    {
-        //                        this.pictureBox3.Image = EyeOfSauron.Properties.Resources.emptyImage;
-        //                    }
-        //                //}
-                            
-        //            }
-        //            catch (Exception ex)
-        //            {
-        //                throw ex;
-        //            }
-        //            finally
-        //            {
-        //                /*
-        //                if (conn != null)
-        //                {
-        //                    conn.Close();
-        //                }
-        //                */
-        //            }
-        //        }
-        //        else
-        //        {
-        //            //imageIDTextBox.Text = "ID Illegal";
-        //        }
-        //    }
-        //    else
-        //    {
-        //        //imageIDTextBox.Text = "ID Empty";
-        //    }
         }
         private void upToTopButton_Click(object sender, EventArgs e)
         {
             idNum = 0;
-            ///*this*/.imageIDTextBox.Text = this.idTextBox.Lines[idNum];
+            //.imageIDTextBox.Text = this.idTextBox.Lines[idNum];
         }
 
+        private void AddPanelIdbutton_Click(object sender, EventArgs e)
+        {
+            PanelIdAddForm idform = new PanelIdAddForm();
+            idform.BindIdArray(idlist);
+            idform.ShowDialog();
+            AddPanelId();
+        }
+        private void AddPanelId()
+        {
+            // 将 ID array 中的id添加任务；预加载图片及添加至newidlistbox中；
+            foreach (var item in idlist)
+            {
+                //TODO:
+            }
+        }
     }
     class SeverConnecter
     {

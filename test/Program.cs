@@ -18,22 +18,15 @@ namespace test
         [STAThread]
         static void Main(string[] args)
         {
-        // 添加；
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Form1 the_main_form = new Form1();
-            Application.Run(the_main_form);
+            // 添加；
+            TestDB();
         }
         static private void TestDB()
         {
             SqlConnection TheDataBase = new SqlConnection("server=172.16.150.200;UID=sa;PWD=1qaz@WSX;Database=EDIAS_DB;Trusted_connection=False");
             string path = @"D:\1218180\program2\c#\123";
             DataSet set = new DataSet();
-            string querystring = @"SELECT TOP (1000) [ID]
-      ,[UserId]
-      ,[PassWord]
-      ,[UserName]
-  FROM [EDIAS_DB].[dbo].[AET_IMAGE_USER]";
+            string querystring = @"SELECT TOP (1000) [ID],[UserId],[PassWord],[UserName] FROM [EDIAS_DB].[dbo].[AET_IMAGE_USER]";
             SqlCommand newcommand = new SqlCommand(querystring, TheDataBase);
             TheDataBase.Open();
             SqlDataAdapter adp = new SqlDataAdapter();
@@ -41,9 +34,6 @@ namespace test
             SqlCommandBuilder Builder = new SqlCommandBuilder(adp);
             adp.Fill(set);
             ChangeRows(set);
-            //var change = set.GetChanges();
-            //AddRows(set);
-            //var add = set.GetChanges();
             DeleteRows(set);
             var del = set.GetChanges();
             var cmd = Builder.GetUpdateCommand();

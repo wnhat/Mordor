@@ -33,9 +33,9 @@ namespace ExamManager
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
             this.ExamDBGridView = new System.Windows.Forms.DataGridView();
+            this.AddPanelIdbutton = new System.Windows.Forms.Button();
+            this.Cleanbutton = new System.Windows.Forms.Button();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.NewIdListBox = new System.Windows.Forms.ListBox();
             this.button3 = new System.Windows.Forms.Button();
@@ -106,26 +106,6 @@ namespace ExamManager
             this.tableLayoutPanel1.Size = new System.Drawing.Size(1589, 887);
             this.tableLayoutPanel1.TabIndex = 8;
             // 
-            // button1
-            // 
-            this.button1.Font = new System.Drawing.Font("SimSun", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.button1.Location = new System.Drawing.Point(12, 15);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(140, 59);
-            this.button1.TabIndex = 9;
-            this.button1.Text = "添加ID";
-            this.button1.UseVisualStyleBackColor = true;
-            // 
-            // button2
-            // 
-            this.button2.Font = new System.Drawing.Font("SimSun", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.button2.Location = new System.Drawing.Point(158, 15);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(140, 59);
-            this.button2.TabIndex = 10;
-            this.button2.Text = "清空ID";
-            this.button2.UseVisualStyleBackColor = true;
-            // 
             // ExamDBGridView
             // 
             this.ExamDBGridView.AllowUserToAddRows = false;
@@ -145,6 +125,27 @@ namespace ExamManager
             this.ExamDBGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.ExamDBGridView.Size = new System.Drawing.Size(789, 438);
             this.ExamDBGridView.TabIndex = 11;
+            // 
+            // AddPanelIdbutton
+            // 
+            this.AddPanelIdbutton.Font = new System.Drawing.Font("SimSun", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.AddPanelIdbutton.Location = new System.Drawing.Point(12, 15);
+            this.AddPanelIdbutton.Name = "AddPanelIdbutton";
+            this.AddPanelIdbutton.Size = new System.Drawing.Size(140, 59);
+            this.AddPanelIdbutton.TabIndex = 9;
+            this.AddPanelIdbutton.Text = "添加ID";
+            this.AddPanelIdbutton.UseVisualStyleBackColor = true;
+            this.AddPanelIdbutton.Click += new System.EventHandler(this.AddPanelIdbutton_Click);
+            // 
+            // Cleanbutton
+            // 
+            this.Cleanbutton.Font = new System.Drawing.Font("SimSun", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.Cleanbutton.Location = new System.Drawing.Point(158, 15);
+            this.Cleanbutton.Name = "Cleanbutton";
+            this.Cleanbutton.Size = new System.Drawing.Size(140, 59);
+            this.Cleanbutton.TabIndex = 10;
+            this.Cleanbutton.Text = "清空ID";
+            this.Cleanbutton.UseVisualStyleBackColor = true;
             // 
             // comboBox1
             // 
@@ -213,7 +214,7 @@ namespace ExamManager
             this.label2.TabIndex = 18;
             this.label2.Text = "样本任务集选择";
             // 
-            // Form1
+            // examManageForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(1904, 1041);
@@ -224,13 +225,13 @@ namespace ExamManager
             this.Controls.Add(this.button3);
             this.Controls.Add(this.NewIdListBox);
             this.Controls.Add(this.comboBox1);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.Cleanbutton);
+            this.Controls.Add(this.AddPanelIdbutton);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Margin = new System.Windows.Forms.Padding(2);
             this.MaximumSize = new System.Drawing.Size(1920, 1080);
             this.MinimumSize = new System.Drawing.Size(1918, 1038);
-            this.Name = "Form1";
+            this.Name = "examManageForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Form1";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
@@ -249,8 +250,8 @@ namespace ExamManager
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.PictureBox pictureBox3;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button AddPanelIdbutton;
+        private System.Windows.Forms.Button Cleanbutton;
         private System.Windows.Forms.DataGridView ExamDBGridView;
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.ListBox NewIdListBox;
