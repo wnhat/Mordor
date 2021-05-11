@@ -67,5 +67,13 @@ namespace EyeOfSauron.Properties
                 resourceCulture = value;
             }
         }
+        internal static System.Drawing.Bitmap emptyImage
+        {
+            get
+            {
+                object obj = ResourceManager.GetObject("emptyImage", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
     }
 }

@@ -11,15 +11,26 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Collections;
 using System.Text.RegularExpressions;
-
+using EyeOfSauron;
+using Container;
 namespace ExamManager
 {
-    public partial class mainForm : Form
+    public partial class examManageForm : Form
     {
+        LoginForm TheParentForm;
+        Defectcode defect_translator;
+        Manager TheManager;
         int idNum = 0;
-        public mainForm()
+        public examManageForm()
         {
             InitializeComponent();
+        }
+        public examManageForm(LoginForm parentForm, Manager theManager)
+        {
+            InitializeComponent();
+            TheParentForm = parentForm;
+            TheManager = theManager;
+            defect_translator = new Defectcode(TheManager.SystemParameter.CodeNameList);
         }
 
         public static bool chcekIsTextFile(string fileName)
@@ -69,37 +80,51 @@ namespace ExamManager
         private void fileSelectButton_Click(object sender, EventArgs e)
         {
             this.idTextBox.Text = "ID Input";
+            idNum = 0;
+
         }
         private void imageViewButton_Click(object sender, EventArgs e)
         {
+            this.pictureBox1.Image = EyeOfSauron.Properties.Resources.emptyImage;
+            this.pictureBox2.Image = EyeOfSauron.Properties.Resources.emptyImage;
+            this.pictureBox3.Image = EyeOfSauron.Properties.Resources.emptyImage;
             if (idNum < this.idTextBox.Lines.Length)
             {
                 this.imageIDTextBox.Text = this.idTextBox.Lines[idNum];
                 idNum++;
+                List<PanelInfo> panelIdList = new List<PanelInfo>();
+                PanelInfo panelInfo;
                 string panelID = this.imageIDTextBox.Text;
+                this.Refresh();
                 Regex regex = new Regex(@"^7[A-Za-z0-9]{16}$");
                 if (regex.IsMatch(panelID))
                 {
-                    string connStr = "server = 172.16.150.100; uid = sa; pwd = 1qaz@WSX; database = AET_IMAGE_URL";
-                    SqlConnection conn = new SqlConnection(connStr);
-                    String sqlString = "SELECT [ImageURL] FROM dbo.AET_IMAGE_URL_AVI WHERE VcrID = '" + panelID + "'";
-                    string imagePath = "";
+                    //Sauron版
+                    panelInfo = new PanelInfo(panelID, InspectSection.AVI);
+                    panelIdList.Add(panelInfo);
+                    panelInfo = TheManager.GetPanelInfo(panelIdList).Dequeue();
+                    string imagePath = panelInfo.Image_path + @"\MNImg\";
+                     
+                    //string imagePath = "";
+                    //string connStr = "server = 172.16.150.100; uid = sa; pwd = 1qaz@WSX; database = AET_IMAGE_URL";
+                    //SqlConnection conn = new SqlConnection(connStr);
+                    //String sqlString = "SELECT [ImageURL] FROM dbo.AET_IMAGE_URL_AVI WHERE VcrID = '" + panelID + "'";
                     try
                     {
-                        conn.Open();
-                        SqlDataReader dr = null;
-                        SqlCommand sc = new SqlCommand(sqlString, conn);
-                        dr = sc.ExecuteReader();
-                        if (dr.Read())
-                        {
-                            imagePath = dr[0].ToString().Replace("Origin", "Result") + @"MNImg\";
+                        //conn.Open();
+                        //SqlDataReader dr = null;
+                        //SqlCommand sc = new SqlCommand(sqlString, conn);
+                        //dr = sc.ExecuteReader();
+                        //if (dr.Read())
+                        //{
+                            //imagePath = dr[0].ToString().Replace("Origin", "Result") + @"MNImg\";
                             if (File.Exists(imagePath + "04_WHITE_Pre-Input.jpg"))
                             {
                                 this.pictureBox1.Image = Image.FromFile(imagePath + "04_WHITE_Pre-Input.jpg");
                             }
                             else
                             {
-                                this.pictureBox1.Image = ExamManager.Properties.Resources.emptyImage;
+                                this.pictureBox1.Image = EyeOfSauron.Properties.Resources.emptyImage;
                             }
                             if (File.Exists(imagePath + "06_G64_Pre-Input.jpg"))
                             {
@@ -107,7 +132,7 @@ namespace ExamManager
                             }
                             else
                             {
-                                this.pictureBox2.Image = ExamManager.Properties.Resources.emptyImage;
+                                this.pictureBox2.Image = EyeOfSauron.Properties.Resources.emptyImage;
                             }
                             if (File.Exists(imagePath + "08_G64-2_Pre-Input.jpg"))
                             {
@@ -115,17 +140,10 @@ namespace ExamManager
                             }
                             else
                             {
-                                this.pictureBox3.Image = ExamManager.Properties.Resources.emptyImage;
+                                this.pictureBox3.Image = EyeOfSauron.Properties.Resources.emptyImage;
                             }
-                      }
-                        else
-                        {
-                            this.pictureBox1.Image = ExamManager.Properties.Resources.emptyImage;
-                            this.pictureBox2.Image = ExamManager.Properties.Resources.emptyImage;
-                            this.pictureBox3.Image = ExamManager.Properties.Resources.emptyImage;
-                        }
-
-
+                        //}
+                            
                     }
                     catch (Exception ex)
                     {
@@ -133,26 +151,22 @@ namespace ExamManager
                     }
                     finally
                     {
+                        /*
                         if (conn != null)
                         {
                             conn.Close();
                         }
+                        */
                     }
                 }
                 else
                 {
                     imageIDTextBox.Text = "ID Illegal";
-                    this.pictureBox1.Image = ExamManager.Properties.Resources.emptyImage;
-                    this.pictureBox2.Image = ExamManager.Properties.Resources.emptyImage;
-                    this.pictureBox3.Image = ExamManager.Properties.Resources.emptyImage;
                 }
             }
             else
             {
                 imageIDTextBox.Text = "ID Empty";
-                this.pictureBox1.Image = ExamManager.Properties.Resources.emptyImage;
-                this.pictureBox2.Image = ExamManager.Properties.Resources.emptyImage;
-                this.pictureBox3.Image = ExamManager.Properties.Resources.emptyImage;
             }
         }
         private void upToTopButton_Click(object sender, EventArgs e)
@@ -162,3 +176,4 @@ namespace ExamManager
         }
     }
 }
+

@@ -66,6 +66,11 @@ namespace Sauron
                             ExamMissionMessage newexammission = new ExamMissionMessage(MessageType.SERVER_SEND_MISSION, TheMissionManager.GetExamMission());
                             a.Socket.SendMultipartMessage(newexammission);
                             break;
+                        case MessageType.CLINET_GET_PANEL_INFO:
+                            PanelInfoMessage panelInfo = new PanelInfoMessage(messageIn);
+                            PanelInfoMessage newpanelinfomassage = new PanelInfoMessage(MessageType.CLINET_GET_PANEL_INFO, TheMissionManager.GetPanelInfo(panelInfo.panelInfoList));
+                            a.Socket.SendMultipartMessage(newpanelinfomassage);
+                            break;
                         case MessageType.CONTROLER_CLEAR_MISSION:
                             Console.WriteLine("start clean mission queue;");
                             TheMissionManager.MissionQueue.Clear();

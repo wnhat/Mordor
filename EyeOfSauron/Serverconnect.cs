@@ -105,6 +105,22 @@ namespace EyeOfSauron
                 ExamMissionList.Enqueue(item);
             }
         }
+        public Queue<PanelInfo> GetPanelInfoByID(List<PanelInfo> panelIdList)
+        {
+            Queue<PanelInfo> SampleInfoList = new Queue<PanelInfo>();
+            BaseMessage newmessage = new PanelInfoMessage(MessageType.CLINET_GET_PANEL_INFO, panelIdList);
+            request.SendMultipartMessage(newmessage);
+            var returnmessage = new PanelInfoMessage(request.ReceiveMultipartMessage());
+            foreach (var item in returnmessage.panelInfoList)
+            {
+                SampleInfoList.Enqueue(item);
+            }
+            return SampleInfoList;
+        }
+        public void SetExamMissionsToDataBase()
+        {
+            //TODO 
+        }
         public InspectMission GetMission(InspectSection section)
         {
             string[] imagenamelist = SystemParameter.AviImageNameList;

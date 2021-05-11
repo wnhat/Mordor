@@ -68,6 +68,7 @@ Global
 		{51603E0B-A637-456D-9A40-2116C50BF463}.Release|Any CPU.Build.0 = Release|Any CPU
 		{51603E0B-A637-456D-9A40-2116C50BF463}.Release|x64.ActiveCfg = Release|Any CPU
 		{51603E0B-A637-456D-9A40-2116C50BF463}.Release|x64.Build.0 = Release|Any CPU
+<<<<<<< HEAD
 		{99399541-F1A9-494A-B976-7D232B690A89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{99399541-F1A9-494A-B976-7D232B690A89}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{99399541-F1A9-494A-B976-7D232B690A89}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -84,6 +85,8 @@ Global
 		{394CC229-312D-4AD1-9B22-6822DD87D1A8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{394CC229-312D-4AD1-9B22-6822DD87D1A8}.Release|x64.ActiveCfg = Release|Any CPU
 		{394CC229-312D-4AD1-9B22-6822DD87D1A8}.Release|x64.Build.0 = Release|Any CPU
+=======
+>>>>>>> serverRepo/ph1_dev
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -58,6 +58,17 @@ namespace Sauron
                 return null;
             }
         }
+        public PanelPathContainer GetPanelPathList(string panel_id, InspectSection pcsection)
+        {
+            if (PathManager.Contains(panel_id))
+            {
+                return PathManager.PanelPathGet(panel_id, pcsection);
+            }
+            else
+            {
+                return null;
+            }
+        }
         public PanelPathContainer GetPanel(string panel_id)
         {
             // return the first matching result;
