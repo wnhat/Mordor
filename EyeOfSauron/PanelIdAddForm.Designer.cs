@@ -28,19 +28,20 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.button1 = new System.Windows.Forms.Button();
+            this.AviButton = new System.Windows.Forms.Button();
             this.IdTextBox = new System.Windows.Forms.TextBox();
+            this.SviButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // button1
+            // AviButton
             // 
-            this.button1.Location = new System.Drawing.Point(12, 363);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(260, 37);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "添加ID";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.AviButton.Location = new System.Drawing.Point(12, 363);
+            this.AviButton.Name = "AviButton";
+            this.AviButton.Size = new System.Drawing.Size(126, 37);
+            this.AviButton.TabIndex = 0;
+            this.AviButton.Text = "添加AVI";
+            this.AviButton.UseVisualStyleBackColor = true;
+            this.AviButton.Click += new System.EventHandler(this.AVIbutton_Click);
             // 
             // IdTextBox
             // 
@@ -50,13 +51,24 @@
             this.IdTextBox.Size = new System.Drawing.Size(260, 345);
             this.IdTextBox.TabIndex = 1;
             // 
+            // SviButton
+            // 
+            this.SviButton.Location = new System.Drawing.Point(146, 363);
+            this.SviButton.Name = "SviButton";
+            this.SviButton.Size = new System.Drawing.Size(126, 37);
+            this.SviButton.TabIndex = 2;
+            this.SviButton.Text = "添加SVI";
+            this.SviButton.UseVisualStyleBackColor = true;
+            this.SviButton.Click += new System.EventHandler(this.SviButton_Click);
+            // 
             // PanelIdAddForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(281, 412);
+            this.Controls.Add(this.SviButton);
             this.Controls.Add(this.IdTextBox);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.AviButton);
             this.Name = "PanelIdAddForm";
             this.Text = "PnaelIdAddForm";
             this.ResumeLayout(false);
@@ -66,7 +78,8 @@
 
         #endregion
 
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button AviButton;
         private System.Windows.Forms.TextBox IdTextBox;
+        private System.Windows.Forms.Button SviButton;
     }
 }

@@ -25,7 +25,9 @@ namespace ExamManager
         Defectcode defect_translator;
         Manager TheManager;
         int idNum = 0;
-        List<string> idlist;
+        List<PanelInfo> idlist;
+        int Refreshflag;
+        Bitmap[] ImageArray;
 
         public examManageForm()
         {
@@ -37,48 +39,39 @@ namespace ExamManager
             TheParentForm = parentForm;
             TheManager = theManager;
             defect_translator = new Defectcode(TheManager.SystemParameter.CodeNameList);
-            idlist = new List<string>();
-        }
-
-        public static bool chcekIsTextFile(string fileName)
-        {
-            FileStream fs = new FileStream(fileName,FileMode.Open, FileAccess.Read);
-            bool isTextFile = true;
-            byte data;
-            int i = 0;
-            int length = (int)fs.Length;
-            try
-            {
-                while(i<length && isTextFile)
-                {
-                    data = (byte)fs.ReadByte();
-                    isTextFile = (data != 0);
-                    i++;
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            finally
-            {
-                if (fs != null);
-                {
-                    fs.Close();
-                }
-            }
-            return isTextFile;
+            idlist = new List<PanelInfo>();
+            AddDefectCode();
         }
         private void commitButton_Click(object sender, EventArgs e)
         {
             //TODO: 1、保存内存中图像图片 ；
             //      2、更新数据库；
         }
-
-        private void fileSelectButton_Click(object sender, EventArgs e)
+        public void SetImage(Bitmap[] imagearray)
         {
-            //this.idTextBox.Text = "ID Input";
-            idNum = 0;
+            pictureBox1.Image = imagearray[0];
+            pictureBox2.Image = imagearray[1];
+            pictureBox3.Image = imagearray[2];
+        }
+        public void RefreshForm()
+        {
+            if ((Refreshflag) * 3 < ImageArray.Count())
+            {
+                SetImage(ImageArray.Skip((Refreshflag) * 3).Take(3).ToArray());
+                Refreshflag++;
+            }
+            else
+            {
+                Refreshflag = 0;
+                RefreshForm();
+            }
+        }
+        private void AddDefectCode()
+        {
+            foreach (var item in TheManager.SystemParameter.CodeNameList)
+            {
+                this.DefectcomboBox.Items.Add(item.DefectName);
+            }
         }
         private void imageViewButton_Click(object sender, EventArgs e)
         {
@@ -86,12 +79,6 @@ namespace ExamManager
             this.pictureBox2.Image = EyeOfSauron.Properties.Resources.emptyImage;
             this.pictureBox3.Image = EyeOfSauron.Properties.Resources.emptyImage;
         }
-        private void upToTopButton_Click(object sender, EventArgs e)
-        {
-            idNum = 0;
-            //.imageIDTextBox.Text = this.idTextBox.Lines[idNum];
-        }
-
         private void AddPanelIdbutton_Click(object sender, EventArgs e)
         {
             PanelIdAddForm idform = new PanelIdAddForm();
