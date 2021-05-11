@@ -66,9 +66,12 @@ namespace EyeOfSauron
         private void Evilbutton_Click(object sender, EventArgs e)
         {
             // 考试
-            //TheManager.SetInspectSection(InspectSection.EXAM);
-            //TheManager.AddExamMissions();
-            //UserCheckIn(TheInspectForm);
+            TheManager.SetInspectSection(InspectSection.EXAM);
+            TheManager.AddExamMissions();
+            UserCheckIn(TheInspectForm);
+        }
+        private void ExamManagerButton_Click(object sender, EventArgs e)
+        {
             this.Hide();
             TheExamManageForm.ShowDialog();
         }
