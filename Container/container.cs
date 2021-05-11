@@ -189,6 +189,38 @@ namespace Container
             return sortint.CompareTo(other.sortint);
         }
     }
+    public class PanelInfo
+    {
+        public string PanelId;
+        public string Image_path;
+        public InspectSection PcSection { get; set; }
+        private Defect Defect;
+        public PanelInfo()
+        {
+        }
+        public PanelInfo(string panelId, string image_path, InspectSection pcSection, Defect defect)
+        {
+            PanelId = panelId;
+            Image_path = image_path;
+            PcSection = pcSection;
+            Defect = defect;
+        }
+        public PanelInfo(string panelId, InspectSection pcSection, Defect defect)
+        {
+            PanelId = panelId;
+            PcSection = pcSection;
+            Defect = defect;
+        }
+        public PanelInfo(string panelId, InspectSection pcSection)
+        {
+            PanelId = panelId;
+            PcSection = pcSection;
+        }
+        public void SetImagePath(string path)
+        {
+            Image_path = path;
+        }
+    }
     public class PanelMission
     {
         public string PanelId;

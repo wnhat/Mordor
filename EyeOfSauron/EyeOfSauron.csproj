@@ -98,6 +98,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="defectcode.cs" />
+    <Compile Include="ExamManageForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ExamManageForm.Designer.cs">
+      <DependentUpon>ExamManageForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="LoginForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -127,6 +133,9 @@
     <Compile Include="settings.Designer.cs">
       <DependentUpon>settings.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="ExamManageForm.resx">
+      <DependentUpon>ExamManageForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="InspectForm.resx">
       <DependentUpon>InspectForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -179,6 +188,9 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\emptyImage.bmp" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -47,6 +47,23 @@ namespace Sauron
                 return null;
             }
         }
+        public PanelPathContainer PanelPathGet(string panelId, InspectSection pcsection)
+        {
+            // TODO: 当同时存在多个相同ID产品时的情况；
+            PanelPathContainer pathContainer = null;
+            if (theContainer.ContainsKey(panelId))
+            {
+                List<PanelPathContainer> containerList = theContainer[panelId];
+                foreach (var containerItem in containerList)
+                {
+                    if (containerItem.PcSection == pcsection)
+                    {
+                        pathContainer = containerItem;
+                    }
+                }
+            }
+            return pathContainer;
+        }
 
         public void Clear()
         {

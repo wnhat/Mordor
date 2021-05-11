@@ -28,6 +28,7 @@ namespace Sauron
         Queue<PanelMission> FinishedMissionQueue;
         List<ExamMission> ExamMissionList;
 
+
         public MissionManager()
         {
             string ip_path = @"D:\1218180\program2\c#\Mordor\Sauron\IP.json";
@@ -160,6 +161,16 @@ namespace Sauron
             }
             ExamMissionList.Sort();
             return ExamMissionList;
+        }
+        public List<PanelInfo> GetPanelInfo(List<PanelInfo> SampleInfoList)
+        {
+            foreach (var item in SampleInfoList)
+            {
+                //TODO:
+                PanelPathContainer panelPathContainer = Thefilecontainer.GetPanelPathList(item.PanelId,item.PcSection);
+                item.SetImagePath(panelPathContainer.Result_path);
+            }
+            return SampleInfoList;
         }
         private void AddMissionInQueue()
         {

@@ -16,7 +16,9 @@ namespace Container.Message
         CLINET_GET_MISSION_AVI,
         CLINET_GET_MISSION_SVI,
         CLINET_GET_MISSION_APP,
+        CLINET_GET_PANEL_INFO,
         CLINET_GET_EXAM_MISSION_LIST,
+        //CLINET_SET_EXAM_MISSION_LIST,
         CLINET_CHECK_USER,
         CLINET_SEND_UNFINISHED_MISSION_AVI,
         CLINET_SEND_UNFINISHED_MISSION_SVI,
@@ -137,6 +139,30 @@ namespace Container.Message
         List<ExamMission> TransferToResult(string resultstring)
         {
             return JsonConvert.DeserializeObject<List<ExamMission>>(resultstring, new JsonSerializerSettings(){StringEscapeHandling = StringEscapeHandling.EscapeNonAscii });
+        }
+    }
+    public class PanelInfoMessage : BaseMessage
+    {
+        public List<PanelInfo> panelInfoList;
+        //序列化发送的Massage
+        public PanelInfoMessage(MessageType messageType, List<PanelInfo> panelIdList) : base(messageType)
+        {
+            panelInfoList = panelIdList;
+            this.Append(TransferToString(panelInfoList));
+        }
+        //对收到的Massage进行反序列化
+        public PanelInfoMessage(NetMQMessage message) : base()
+        {
+            panelInfoList = TransferToResult(message[1].ConvertToString());
+        }
+        //序列化和反序列化实现
+        string TransferToString(List<PanelInfo> result)
+        {
+            return JsonConvert.SerializeObject(result, new JsonSerializerSettings() { StringEscapeHandling = StringEscapeHandling.EscapeNonAscii });
+        }
+        List<PanelInfo> TransferToResult(string resultstring)
+        {
+            return JsonConvert.DeserializeObject<List<PanelInfo>>(resultstring, new JsonSerializerSettings() { StringEscapeHandling = StringEscapeHandling.EscapeNonAscii });
         }
     }
 }

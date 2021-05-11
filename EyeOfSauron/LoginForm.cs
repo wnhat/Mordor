@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Container;
+using ExamManager;
 
 namespace EyeOfSauron
 {
@@ -15,11 +16,13 @@ namespace EyeOfSauron
     {
         private Manager TheManager;
         private InspectForm TheInspectForm;
+        private examManageForm TheExamManageForm;
         public LoginForm()
         {
             InitializeComponent();
             TheManager = new Manager();
             TheInspectForm = new InspectForm(this,TheManager);
+            TheExamManageForm = new examManageForm(this, TheManager);
         }
         private void userid_box_KeyDown(object sender, KeyEventArgs e)
         {
@@ -63,9 +66,11 @@ namespace EyeOfSauron
         private void Evilbutton_Click(object sender, EventArgs e)
         {
             // 考试
-            TheManager.SetInspectSection(InspectSection.EXAM);
-            TheManager.AddExamMissions();
-            UserCheckIn(TheInspectForm);
+            //TheManager.SetInspectSection(InspectSection.EXAM);
+            //TheManager.AddExamMissions();
+            //UserCheckIn(TheInspectForm);
+            this.Hide();
+            TheExamManageForm.ShowDialog();
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System.IO;
 namespace ExamManager
 {
-    partial class mainForm
+    partial class examManageForm
     {
         /// <summary>
         /// Required designer variable.
@@ -178,7 +178,7 @@ namespace ExamManager
             this.upToTopButton.UseVisualStyleBackColor = true;
             this.upToTopButton.Click += new System.EventHandler(this.upToTopButton_Click);
             // 
-            // mainForm
+            // examManageForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -197,7 +197,7 @@ namespace ExamManager
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.commitButton);
             this.MaximizeBox = false;
-            this.Name = "mainForm";
+            this.Name = "examManageForm";
             this.Text = "Cell ID Register";
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();

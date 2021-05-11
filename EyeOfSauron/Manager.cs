@@ -151,5 +151,9 @@ namespace EyeOfSauron
             OnInspectedMission = null;
             PreDownloadedMissionQueue = new Queue<InspectMission>();
         }
+        public Queue<PanelInfo> GetPanelInfo(List<PanelInfo> panelIdList)
+        {
+            return TheServerConnecter.GetPanelInfoByID(panelIdList);
+        }
     }
 }
