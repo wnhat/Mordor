@@ -22,55 +22,58 @@ namespace ExamManager
     public partial class examManageForm : Form
     {
         DataSet dataset;
+        SqlConnection TheDataBase;
         BindingSource bdsource;
         LoginForm TheParentForm;
         Defectcode defect_translator;
         Manager TheManager;
+        SqlCommandBuilder Builder;
+        SqlDataAdapter adp;
         int idNum = 0;
         List<string> idlist;
 
         public examManageForm()
         {
-            dataset = new DataSet();
-            data();
-            bdsource = new BindingSource();
-            bdsource.DataSource = dataset.Tables[0];
             InitializeComponent();
-            this.ExamDBGridView.DataSource = bdsource;
         }
         public examManageForm(LoginForm parentForm, Manager theManager)
         {
-            dataset = new DataSet();
-            data();
-            bdsource = new BindingSource();
-            bdsource.DataSource = dataset.Tables[0];
             InitializeComponent();
-            this.ExamDBGridView.DataSource = bdsource;
+            dataInitial();
             TheParentForm = parentForm;
             TheManager = theManager;
             defect_translator = new Defectcode(TheManager.SystemParameter.CodeNameList);
             idlist = new List<string>();
         }
-        private void data()
+        private void dataInitial()
         {
-            SqlConnection TheDataBase = new SqlConnection("server=172.16.150.200;UID=sa;PWD=1qaz@WSX;Database=EDIAS_DB;Trusted_connection=False");
-            string path = @"D:\1218180\program2\c#\123";
+            dataset = new DataSet();
+            TheDataBase = new SqlConnection("server=172.16.150.200;UID=sa;PWD=1qaz@WSX;Database=EDIAS_DB;Trusted_connection=False");
             string querystring = @"SELECT [ID],[PanelID]
       ,[Judge]
       ,[DefectCode]
       ,[DefectName]
       ,[Section]
       ,[Info]
+      ,[DelFlag]
   FROM [EDIAS_DB].[dbo].[AET_IMAGE_EXAM]";
             SqlCommand newcommand = new SqlCommand(querystring, TheDataBase);
             TheDataBase.Open();
-            SqlDataAdapter adp = new SqlDataAdapter();
+            adp = new SqlDataAdapter();
             adp.SelectCommand = newcommand;
-            SqlCommandBuilder Builder = new SqlCommandBuilder(adp);
+            Builder = new SqlCommandBuilder(adp);
             adp.Fill(dataset);
             TheDataBase.Close();
-
+            bdsource = new BindingSource();
+            bdsource.DataSource = dataset.Tables[0];
+            this.ExamDBGridView.DataSource = bdsource;
+            foreach(DataGridViewColumn Col in this.ExamDBGridView.Columns)
+            {
+                Col.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+                this.ExamDBGridView.Sort(this.ExamDBGridView.Columns[7], ListSortDirection.Ascending);
+            }
         }
+
         public static bool chcekIsTextFile(string fileName)
         {
             FileStream fs = new FileStream(fileName,FileMode.Open, FileAccess.Read);
@@ -140,6 +143,32 @@ namespace ExamManager
             foreach (var item in idlist)
             {
                 //TODO:
+            }
+        }
+
+        private void del_button_Click(object sender, EventArgs e)
+        {
+            this.ExamDBGridView.SelectedRows[0].Cells[7].Value = 1;
+            this.bdsource.EndEdit();
+            refreshDataSet();
+        }
+        private void refreshDataSet()
+        {
+            TheDataBase.Open();
+            Builder.GetUpdateCommand();
+            var asd = dataset.GetChanges();
+            adp.Update(dataset);
+            TheDataBase.Close();
+        }
+
+        private void dataGridViewRowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
+        {
+            for (int i = 0; i < this.ExamDBGridView.Rows.Count; i++)
+            {
+                if (Convert.ToInt16(this.ExamDBGridView.Rows[i].Cells[7].Value) == 1)
+                {
+                    this.ExamDBGridView.Rows[i].DefaultCellStyle.BackColor = Color.BurlyWood;
+                }
             }
         }
     }

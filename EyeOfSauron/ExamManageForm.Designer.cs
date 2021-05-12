@@ -113,6 +113,7 @@ namespace ExamManager
             this.ExamDBGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.ExamDBGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.ExamDBGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.ExamDBGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.ExamDBGridView.ImeMode = System.Windows.Forms.ImeMode.Off;
@@ -124,9 +125,7 @@ namespace ExamManager
             this.ExamDBGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.ExamDBGridView.Size = new System.Drawing.Size(789, 438);
             this.ExamDBGridView.TabIndex = 11;
-            this.ExamDBGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.ExamDBGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
-
+            this.ExamDBGridView.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.dataGridViewRowPrePaint);
             // 
             // AddPanelIdbutton
             // 
@@ -177,6 +176,7 @@ namespace ExamManager
             this.button3.TabIndex = 14;
             this.button3.Text = "删除";
             this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.del_button_Click);
             // 
             // button4
             // 
@@ -219,7 +219,7 @@ namespace ExamManager
             // examManageForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(1904, 1041);
+            this.ClientSize = new System.Drawing.Size(1444, 881);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.comboBox2);
@@ -232,7 +232,7 @@ namespace ExamManager
             this.Controls.Add(this.tableLayoutPanel1);
             this.Margin = new System.Windows.Forms.Padding(2);
             this.MaximumSize = new System.Drawing.Size(1920, 1080);
-            this.MinimumSize = new System.Drawing.Size(1918, 1038);
+            this.MinimumSize = new System.Drawing.Size(1438, 858);
             this.Name = "examManageForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Form1";
@@ -254,7 +254,6 @@ namespace ExamManager
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Button AddPanelIdbutton;
         private System.Windows.Forms.Button Cleanbutton;
-        private System.Windows.Forms.DataGridView ExamDBGridView;
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.ListBox NewIdListBox;
         private System.Windows.Forms.Button button3;
@@ -262,6 +261,7 @@ namespace ExamManager
         private System.Windows.Forms.ComboBox comboBox2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.DataGridView ExamDBGridView;
     }
 }
 
