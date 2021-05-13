@@ -14,7 +14,6 @@ namespace EyeOfSauron
     {
         Serverconnecter TheServerConnecter;
         Operator Operater;
-        public Parameter SystemParameter;
         public InspectSection Section { get; set; }
         public InspectMission OnInspectedMission { get; set; }
         private Queue<InspectMission> PreDownloadedMissionQueue;        //已加载的文件队列
@@ -29,15 +28,15 @@ namespace EyeOfSauron
             {
                 if (Section == InspectSection.AVI)
                 {
-                    return SystemParameter.AviImageNameList;
+                    return Parameter.AviImageNameList;
                 }
                 else if (Section == InspectSection.SVI)
                 {
-                    return SystemParameter.SviImageNameList;
+                    return Parameter.SviImageNameList;
                 }
                 else
                 {
-                    return SystemParameter.AppImageNameList;
+                    return Parameter.AppImageNameList;
                 }
             }
         }
@@ -75,12 +74,11 @@ namespace EyeOfSauron
         }
         public Manager()
         {
-            SystemParameter = InitParameter();
-            TheServerConnecter = new Serverconnecter(SystemParameter);
+            TheServerConnecter = new Serverconnecter();
             Operater = null;
             OnInspectedMission = null;
-            DownloadQuantity = SystemParameter.PreLoadQuantity;
-            ImageSavingPath = SystemParameter.SavePath;
+            DownloadQuantity = Parameter.PreLoadQuantity;
+            ImageSavingPath = Parameter.SavePath;
             PreDownloadedMissionQueue = new Queue<InspectMission>();
         }
         public void CleanMission()
@@ -119,19 +117,6 @@ namespace EyeOfSauron
         public void OperaterCheckOut()
         {
             Operater = null;
-        }
-        public Parameter InitParameter()
-        {
-            string sysconfig_path = @"\\172.16.145.22\NetworkDrive\D_Drive\Mordor\sysconfig.json";
-            FileInfo sysconfig = new FileInfo(sysconfig_path);
-            if (sysconfig.Exists)
-            {
-                var jsonstring = new StreamReader(sysconfig.OpenRead());
-                JsonSerializer file_serial = new JsonSerializer();
-                Parameter newparameter = (Parameter)file_serial.Deserialize(new JsonTextReader(jsonstring), typeof(Parameter));
-                return newparameter;
-            }
-            return null;
         }
         public void SaveParameter() { }
         public void SetInspectSection(InspectSection section)

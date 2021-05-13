@@ -28,23 +28,23 @@ namespace EyeOfSauron
             TheParentForm = parentForm;
             TheManager = theManager;
             Refreshflag = 0;
-            defect_translator = new Defectcode(TheManager.SystemParameter.CodeNameList);
+            defect_translator = new Defectcode(Parameter.CodeNameList);
             SetDefectButton();
         }
         private void SetDefectButton()
         {
-            this.defect_button_1.Text = TheManager.SystemParameter.CodeNameList[0].DefectName;
-            this.defect_button_2.Text = TheManager.SystemParameter.CodeNameList[1].DefectName;
-            this.defect_button_3.Text = TheManager.SystemParameter.CodeNameList[2].DefectName;
-            this.defect_button_4.Text = TheManager.SystemParameter.CodeNameList[3].DefectName;
-            this.defect_button_5.Text = TheManager.SystemParameter.CodeNameList[4].DefectName;
-            this.defect_button_6.Text = TheManager.SystemParameter.CodeNameList[5].DefectName;
-            this.defect_button_7.Text = TheManager.SystemParameter.CodeNameList[6].DefectName;
-            this.defect_button_8.Text = TheManager.SystemParameter.CodeNameList[7].DefectName;
-            this.defect_button_9.Text = TheManager.SystemParameter.CodeNameList[8].DefectName;
-            this.defect_button_10.Text = TheManager.SystemParameter.CodeNameList[9].DefectName;
-            this.defect_button_11.Text = TheManager.SystemParameter.CodeNameList[10].DefectName;
-            this.defect_button_12.Text = TheManager.SystemParameter.CodeNameList[11].DefectName;
+            this.defect_button_1.Text = Parameter.CodeNameList[0].DefectName;
+            this.defect_button_2.Text = Parameter.CodeNameList[1].DefectName;
+            this.defect_button_3.Text = Parameter.CodeNameList[2].DefectName;
+            this.defect_button_4.Text = Parameter.CodeNameList[3].DefectName;
+            this.defect_button_5.Text = Parameter.CodeNameList[4].DefectName;
+            this.defect_button_6.Text = Parameter.CodeNameList[5].DefectName;
+            this.defect_button_7.Text = Parameter.CodeNameList[6].DefectName;
+            this.defect_button_8.Text = Parameter.CodeNameList[7].DefectName;
+            this.defect_button_9.Text = Parameter.CodeNameList[8].DefectName;
+            this.defect_button_10.Text = Parameter.CodeNameList[9].DefectName;
+            this.defect_button_11.Text = Parameter.CodeNameList[10].DefectName;
+            this.defect_button_12.Text = Parameter.CodeNameList[11].DefectName;
         }
         public void SetImageLabel(string[] imagenamelist)
         {

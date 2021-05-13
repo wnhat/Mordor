@@ -38,7 +38,7 @@ namespace ExamManager
             InitializeComponent();
             TheParentForm = parentForm;
             TheManager = theManager;
-            defect_translator = new Defectcode(TheManager.SystemParameter.CodeNameList);
+            defect_translator = new Defectcode(Parameter.CodeNameList);
             idlist = new List<PanelInfo>();
             AddDefectCode();
         }
@@ -68,7 +68,7 @@ namespace ExamManager
         }
         private void AddDefectCode()
         {
-            foreach (var item in TheManager.SystemParameter.CodeNameList)
+            foreach (var item in Parameter.CodeNameList)
             {
                 this.DefectcomboBox.Items.Add(item.DefectName);
             }
@@ -99,12 +99,10 @@ namespace ExamManager
     {
 
         private RequestSocket request;
-        Parameter SystemParameter;
-        public SeverConnecter(Parameter systemParameter)
+        public SeverConnecter()
         {
             request = new RequestSocket();
             request.Connect("tcp://172.16.145.22:5555");
-            SystemParameter = systemParameter;
         }
         public Queue<PanelInfo> GetPanelInfoByID(List<PanelInfo> panelIdList)
         {
