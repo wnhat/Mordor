@@ -27,11 +27,11 @@ namespace EyeOfSauron
         }
         private void DownloadWork(object sender, EventArgs e)
         {
-            for (int i = 0; i < TheManager.SystemParameter.PreLoadQuantity; i++)
+            for (int i = 0; i < Parameter.PreLoadQuantity; i++)
             {
                 if (TheManager.PreLoadOneMission())  // 调用 Manager.PreLoadOneMission()完成图像加载；
                 {
-                    int percentage = i * 100 / TheManager.SystemParameter.PreLoadQuantity;
+                    int percentage = i * 100 / Parameter.PreLoadQuantity;
                     backgroundWorkerForDownload.ReportProgress(percentage);
                 }
                 else

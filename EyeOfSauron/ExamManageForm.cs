@@ -30,7 +30,9 @@ namespace ExamManager
         SqlCommandBuilder Builder;
         SqlDataAdapter adp;
         int idNum = 0;
-        List<string> idlist;
+        List<PanelInfo> idlist;
+        int Refreshflag;
+        Bitmap[] ImageArray;
 
         public examManageForm()
         {
@@ -42,8 +44,9 @@ namespace ExamManager
             dataInitial();
             TheParentForm = parentForm;
             TheManager = theManager;
-            defect_translator = new Defectcode(TheManager.SystemParameter.CodeNameList);
-            idlist = new List<string>();
+            defect_translator = new Defectcode(Parameter.CodeNameList);
+            idlist = new List<PanelInfo>();
+            AddDefectCode();
         }
         private void dataInitial()
         {
@@ -76,47 +79,34 @@ namespace ExamManager
 
         public static bool chcekIsTextFile(string fileName)
         {
-            FileStream fs = new FileStream(fileName,FileMode.Open, FileAccess.Read);
-            bool isTextFile = true;
-            byte data;
-            int i = 0;
-            int length = (int)fs.Length;
-            try
-            {
-                while(i<length && isTextFile)
-                {
-                    data = (byte)fs.ReadByte();
-                    isTextFile = (data != 0);
-                    i++;
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            finally
-            {
-                if (fs != null);
-                {
-                    fs.Close();
-                }
-            }
-            return isTextFile;
+            //TODO: 1、保存内存中图像图片 ；
+            //      2、更新数据库；
         }
-        private void commitButton_Click(object sender, EventArgs e)
+        public void SetImage(Bitmap[] imagearray)
         {
-            //ArrayList list = new ArrayList();
-            //for (int i=0; i<this.idTextBox.Lines.Length; i++)
-            //{
-            //    list.Add(idTextBox.Lines[i]);
-            //}
-            //TODO:验证ID对应图片是否存在
-            //TODO:获取图片并上传到数据库
+            pictureBox1.Image = imagearray[0];
+            pictureBox2.Image = imagearray[1];
+            pictureBox3.Image = imagearray[2];
         }
-        private void fileSelectButton_Click(object sender, EventArgs e)
+        public void RefreshForm()
         {
-            //this.idTextBox.Text = "ID Input";
-            idNum = 0;
+            if ((Refreshflag) * 3 < ImageArray.Count())
+            {
+                SetImage(ImageArray.Skip((Refreshflag) * 3).Take(3).ToArray());
+                Refreshflag++;
+            }
+            else
+            {
+                Refreshflag = 0;
+                RefreshForm();
+            }
+        }
+        private void AddDefectCode()
+        {
+            foreach (var item in Parameter.CodeNameList)
+            {
+                this.DefectcomboBox.Items.Add(item.DefectName);
+            }
         }
         private void imageViewButton_Click(object sender, EventArgs e)
         {
@@ -124,12 +114,6 @@ namespace ExamManager
             this.pictureBox2.Image = EyeOfSauron.Properties.Resources.emptyImage;
             this.pictureBox3.Image = EyeOfSauron.Properties.Resources.emptyImage;
         }
-        private void upToTopButton_Click(object sender, EventArgs e)
-        {
-            idNum = 0;
-            //.imageIDTextBox.Text = this.idTextBox.Lines[idNum];
-        }
-
         private void AddPanelIdbutton_Click(object sender, EventArgs e)
         {
             PanelIdAddForm idform = new PanelIdAddForm();
@@ -193,12 +177,10 @@ namespace ExamManager
     {
 
         private RequestSocket request;
-        Parameter SystemParameter;
-        public SeverConnecter(Parameter systemParameter)
+        public SeverConnecter()
         {
             request = new RequestSocket();
             request.Connect("tcp://172.16.145.22:5555");
-            SystemParameter = systemParameter;
         }
         public Queue<PanelInfo> GetPanelInfoByID(List<PanelInfo> panelIdList)
         {

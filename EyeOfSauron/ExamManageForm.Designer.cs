@@ -40,7 +40,7 @@ namespace ExamManager
             this.NewIdListBox = new System.Windows.Forms.ListBox();
             this.button3 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
-            this.comboBox2 = new System.Windows.Forms.ComboBox();
+            this.DefectcomboBox = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -188,14 +188,14 @@ namespace ExamManager
             this.button4.Text = "添加";
             this.button4.UseVisualStyleBackColor = true;
             // 
-            // comboBox2
+            // DefectcomboBox
             // 
-            this.comboBox2.Font = new System.Drawing.Font("SimSun", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.comboBox2.FormattingEnabled = true;
-            this.comboBox2.Location = new System.Drawing.Point(1563, 952);
-            this.comboBox2.Name = "comboBox2";
-            this.comboBox2.Size = new System.Drawing.Size(167, 35);
-            this.comboBox2.TabIndex = 16;
+            this.DefectcomboBox.Font = new System.Drawing.Font("SimSun", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.DefectcomboBox.FormattingEnabled = true;
+            this.DefectcomboBox.Location = new System.Drawing.Point(1563, 952);
+            this.DefectcomboBox.Name = "DefectcomboBox";
+            this.DefectcomboBox.Size = new System.Drawing.Size(167, 35);
+            this.DefectcomboBox.TabIndex = 16;
             // 
             // label1
             // 
@@ -223,7 +223,7 @@ namespace ExamManager
             this.ClientSize = new System.Drawing.Size(1444, 881);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.comboBox2);
+            this.Controls.Add(this.DefectcomboBox);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.NewIdListBox);
@@ -259,7 +259,7 @@ namespace ExamManager
         private System.Windows.Forms.ListBox NewIdListBox;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.ComboBox comboBox2;
+        private System.Windows.Forms.ComboBox DefectcomboBox;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.DataGridView ExamDBGridView;

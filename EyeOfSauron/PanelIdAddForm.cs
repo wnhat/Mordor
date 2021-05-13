@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Container;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -16,18 +17,27 @@ namespace EyeOfSauron
         {
             InitializeComponent();
         }
-        List<string> idarray;
-        private void button1_Click(object sender, EventArgs e)
+        List<PanelInfo> idarray;
+        private void AVIbutton_Click(object sender, EventArgs e)
         {
             foreach (var item in this.IdTextBox.Lines)
             {
-                idarray.Add(item);
+                idarray.Add(new PanelInfo(item,InspectSection.AVI));
             }
             this.Close();
         }
-        public void BindIdArray(List<string> id)
+        private void SviButton_Click(object sender, EventArgs e)
+        {
+            foreach (var item in this.IdTextBox.Lines)
+            {
+                idarray.Add(new PanelInfo(item, InspectSection.SVI));
+            }
+            this.Close();
+        }
+        public void BindIdArray(List<PanelInfo> id)
         {
             this.idarray = id;
         }
+        
     }
 }

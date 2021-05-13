@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Schema;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,6 +11,8 @@ using Container;
 using System.Data;
 using System.Data.SqlClient;
 using System.Windows.Forms;
+using Newtonsoft.Json.Linq;
+
 
 namespace test
 {
@@ -18,8 +21,7 @@ namespace test
         [STAThread]
         static void Main(string[] args)
         {
-            // 添加；
-            TestDB();
+            Console.WriteLine(Parameter.AppImageNameList);
         }
         static private void TestDB()
         {
@@ -82,5 +84,60 @@ namespace test
             }
         }
     }
+    static class Parameter
+    {
+        public static string SavePath;
+        public static string[] AviImageNameList;
+        public static string[] SviImageNameList;
+        public static string[] AppImageNameList;
+        public static int PreLoadQuantity;
+        public static Defect[] CodeNameList;
 
+        static Parameter()
+        {
+            string sysConfigPath = @"\\172.16.145.22\NetworkDrive\D_Drive\Mordor\sysconfig.json";
+            FileInfo sysconfig = new FileInfo(sysConfigPath);
+            if (sysconfig.Exists)
+            {
+                var jsonreader = new StreamReader(sysconfig.OpenRead());
+                var jsonstring = jsonreader.ReadToEnd();
+                JObject jsonobj = JObject.Parse(jsonstring);
+                var fieldcollection = typeof(Parameter).GetFields();
+                var asd = fieldcollection.ToArray();
+                List<string> fieldnamelist = new List<string>();
+                List<string> jsonnamelist = new List<string>();
+                foreach (var item in fieldcollection)
+                {
+                    fieldnamelist.Add(item.Name);
+                }
+                foreach (var item in jsonobj)
+                {
+                    jsonnamelist.Add(item.Key);
+                }
+                if (fieldnamelist.Except(jsonnamelist).Count() != 0)
+                {
+                    throw new ApplicationException("系统参数多于文件记录，请检查版本对应关系");
+                }
+                else if (jsonnamelist.Except(fieldnamelist).Count() != 0)
+                {
+                    throw new ApplicationException("文件记录多于系统参数，请检查版本对应关系");
+                }
+                else
+                {
+                    foreach (var item in fieldcollection)
+                    {
+                        var propertyName = item.Name;
+                        var value = jsonobj.GetValue(propertyName);
+                        Type propertytype = item.FieldType;
+                        var convertvalue = value.ToObject(propertytype);
+                        item.SetValue(null,convertvalue);
+                    }
+                }
+            }
+            else
+            {
+                throw new ApplicationException("sysconfig.json 文件不存在，请检查与 145.22电脑的链接或相应地址是否存在设置文件；");
+            }
+        }
+    }
 }

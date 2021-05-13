@@ -19,12 +19,10 @@ namespace EyeOfSauron
         Queue<ExamMission> ExamMissionList;
         Queue<ExamMission> ExamBuffer;
         List<ExamMission> ExamResult;
-        Parameter SystemParameter;
-        public Serverconnecter(Parameter systemParameter)
+        public Serverconnecter()
         {
             request = new RequestSocket();
             request.Connect("tcp://172.16.145.22:5555");
-            SystemParameter = systemParameter;
             panelMissionList = new Queue<PanelMission>();
             ExamMissionList = new Queue<ExamMission>();
             ExamBuffer = new Queue<ExamMission>();
@@ -123,14 +121,14 @@ namespace EyeOfSauron
         }
         public InspectMission GetMission(InspectSection section)
         {
-            string[] imagenamelist = SystemParameter.AviImageNameList;
+            string[] imagenamelist = Parameter.AviImageNameList;
             if (section == InspectSection.AVI)
             {
                 var newmission = GetPanelMission();
                 if (newmission!=null)
                 {
                     panelMissionList.Enqueue(newmission);
-                    return new InspectMission(newmission, section, SystemParameter.AviImageNameList);
+                    return new InspectMission(newmission, section, Parameter.AviImageNameList);
                 }
                 else
                 {
@@ -143,7 +141,7 @@ namespace EyeOfSauron
                 if (newmission != null)
                 {
                     panelMissionList.Enqueue(newmission);
-                    return new InspectMission(newmission, section, SystemParameter.SviImageNameList);
+                    return new InspectMission(newmission, section, Parameter.SviImageNameList);
                 }
                 else
                 {
@@ -156,7 +154,7 @@ namespace EyeOfSauron
                 if (newmission != null)
                 {
                     panelMissionList.Enqueue(newmission);
-                    return new InspectMission(newmission, section, SystemParameter.AppImageNameList);
+                    return new InspectMission(newmission, section, Parameter.AppImageNameList);
                 }
                 else
                 {
@@ -171,13 +169,13 @@ namespace EyeOfSauron
                     switch (newExamMission.PcSection)
                     {
                         case InspectSection.AVI:
-                            imagenamelist = SystemParameter.AviImageNameList;
+                            imagenamelist = Parameter.AviImageNameList;
                             break;
                         case InspectSection.SVI:
-                            imagenamelist = SystemParameter.SviImageNameList;
+                            imagenamelist = Parameter.SviImageNameList;
                             break;
                         case InspectSection.APP:
-                            imagenamelist = SystemParameter.AppImageNameList;
+                            imagenamelist = Parameter.AppImageNameList;
                             break;
                     }
                     InspectMission newinspectmission = new InspectMission(newExamMission, imagenamelist);
