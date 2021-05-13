@@ -27,7 +27,7 @@ namespace Sauron
             {
                 MissionManager TheMissionManager = new MissionManager();
                 // wait the async process finish;
-                // Thread.Sleep(TimeSpan.FromSeconds(180));  // TODO：使用事件
+                Thread.Sleep(TimeSpan.FromSeconds(180));  // TODO：使用事件
                 // 图像路径爬取完成后从数据库获取任务；
                 TheMissionManager.AddMissionByServer();
                 Console.WriteLine("add mission finished.");
