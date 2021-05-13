@@ -133,8 +133,10 @@ namespace ExamManager
         private void del_button_Click(object sender, EventArgs e)
         {
             this.ExamDBGridView.SelectedRows[0].Cells[7].Value = 1;
+            int ColIndex = this.ExamDBGridView.CurrentRow.Index;
             this.bdsource.EndEdit();
             refreshDataSet();
+            this.ExamDBGridView.CurrentCell = this.ExamDBGridView[0,ColIndex];
         }
         private void refreshDataSet()
         {
@@ -154,6 +156,21 @@ namespace ExamManager
                     this.ExamDBGridView.Rows[i].DefaultCellStyle.BackColor = Color.BurlyWood;
                 }
             }
+        }
+
+        private void CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            PanelInfo panel = new PanelInfo(Convert.ToString(this.ExamDBGridView.CurrentRow.Cells[1].Value), (InspectSection)Enum.Parse(typeof(InspectSection), Convert.ToString(this.ExamDBGridView.CurrentRow.Cells[5].Value)));
+            List<PanelInfo> panelIdList = new List<PanelInfo>();
+            panelIdList.Add(panel);
+            //Queue<PanelInfo> IdList = TheManager.GetPanelInfo(panelIdList);
+            //panel = IdList.Dequeue();
+            //string resultPath = panel.Image_path + "\\MNImg\\";
+            string resultPath = @"\\172.16.180.102\NetworkDrive\F_Drive\Defect Info\Result\761L140046B3AAD02\MNImg";
+            DirContainer panelResultDirContainer = new DirContainer(resultPath);
+            this.pictureBox1.Image = Image.FromStream(panelResultDirContainer.GetFileFromMemory("04_WHITE_Pre-Input.jpg"));
+            this.pictureBox2.Image = Image.FromStream(panelResultDirContainer.GetFileFromMemory("06_G64_Pre-Input.jpg"));
+            this.pictureBox3.Image = Image.FromStream(panelResultDirContainer.GetFileFromMemory("08_G64-2_Pre-Input.jpg"));
         }
     }
     class SeverConnecter

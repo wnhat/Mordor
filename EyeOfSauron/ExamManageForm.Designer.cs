@@ -125,6 +125,7 @@ namespace ExamManager
             this.ExamDBGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.ExamDBGridView.Size = new System.Drawing.Size(789, 438);
             this.ExamDBGridView.TabIndex = 11;
+            this.ExamDBGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.CellContentClick);
             this.ExamDBGridView.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.dataGridViewRowPrePaint);
             // 
             // AddPanelIdbutton
