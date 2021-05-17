@@ -21,14 +21,12 @@ namespace Container
         F,
         U,  //unfinish
     }
-
     public enum MissionType
     {
         PRODUCITVE, // 正常设备量产产生的任务；
         INS_CHECK, // 作为核对检查准确性发布的任务；
 
     }
-
     public enum InspectSection
     {
         AVI,
@@ -103,7 +101,7 @@ namespace Container
         public string EqId { get { return PcInfo.EqId.ToString(); } }
         public string DiskName { get { return diskName.ToString(); } }
         public InspectSection PcSection { get { return PcInfo.PcName; } }
-        public string Origin_image_path
+        public string OriginImagePath
         {
             get
             {   // \\172.16.180.83\NetworkDrive\F_Drive\Defect Info\Origin
@@ -111,7 +109,7 @@ namespace Container
                 return returnstring;
             }
         }
-        public string Result_path
+        public string ResultPath
         {
             get
             {   // \\172.16.180.83\NetworkDrive\F_Drive\Defect Info\Origin
@@ -119,28 +117,55 @@ namespace Container
                 return returnstring;
             }
         }
+        public override string ToString()
+        {
+            return PanelId;
+        }
     }
     public class PanelInfo
     {
         public string PanelId;
+        public List<PanelPathContainer> PanelPath;
         public string Image_path;
         public InspectSection PcSection { get; set; }
-        private Defect Defect;
+        private DirContainer resultFile = null;
+        private DirContainer imageFile = null;
+        public bool ResultFileReadComplete
+        {
+            get
+            {
+                if (resultFile == null)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                } 
+            }
+        }
+        public bool ImageFileReadComplete
+        {
+            get
+            {
+                if (imageFile == null)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+        }
         public PanelInfo()
         {
         }
-        public PanelInfo(string panelId, string image_path, InspectSection pcSection, Defect defect)
+        public PanelInfo(string panelId, List<PanelPathContainer> panelPath, InspectSection pcSection, Defect defect)
         {
             PanelId = panelId;
-            Image_path = image_path;
+            PanelPath = panelPath;
             PcSection = pcSection;
-            Defect = defect;
-        }
-        public PanelInfo(string panelId, InspectSection pcSection, Defect defect)
-        {
-            PanelId = panelId;
-            PcSection = pcSection;
-            Defect = defect;
         }
         public PanelInfo(string panelId, InspectSection pcSection)
         {
@@ -151,6 +176,11 @@ namespace Container
         {
             Image_path = path;
         }
+        public override string ToString()
+        {
+            return PanelId;
+        }
+
     }
     public class PanelMissionResult
     {

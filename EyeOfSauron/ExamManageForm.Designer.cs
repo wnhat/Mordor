@@ -127,6 +127,7 @@ namespace ExamManager
             this.ExamDBGridView.TabIndex = 11;
             this.ExamDBGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.CellContentClick);
             this.ExamDBGridView.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.dataGridViewRowPrePaint);
+            this.ExamDBGridView.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ExamDBGridView_MouseClick);
             // 
             // AddPanelIdbutton
             // 
@@ -148,6 +149,7 @@ namespace ExamManager
             this.Cleanbutton.TabIndex = 10;
             this.Cleanbutton.Text = "清空ID";
             this.Cleanbutton.UseVisualStyleBackColor = true;
+            this.Cleanbutton.Click += new System.EventHandler(this.Cleanbutton_Click);
             // 
             // comboBox1
             // 
@@ -166,8 +168,11 @@ namespace ExamManager
             this.NewIdListBox.ItemHeight = 19;
             this.NewIdListBox.Location = new System.Drawing.Point(12, 80);
             this.NewIdListBox.Name = "NewIdListBox";
+            this.NewIdListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.NewIdListBox.Size = new System.Drawing.Size(286, 821);
             this.NewIdListBox.TabIndex = 13;
+            this.NewIdListBox.Click += new System.EventHandler(this.NewIdListBox_Click);
+            this.NewIdListBox.SelectedValueChanged += new System.EventHandler(this.NewIdListBox_SelectedValueChanged);
             // 
             // button3
             // 

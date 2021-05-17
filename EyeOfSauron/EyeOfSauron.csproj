@@ -104,6 +104,7 @@
     <Compile Include="ExamManageForm.Designer.cs">
       <DependentUpon>ExamManageForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ImageFormManager.cs" />
     <Compile Include="LoginForm.cs">
       <SubType>Form</SubType>
     </Compile>

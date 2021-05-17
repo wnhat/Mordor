@@ -20,13 +20,13 @@ namespace Container
             switch (section)
             {
                 case InspectSection.AVI:
-                    Container = new DirContainer(missioninfo.AviPanelPath.Result_path);
+                    Container = new DirContainer(missioninfo.AviPanelPath.ResultPath);
                     break;
                 case InspectSection.SVI:
-                    Container = new DirContainer(missioninfo.SviPanelPath.Result_path);
+                    Container = new DirContainer(missioninfo.SviPanelPath.ResultPath);
                     break;
                 case InspectSection.APP:
-                    Container = new DirContainer(missioninfo.AppPanelPath.Result_path);
+                    Container = new DirContainer(missioninfo.AppPanelPath.ResultPath);
                     break;
                 default:
                     break;

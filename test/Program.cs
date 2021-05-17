@@ -21,7 +21,14 @@ namespace test
         [STAThread]
         static void Main(string[] args)
         {
-            Console.WriteLine(Parameter.AppImageNameList);
+            testclass a = new testclass("zhangshaobo", 18);
+            changename(ref a);
+            Console.WriteLine(a);
+        }
+        static private void changename(ref testclass strin)
+        {
+            testclass b = new testclass("wangxue", 16);
+            strin = b;
         }
         static private void TestDB()
         {
@@ -82,6 +89,16 @@ namespace test
                 }
 
             }
+        }
+    }
+    class testclass
+    {
+        public string name;
+        public int age;
+        public testclass(string aname, int aage)
+        {
+            name = aname;
+            age = aage;
         }
     }
     static class Parameter
