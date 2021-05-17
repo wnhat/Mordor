@@ -21,19 +21,16 @@ namespace ExamManager
 {
     public partial class examManageForm : Form
     {
-        DataSet dataset;
-        SqlConnection TheDataBase;
-        BindingSource bdsource;
-        LoginForm TheParentForm;
-        Defectcode defect_translator;
-        Manager TheManager;
-        SqlCommandBuilder Builder;
-        SqlDataAdapter adp;
-        int idNum = 0;
-        List<PanelInfo> idlist;
-        int Refreshflag;
-        Bitmap[] ImageArray;
-
+        DataSet             dataset;
+        SqlConnection       TheDataBase;
+        BindingSource       bdsource;
+        LoginForm           TheParentForm;
+        Defectcode          defect_translator;
+        Manager             TheManager;
+        SqlCommandBuilder   Builder;
+        SqlDataAdapter      adp;
+        List<PanelInfo>     idList;
+        ImageFormManager    imageFormManager;
         public examManageForm()
         {
             InitializeComponent();
@@ -44,8 +41,9 @@ namespace ExamManager
             dataInitial();
             TheParentForm = parentForm;
             TheManager = theManager;
+            imageFormManager = new ImageFormManager(this.pictureBox1, this.pictureBox2, this.pictureBox3);
             defect_translator = new Defectcode(Parameter.CodeNameList);
-            idlist = new List<PanelInfo>();
+            idList = new List<PanelInfo>();
             AddDefectCode();
         }
         private void dataInitial()
@@ -76,30 +74,11 @@ namespace ExamManager
                 this.ExamDBGridView.Sort(this.ExamDBGridView.Columns[7], ListSortDirection.Ascending);
             }
         }
-
         public static bool chcekIsTextFile(string fileName)
         {
             //TODO: 1、保存内存中图像图片 ；
             //      2、更新数据库；
-        }
-        public void SetImage(Bitmap[] imagearray)
-        {
-            pictureBox1.Image = imagearray[0];
-            pictureBox2.Image = imagearray[1];
-            pictureBox3.Image = imagearray[2];
-        }
-        public void RefreshForm()
-        {
-            if ((Refreshflag) * 3 < ImageArray.Count())
-            {
-                SetImage(ImageArray.Skip((Refreshflag) * 3).Take(3).ToArray());
-                Refreshflag++;
-            }
-            else
-            {
-                Refreshflag = 0;
-                RefreshForm();
-            }
+            return true;
         }
         private void AddDefectCode()
         {
@@ -107,29 +86,23 @@ namespace ExamManager
             {
                 this.DefectcomboBox.Items.Add(item.DefectName);
             }
-        }
-        private void imageViewButton_Click(object sender, EventArgs e)
-        {
-            this.pictureBox1.Image = EyeOfSauron.Properties.Resources.emptyImage;
-            this.pictureBox2.Image = EyeOfSauron.Properties.Resources.emptyImage;
-            this.pictureBox3.Image = EyeOfSauron.Properties.Resources.emptyImage;
+            this.DefectcomboBox.Text = Parameter.CodeNameList[0].DefectName;
         }
         private void AddPanelIdbutton_Click(object sender, EventArgs e)
         {
             PanelIdAddForm idform = new PanelIdAddForm();
-            idform.BindIdArray(idlist);
+            idform.BindIdArray(idList);
             idform.ShowDialog();
             AddPanelId();
         }
         private void AddPanelId()
         {
             // 将 ID array 中的id添加任务；预加载图片及添加至newidlistbox中；
-            foreach (var item in idlist)
+            foreach (var item in idList)
             {
-                //TODO:
+                this.NewIdListBox.Items.Add(item);
             }
         }
-
         private void del_button_Click(object sender, EventArgs e)
         {
             this.ExamDBGridView.SelectedRows[0].Cells[7].Value = 1;
@@ -146,7 +119,6 @@ namespace ExamManager
             adp.Update(dataset);
             TheDataBase.Close();
         }
-
         private void dataGridViewRowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
         {
             for (int i = 0; i < this.ExamDBGridView.Rows.Count; i++)
@@ -157,25 +129,39 @@ namespace ExamManager
                 }
             }
         }
-
         private void CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             PanelInfo panel = new PanelInfo(Convert.ToString(this.ExamDBGridView.CurrentRow.Cells[1].Value), (InspectSection)Enum.Parse(typeof(InspectSection), Convert.ToString(this.ExamDBGridView.CurrentRow.Cells[5].Value)));
             List<PanelInfo> panelIdList = new List<PanelInfo>();
             panelIdList.Add(panel);
-            //Queue<PanelInfo> IdList = TheManager.GetPanelInfo(panelIdList);
-            //panel = IdList.Dequeue();
-            //string resultPath = panel.Image_path + "\\MNImg\\";
-            string resultPath = @"\\172.16.180.102\NetworkDrive\F_Drive\Defect Info\Result\761L140046B3AAD02\MNImg";
-            DirContainer panelResultDirContainer = new DirContainer(resultPath);
-            this.pictureBox1.Image = Image.FromStream(panelResultDirContainer.GetFileFromMemory("04_WHITE_Pre-Input.jpg"));
-            this.pictureBox2.Image = Image.FromStream(panelResultDirContainer.GetFileFromMemory("06_G64_Pre-Input.jpg"));
-            this.pictureBox3.Image = Image.FromStream(panelResultDirContainer.GetFileFromMemory("08_G64-2_Pre-Input.jpg"));
+        }
+        private void Cleanbutton_Click(object sender, EventArgs e)
+        {
+            this.NewIdListBox.Items.Clear();
+            this.idList.Clear();
+        }
+        private void NewIdListBox_Click(object sender, EventArgs e)
+        {
+            this.ExamDBGridView.ClearSelection();
+        }
+        private void ExamDBGridView_MouseClick(object sender, MouseEventArgs e)
+        {
+            this.NewIdListBox.ClearSelected();
+        }
+        private void NewIdListBox_SelectedValueChanged(object sender, EventArgs e)
+        {
+            ListBox theListBox = (ListBox)sender;
+            if (theListBox.SelectedItems.Count == 1)
+            {
+                PanelInfo newpanel = (PanelInfo)theListBox.SelectedItem;
+
+                //imageFormManager.SetImageArray();
+            }
+            // 刷新界面图像
         }
     }
     class SeverConnecter
     {
-
         private RequestSocket request;
         public SeverConnecter()
         {
@@ -202,6 +188,7 @@ namespace ExamManager
         Dictionary<int, DirContainer> recycleBin;
         public void DeleteFile(string panelid, InspectSection section)
         {
+            // 当同一张屏存在与不同任务集中时不删除；
             string filePath = examFilePath;
             if (section == InspectSection.AVI)
             {
@@ -227,7 +214,6 @@ namespace ExamManager
             {
                 dir.SaveDirInDisk(examFilePath + @"\SVI");
             }
-
         }
     }
 }

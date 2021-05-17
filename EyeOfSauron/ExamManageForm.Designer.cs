@@ -127,6 +127,7 @@ namespace ExamManager
             this.ExamDBGridView.TabIndex = 11;
             this.ExamDBGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.CellContentClick);
             this.ExamDBGridView.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.dataGridViewRowPrePaint);
+            this.ExamDBGridView.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ExamDBGridView_MouseClick);
             // 
             // AddPanelIdbutton
             // 
@@ -148,6 +149,7 @@ namespace ExamManager
             this.Cleanbutton.TabIndex = 10;
             this.Cleanbutton.Text = "清空ID";
             this.Cleanbutton.UseVisualStyleBackColor = true;
+            this.Cleanbutton.Click += new System.EventHandler(this.Cleanbutton_Click);
             // 
             // comboBox1
             // 
@@ -166,8 +168,11 @@ namespace ExamManager
             this.NewIdListBox.ItemHeight = 19;
             this.NewIdListBox.Location = new System.Drawing.Point(12, 80);
             this.NewIdListBox.Name = "NewIdListBox";
+            this.NewIdListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.NewIdListBox.Size = new System.Drawing.Size(286, 821);
             this.NewIdListBox.TabIndex = 13;
+            this.NewIdListBox.Click += new System.EventHandler(this.NewIdListBox_Click);
+            this.NewIdListBox.SelectedValueChanged += new System.EventHandler(this.NewIdListBox_SelectedValueChanged);
             // 
             // button3
             // 
@@ -220,7 +225,7 @@ namespace ExamManager
             // examManageForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(1444, 881);
+            this.ClientSize = new System.Drawing.Size(1902, 999);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.DefectcomboBox);
@@ -233,7 +238,7 @@ namespace ExamManager
             this.Controls.Add(this.tableLayoutPanel1);
             this.Margin = new System.Windows.Forms.Padding(2);
             this.MaximumSize = new System.Drawing.Size(1920, 1080);
-            this.MinimumSize = new System.Drawing.Size(1438, 858);
+            this.MinimumSize = new System.Drawing.Size(1918, 1038);
             this.Name = "examManageForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Form1";
