@@ -59,7 +59,8 @@ namespace ExamManager
       ,[Section]
       ,[Info]
       ,[DelFlag]
-  FROM [EDIAS_DB].[dbo].[AET_IMAGE_EXAM]";
+  FROM [EDIAS_DB].[dbo].[AET_IMAGE_EXAM]
+WHERE [DelFlag] = '0'";
             SqlCommand newcommand = new SqlCommand(querystring, TheDataBase);
             TheDataBase.Open();
             adp = new SqlDataAdapter();
@@ -75,12 +76,14 @@ namespace ExamManager
                 Col.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
                 this.ExamDBGridView.Sort(this.ExamDBGridView.Columns[7], ListSortDirection.Ascending);
             }
+            //this.ExamDBGridView.Columns[7].Visible = false;
         }
 
         public static bool chcekIsTextFile(string fileName)
         {
             //TODO: 1、保存内存中图像图片 ；
             //      2、更新数据库；
+            return true;
         }
         public void SetImage(Bitmap[] imagearray)
         {
@@ -127,16 +130,21 @@ namespace ExamManager
             foreach (var item in idlist)
             {
                 //TODO:
+                //Regex regex = new Regex(@"^7[A-Za-z0-9]{16}$");
+                //if (regex.IsMatch(panelID))
             }
         }
 
         private void del_button_Click(object sender, EventArgs e)
         {
-            this.ExamDBGridView.SelectedRows[0].Cells[7].Value = 1;
-            int ColIndex = this.ExamDBGridView.CurrentRow.Index;
+            this.ExamDBGridView.SelectedRows[0].Cells[7].Value = Convert.ToInt16(this.ExamDBGridView.SelectedRows[0].Cells[7].Value) == 1 ? 0: 1;
+            int RowIndex = this.ExamDBGridView.CurrentRow.Index;
             this.bdsource.EndEdit();
             refreshDataSet();
-            this.ExamDBGridView.CurrentCell = this.ExamDBGridView[0,ColIndex];
+            if (Convert.ToInt16(this.ExamDBGridView.SelectedRows[0].Cells[7].Value) == 1)
+            {
+                this.ExamDBGridView.CurrentCell = this.ExamDBGridView[0, RowIndex];
+            }
         }
         private void refreshDataSet()
         {
@@ -151,26 +159,25 @@ namespace ExamManager
         {
             for (int i = 0; i < this.ExamDBGridView.Rows.Count; i++)
             {
-                if (Convert.ToInt16(this.ExamDBGridView.Rows[i].Cells[7].Value) == 1)
-                {
-                    this.ExamDBGridView.Rows[i].DefaultCellStyle.BackColor = Color.BurlyWood;
-                }
+                this.ExamDBGridView.Rows[i].DefaultCellStyle.BackColor = Convert.ToInt16(this.ExamDBGridView.Rows[i].Cells[7].Value) == 1? Color.LightPink: Color.White;
             }
         }
 
         private void CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
+            this.button3.Text = Convert.ToInt16(this.ExamDBGridView.CurrentRow.Cells[7].Value) == 0 ? "删除" : "取消删除";
+            this.Refresh();
             PanelInfo panel = new PanelInfo(Convert.ToString(this.ExamDBGridView.CurrentRow.Cells[1].Value), (InspectSection)Enum.Parse(typeof(InspectSection), Convert.ToString(this.ExamDBGridView.CurrentRow.Cells[5].Value)));
-            List<PanelInfo> panelIdList = new List<PanelInfo>();
-            panelIdList.Add(panel);
-            //Queue<PanelInfo> IdList = TheManager.GetPanelInfo(panelIdList);
-            //panel = IdList.Dequeue();
-            //string resultPath = panel.Image_path + "\\MNImg\\";
-            string resultPath = @"\\172.16.180.102\NetworkDrive\F_Drive\Defect Info\Result\761L140046B3AAD02\MNImg";
-            DirContainer panelResultDirContainer = new DirContainer(resultPath);
-            this.pictureBox1.Image = Image.FromStream(panelResultDirContainer.GetFileFromMemory("04_WHITE_Pre-Input.jpg"));
-            this.pictureBox2.Image = Image.FromStream(panelResultDirContainer.GetFileFromMemory("06_G64_Pre-Input.jpg"));
-            this.pictureBox3.Image = Image.FromStream(panelResultDirContainer.GetFileFromMemory("08_G64-2_Pre-Input.jpg"));
+            //List<PanelInfo> panelIdList = new List<PanelInfo>();
+            //panelIdList.Add(panel);
+            if(panel.Image_path != null)
+            {
+                string resultPath = panel.Image_path + "\\MNImg\\";
+                DirContainer panelResultDirContainer = new DirContainer(resultPath);
+                this.pictureBox1.Image = Image.FromStream(panelResultDirContainer.GetFileFromMemory("04_WHITE_Pre-Input.jpg"));
+                this.pictureBox2.Image = Image.FromStream(panelResultDirContainer.GetFileFromMemory("06_G64_Pre-Input.jpg"));
+                this.pictureBox3.Image = Image.FromStream(panelResultDirContainer.GetFileFromMemory("08_G64-2_Pre-Input.jpg"));
+            }
         }
     }
     class SeverConnecter

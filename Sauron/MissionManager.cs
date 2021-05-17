@@ -168,7 +168,10 @@ namespace Sauron
             {
                 //TODO:
                 PanelPathContainer panelPathContainer = Thefilecontainer.GetPanelPathList(item.PanelId,item.PcSection);
-                item.SetImagePath(panelPathContainer.Result_path);
+                if (panelPathContainer != null)
+                {
+                    item.SetImagePath(panelPathContainer.Result_path);
+                }
             }
             return SampleInfoList;
         }

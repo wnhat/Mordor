@@ -64,7 +64,7 @@ namespace Sauron
                                     ,[MergeToolJudge]
                                     ,[DefectName]
         FROM[EDIAS_DB].[dbo].[TAX_PRODUCT_TEST]
-        WHERE InspDate BETWEEN '20210320000000' AND '20210325230000' AND EqpID = '7CTCT27' AND OperationID = 'C52000N' AND LastJudge = 'E'";
+        WHERE InspDate BETWEEN '20210510000000' AND '20210513180000' AND EqpID = '7CTCT27' AND OperationID = 'C52000N' AND LastJudge = 'E'";
 
             List<string> newPanelList = new List<string>();
             SqlCommand newcommand = new SqlCommand(commandstring, TheDataBase);
