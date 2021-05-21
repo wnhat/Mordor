@@ -162,15 +162,16 @@ namespace Sauron
             ExamMissionList.Sort();
             return ExamMissionList;
         }
-        public List<PanelInfo> GetPanelInfo(List<PanelInfo> SampleInfoList)
+        public Dictionary<string, List<PanelPathContainer>> GetPanelPathList(string[] SampleInfoList)
         {
+            Dictionary<string, List<PanelPathContainer>> newPanelPathDic = new Dictionary<string, List<PanelPathContainer>>();
             foreach (var item in SampleInfoList)
             {
                 //TODO:
-                PanelPathContainer panelPathContainer = Thefilecontainer.GetPanelPathList(item.PanelId,item.PcSection);
-                item.SetImagePath(panelPathContainer.Result_path);
+                var panelPathContainer = Thefilecontainer.GetPanelPathList(item);
+                newPanelPathDic.Add(item, panelPathContainer);
             }
-            return SampleInfoList;
+            return newPanelPathDic;
         }
         private void AddMissionInQueue()
         {

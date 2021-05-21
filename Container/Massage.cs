@@ -16,7 +16,7 @@ namespace Container.Message
         CLINET_GET_MISSION_AVI,
         CLINET_GET_MISSION_SVI,
         CLINET_GET_MISSION_APP,
-        CLINET_GET_PANEL_INFO,
+        CLINET_GET_PANEL_PATH,
         CLINET_GET_EXAM_MISSION_LIST,
         //CLINET_SET_EXAM_MISSION_LIST,
         CLINET_CHECK_USER,
@@ -141,28 +141,37 @@ namespace Container.Message
             return JsonConvert.DeserializeObject<List<ExamMission>>(resultstring, new JsonSerializerSettings(){StringEscapeHandling = StringEscapeHandling.EscapeNonAscii });
         }
     }
-    public class PanelInfoMessage : BaseMessage
+    public class PanelPathMessage : BaseMessage
     {
-        public List<PanelInfo> panelInfoList;
+        public Dictionary<string, List<PanelPathContainer>> panelPathDic;
         //序列化发送的Massage
-        public PanelInfoMessage(MessageType messageType, List<PanelInfo> panelIdList) : base(messageType)
+        public PanelPathMessage(MessageType messageType, Dictionary<string, List<PanelPathContainer>> panelpathdic) : base(messageType)
         {
-            panelInfoList = panelIdList;
-            this.Append(TransferToString(panelInfoList));
+            panelPathDic = panelpathdic;
+            this.Append(TransferToString(panelPathDic));
+        }
+        public PanelPathMessage(MessageType messageType, string[] panelidarray) : base(messageType)
+        {
+            panelPathDic = new Dictionary<string, List<PanelPathContainer>>();
+            foreach (var item in panelidarray)
+            {
+                panelPathDic.Add(item,null);
+            }
+            this.Append(TransferToString(panelPathDic));
         }
         //对收到的Massage进行反序列化
-        public PanelInfoMessage(NetMQMessage message) : base()
+        public PanelPathMessage(NetMQMessage message) : base()
         {
-            panelInfoList = TransferToResult(message[1].ConvertToString());
+            panelPathDic = TransferToResult(message[1].ConvertToString());
         }
         //序列化和反序列化实现
-        string TransferToString(List<PanelInfo> result)
+        string TransferToString(Dictionary<string, List<PanelPathContainer>> result)
         {
             return JsonConvert.SerializeObject(result, new JsonSerializerSettings() { StringEscapeHandling = StringEscapeHandling.EscapeNonAscii });
         }
-        List<PanelInfo> TransferToResult(string resultstring)
+        Dictionary<string, List<PanelPathContainer>> TransferToResult(string resultstring)
         {
-            return JsonConvert.DeserializeObject<List<PanelInfo>>(resultstring, new JsonSerializerSettings() { StringEscapeHandling = StringEscapeHandling.EscapeNonAscii });
+            return JsonConvert.DeserializeObject<Dictionary<string, List<PanelPathContainer>>>(resultstring, new JsonSerializerSettings() { StringEscapeHandling = StringEscapeHandling.EscapeNonAscii });
         }
     }
 }

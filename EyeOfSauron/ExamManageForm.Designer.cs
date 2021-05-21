@@ -163,8 +163,10 @@ namespace ExamManager
             // 
             // NewIdListBox
             // 
-            this.NewIdListBox.Font = new System.Drawing.Font("SimSun", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.NewIdListBox.Font = new System.Drawing.Font("Microsoft YaHei", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.NewIdListBox.FormattingEnabled = true;
+            this.NewIdListBox.HorizontalExtent = 1;
+            this.NewIdListBox.HorizontalScrollbar = true;
             this.NewIdListBox.ItemHeight = 19;
             this.NewIdListBox.Location = new System.Drawing.Point(12, 80);
             this.NewIdListBox.Name = "NewIdListBox";
@@ -241,7 +243,7 @@ namespace ExamManager
             this.MinimumSize = new System.Drawing.Size(1918, 1038);
             this.Name = "examManageForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Form1";
+            this.Text = "试题管理系统";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();

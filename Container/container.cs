@@ -87,7 +87,7 @@ namespace Container
             }
         }
     }
-    public class PanelPathContainer
+    public class PanelPathContainer:IComparable
     {
         public string PanelId { get; set; }
         public PC PcInfo;
@@ -121,45 +121,24 @@ namespace Container
         {
             return PanelId;
         }
+
+        public int CompareTo(object obj)
+        {
+            DirectoryInfo self = new DirectoryInfo(ResultPath);
+            var other = (PanelPathContainer)obj;
+            DirectoryInfo otherdir = new DirectoryInfo(other.ResultPath);
+            return self.CreationTime.CompareTo(otherdir.CreationTime);
+        }
     }
     public class PanelInfo
     {
         public string PanelId;
         public List<PanelPathContainer> PanelPath;
-        public string Image_path;
         public InspectSection PcSection { get; set; }
-        private DirContainer resultFile = null;
-        private DirContainer imageFile = null;
-        public bool ResultFileReadComplete
-        {
-            get
-            {
-                if (resultFile == null)
-                {
-                    return false;
-                }
-                else
-                {
-                    return true;
-                } 
-            }
-        }
-        public bool ImageFileReadComplete
-        {
-            get
-            {
-                if (imageFile == null)
-                {
-                    return false;
-                }
-                else
-                {
-                    return true;
-                }
-            }
-        }
+        public int Length { get { return PanelPath.Count; } }
         public PanelInfo()
         {
+
         }
         public PanelInfo(string panelId, List<PanelPathContainer> panelPath, InspectSection pcSection, Defect defect)
         {
@@ -172,15 +151,38 @@ namespace Container
             PanelId = panelId;
             PcSection = pcSection;
         }
-        public void SetImagePath(string path)
-        {
-            Image_path = path;
-        }
         public override string ToString()
         {
             return PanelId;
         }
-
+    }
+    public class ImageContainer
+    {
+        public string Name;
+        public InspectSection Section;
+        private DirContainer Dir = null;
+        public bool ReadComplete
+        {
+            get
+            {
+                if (Dir == null)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+        }
+        public void Read(string dirPath)
+        {
+            Dir = new DirContainer(dirPath);
+        }
+        public MemoryStream GetFile(string fileName)
+        {
+            return Dir.GetFileFromMemory(fileName);
+        }
     }
     public class PanelMissionResult
     {

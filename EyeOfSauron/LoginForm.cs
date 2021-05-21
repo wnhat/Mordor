@@ -41,8 +41,7 @@ namespace EyeOfSauron
             {
                 TheManager.SetOperater(user);
                 this.Hide();
-                ProcessForm newDownloadProcess = new ProcessForm(TheManager); // 初始化预加载界面；
-                newDownloadProcess.ShowDialog();
+                //ProcessForm newDownloadProcess = new ProcessForm(TheManager.PreLoadOneMission); // 初始化预加载界面；
                 TheManager.ChangeDownloadQuantity();
                 form.login(user);   // 写入用户
                 form.ReadData();    // 刷新数据

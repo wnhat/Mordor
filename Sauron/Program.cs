@@ -30,8 +30,8 @@ namespace Sauron
                 // wait the async process finish;
                 Thread.Sleep(TimeSpan.FromSeconds(180));  // TODO：使用事件
                 // 图像路径爬取完成后从数据库获取任务；
-                TheMissionManager.AddMissionByServer();
-                Console.WriteLine("add mission finished.");
+                //TheMissionManager.AddMissionByServer();
+                //Console.WriteLine("add mission finished.");
                 responseSocket.ReceiveReady += (s, a) =>
                 {
                     /* 对客户端发送的事件进行分Type响应（按照Message首位） */
@@ -67,9 +67,10 @@ namespace Sauron
                             ExamMissionMessage newexammission = new ExamMissionMessage(MessageType.SERVER_SEND_MISSION, TheMissionManager.GetExamMission());
                             a.Socket.SendMultipartMessage(newexammission);
                             break;
-                        case MessageType.CLINET_GET_PANEL_INFO:
-                            PanelInfoMessage panelInfo = new PanelInfoMessage(messageIn);
-                            PanelInfoMessage newpanelinfomassage = new PanelInfoMessage(MessageType.CLINET_GET_PANEL_INFO, TheMissionManager.GetPanelInfo(panelInfo.panelInfoList));
+                        case MessageType.CLINET_GET_PANEL_PATH:
+                            PanelPathMessage panelIdInfo = new PanelPathMessage(messageIn);
+                            var newPanelPathDic = TheMissionManager.GetPanelPathList(panelIdInfo.panelPathDic.Keys.ToArray());
+                            PanelPathMessage newpanelinfomassage = new PanelPathMessage(MessageType.CLINET_GET_PANEL_PATH, newPanelPathDic);
                             a.Socket.SendMultipartMessage(newpanelinfomassage);
                             break;
                         case MessageType.CONTROLER_CLEAR_MISSION:

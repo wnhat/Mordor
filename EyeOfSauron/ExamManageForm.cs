@@ -19,6 +19,7 @@ using NetMQ;
 
 namespace ExamManager
 {
+    public delegate void ExamManagerWorkMethod();
     public partial class examManageForm : Form
     {
         DataSet             dataset;
@@ -29,7 +30,7 @@ namespace ExamManager
         Manager             TheManager;
         SqlCommandBuilder   Builder;
         SqlDataAdapter      adp;
-        List<PanelInfo>     idList;
+        Queue<PanelImageContainer>       waitqueue = new Queue<PanelImageContainer>();
         ImageFormManager    imageFormManager;
         public examManageForm()
         {
@@ -43,7 +44,6 @@ namespace ExamManager
             TheManager = theManager;
             imageFormManager = new ImageFormManager(this.pictureBox1, this.pictureBox2, this.pictureBox3);
             defect_translator = new Defectcode(Parameter.CodeNameList);
-            idList = new List<PanelInfo>();
             AddDefectCode();
         }
         private void dataInitial()
@@ -68,17 +68,11 @@ namespace ExamManager
             bdsource = new BindingSource();
             bdsource.DataSource = dataset.Tables[0];
             this.ExamDBGridView.DataSource = bdsource;
-            foreach(DataGridViewColumn Col in this.ExamDBGridView.Columns)
+            foreach (DataGridViewColumn Col in this.ExamDBGridView.Columns)
             {
                 Col.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
                 this.ExamDBGridView.Sort(this.ExamDBGridView.Columns[7], ListSortDirection.Ascending);
             }
-        }
-        public static bool chcekIsTextFile(string fileName)
-        {
-            //TODO: 1、保存内存中图像图片 ；
-            //      2、更新数据库；
-            return true;
         }
         private void AddDefectCode()
         {
@@ -90,17 +84,74 @@ namespace ExamManager
         }
         private void AddPanelIdbutton_Click(object sender, EventArgs e)
         {
-            PanelIdAddForm idform = new PanelIdAddForm();
-            idform.BindIdArray(idList);
+            PanelIdAddForm idform = new PanelIdAddForm(AddPanelId);
             idform.ShowDialog();
-            AddPanelId();
         }
-        private void AddPanelId()
+        private void AddPanelId(string[] panelidarray, InspectSection section)
         {
             // 将 ID array 中的id添加任务；预加载图片及添加至newidlistbox中；
-            foreach (var item in idList)
+            var pathdic = NewSeverConnecter.GetPanelPathByID(panelidarray);
+            for (int i = 0; i < panelidarray.Length; i++)
             {
-                this.NewIdListBox.Items.Add(item);
+                var panelid = panelidarray[i];
+                if (pathdic.ContainsKey(panelid))
+                {
+                    var pathlist = pathdic[panelid];
+                    pathlist = pathlist.Where(x => (x.PcSection == section)).ToList();
+                    foreach (var item in pathlist)
+                    {
+                        // 加入设备中多次出现的图片
+                        if (pathlist.Count > 1)
+                        {
+                            this.waitqueue.Enqueue(new PanelImageContainer(panelid, item, true));
+                        }
+                        else
+                        {
+                            this.waitqueue.Enqueue(new PanelImageContainer(panelid, item, true));
+                        }
+                    }
+                }
+                else
+                {
+                    string errorString = string.Format("panel: {0} cannot find the path", panelid);
+                    throw new ApplicationException(errorString);
+                }
+            }
+            ProcessForm newprocessform = new ProcessForm(AddOnePanelSafe);
+            newprocessform.ShowDialog();
+            Task.Run((Action)AddMutiPanel);
+        }
+        /// <summary>
+        /// using for threadsafe method call acrossed different form;
+        /// </summary>
+        int AddOnePanelSafe()
+        {
+            if (this.waitqueue.Count == 0)
+            {
+                return 100;
+            }
+            else
+            {
+                this.Invoke(new ExamManagerWorkMethod(AddOnePanel), new object[] { });
+                int percent = 100 * this.NewIdListBox.Items.Count / Parameter.PreLoadQuantity;
+                return percent;
+            }
+        }
+        void AddOnePanel()
+        {
+            var panel = this.waitqueue.Dequeue();
+            panel.Download();
+            this.NewIdListBox.Items.Add(panel);
+        }
+        void AddMutiPanel()
+        {
+            foreach (var item in this.waitqueue)
+            {
+                item.Download();
+            }
+            while (this.waitqueue.Count != 0)
+            {
+                this.Invoke(new ExamManagerWorkMethod(AddOnePanel), new object[] { });
             }
         }
         private void del_button_Click(object sender, EventArgs e)
@@ -109,7 +160,7 @@ namespace ExamManager
             int ColIndex = this.ExamDBGridView.CurrentRow.Index;
             this.bdsource.EndEdit();
             refreshDataSet();
-            this.ExamDBGridView.CurrentCell = this.ExamDBGridView[0,ColIndex];
+            this.ExamDBGridView.CurrentCell = this.ExamDBGridView[0, ColIndex];
         }
         private void refreshDataSet()
         {
@@ -138,7 +189,6 @@ namespace ExamManager
         private void Cleanbutton_Click(object sender, EventArgs e)
         {
             this.NewIdListBox.Items.Clear();
-            this.idList.Clear();
         }
         private void NewIdListBox_Click(object sender, EventArgs e)
         {
@@ -153,42 +203,57 @@ namespace ExamManager
             ListBox theListBox = (ListBox)sender;
             if (theListBox.SelectedItems.Count == 1)
             {
-                PanelInfo newpanel = (PanelInfo)theListBox.SelectedItem;
-
+                var item = (PanelImageContainer)theListBox.SelectedItem;
+                //item.Dir.GetFileFromMemory();
                 //imageFormManager.SetImageArray();
             }
             // 刷新界面图像
         }
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (keyData == Keys.Tab)
+            {
+                imageFormManager.RefreshForm();
+                return true;
+            }
+            else
+            {
+                return base.ProcessCmdKey(ref msg, keyData);
+            }
+        }
     }
-    class SeverConnecter
+    public static class NewSeverConnecter
     {
-        private RequestSocket request;
-        public SeverConnecter()
+        static private RequestSocket request;
+        static NewSeverConnecter()
         {
             request = new RequestSocket();
             request.Connect("tcp://172.16.145.22:5555");
         }
-        public Queue<PanelInfo> GetPanelInfoByID(List<PanelInfo> panelIdList)
+        public static Operator CheckPassWord(Operator theuser)
         {
-            Queue<PanelInfo> SampleInfoList = new Queue<PanelInfo>();
-            BaseMessage newmessage = new PanelInfoMessage(MessageType.CLINET_GET_PANEL_INFO, panelIdList);
-            request.SendMultipartMessage(newmessage);
-            var returnmessage = new PanelInfoMessage(request.ReceiveMultipartMessage());
-            foreach (var item in returnmessage.panelInfoList)
-            {
-                SampleInfoList.Enqueue(item);
-            }
-            return SampleInfoList;
+            UserCheckMessage newMessage = new UserCheckMessage(MessageType.CLINET_CHECK_USER,theuser);
+            request.SendMultipartMessage(newMessage);
+            UserCheckMessage returnUser = new UserCheckMessage(request.ReceiveMultipartMessage());
+            if (returnUser.TheMessageType == MessageType.SERVER_SEND_USER_TRUE)
+                return returnUser.TheOperator;
+            else
+                return null;
         }
-
-    }
-    class PanelFileManager
-    {
-        string examFilePath = @"\\172.16.145.22\NetworkDrive\D_Drive\Mordor\ExamSimple";
-        Dictionary<int, DirContainer> recycleBin;
-        public void DeleteFile(string panelid, InspectSection section)
+        public static Dictionary<string, List<PanelPathContainer>> GetPanelPathByID(string[] panelIdList)
         {
-            // 当同一张屏存在与不同任务集中时不删除；
+            BaseMessage newmessage = new PanelPathMessage(MessageType.CLINET_GET_PANEL_PATH, panelIdList);
+            request.SendMultipartMessage(newmessage);
+            var returnmessage = new PanelPathMessage(request.ReceiveMultipartMessage());
+            return returnmessage.panelPathDic;
+        }
+    }
+    static class ExamFileManager
+    {
+        static string examFilePath = @"\\172.16.145.22\NetworkDrive\D_Drive\Mordor\ExamSimple";
+        public static void DeleteFile(string panelid, InspectSection section)
+        {
+            // 当同一张屏存在于不同任务集中时不删除；
             string filePath = examFilePath;
             if (section == InspectSection.AVI)
             {
@@ -204,7 +269,7 @@ namespace ExamManager
                 dir.Delete();
             }
         }
-        public void AddFile(DirContainer dir, InspectSection section)
+        public static void AddFile(DirContainer dir, InspectSection section)
         {
             if (section == InspectSection.AVI)
             {

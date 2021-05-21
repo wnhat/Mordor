@@ -7,16 +7,89 @@ using System.Threading.Tasks;
 
 namespace Container
 {
-    public class InspectMission
+    public class Panel
     {
-        public string PanelId;
+        string panelId;
+        public Panel(string panelId)
+        {
+            this.panelId = panelId;
+        }
+        public string PanelId
+        {
+            // TODO: 校验ID是否符合编码规范；
+            get
+            {
+                return panelId;
+            }
+        }
+        public string GlassId
+        {
+            get
+            {
+                return panelId;
+            }
+        }
+        public string HalfId
+        {
+            get
+            {
+                return panelId;
+            }
+        }
+        public string LotId
+        {
+            get
+            {
+                return panelId;
+            }
+        }
+    }
+    public class PanelImageContainer:Panel
+    {
+        bool MutiFlag;  //如果有相同ID在不同设备出现时，设置该项为true，tostring将显示设备及投入时间
+        PanelPathContainer Path;
+        DirContainer dir = null; // 默认不提前读取;
+        public PanelImageContainer(string panelId, PanelPathContainer path, bool mutiFlag = false):base(panelId)
+        {
+            MutiFlag = mutiFlag;
+            Path = path;
+        }
+        public void Download()
+        {
+            if (dir == null || !dir.ReadComplete)
+            {
+                this.dir = new DirContainer(this.Path.ResultPath);
+                Dir.Read();
+            }
+        }
+        public void Save(string savepath)
+        {
+            Dir.SaveDirInDisk(savepath);
+        }
+        public override string ToString()
+        {
+            if (this.MutiFlag)
+            {
+                string name = this.PanelId+ " #" + this.Path.EqId + " " + this.Dir.CreationTime.ToString("MM/dd HH:mm");
+                return name;
+            }
+            else
+            {
+                return base.ToString();
+            }
+        }
+        InspectSection Section { get { return Path.PcSection; } }
+        bool ReadComplete { get { return Dir.ReadComplete && (dir!=null); } }
+        public DirContainer Dir { get { return dir; } }
+    }
+    public class InspectMission : Panel
+    {
         public string[] ImageNameList;                         // The image name in reuslt file which we need to inspect
         DirContainer Container;
         public long MissionNumber;
         public Defect[] DefectJudgeList;
-        public InspectMission(PanelMission missioninfo, InspectSection section, string[] imageNameList)
+        public InspectMission(PanelMission missioninfo, InspectSection section, string[] imageNameList) : base(missioninfo.PanelId)
         {
-            PanelId = missioninfo.PanelId;
             switch (section)
             {
                 case InspectSection.AVI:
@@ -34,9 +107,8 @@ namespace Container
             ImageNameList = imageNameList;
             MissionNumber = missioninfo.MissionNumber;
         }
-        public InspectMission(ExamMission missioninfo, string[] imageNameList)
+        public InspectMission(ExamMission missioninfo, string[] imageNameList):base(missioninfo.PanelId)
         {
-            PanelId = missioninfo.PanelId;
             Container = new DirContainer(missioninfo.ResultPath);
             ImageNameList = imageNameList;
         }

@@ -10,13 +10,14 @@ using System.Windows.Forms;
 
 namespace EyeOfSauron
 {
+    public delegate int WorkMethod();
     public partial class ProcessForm : Form
     {
-        Manager TheManager;
-        public ProcessForm(Manager theManager)
+        public WorkMethod TheWorkMethod;
+        public ProcessForm(WorkMethod work)
         {
-            TheManager = theManager;
             InitializeComponent();
+            TheWorkMethod = work;
             // 进度条事件；
             backgroundWorkerForDownload.WorkerReportsProgress = true;
             backgroundWorkerForDownload.DoWork += DownloadWork;
@@ -27,22 +28,16 @@ namespace EyeOfSauron
         }
         private void DownloadWork(object sender, EventArgs e)
         {
-            for (int i = 0; i < Parameter.PreLoadQuantity; i++)
+            var percentage = 0;
+            while (percentage < 100)
             {
-                if (TheManager.PreLoadOneMission())  // 调用 Manager.PreLoadOneMission()完成图像加载；
-                {
-                    int percentage = i * 100 / Parameter.PreLoadQuantity;
-                    backgroundWorkerForDownload.ReportProgress(percentage);
-                }
-                else
-                {
-                    break;
-                }
+                percentage = TheWorkMethod();
+                backgroundWorkerForDownload.ReportProgress(percentage);
             }
         }
         private void AddProcessBarValue(object sender, ProgressChangedEventArgs e)
         {
-            // 更新进度条
+            // 更新进度条, 100 为满；
             progressBar1.Value = e.ProgressPercentage;
         }
         private void Finished(object sender, EventArgs e)

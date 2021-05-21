@@ -11,33 +11,24 @@ using System.Windows.Forms;
 
 namespace EyeOfSauron
 {
+    public delegate void PanelIdAddWork(string[] a,InspectSection b);
     public partial class PanelIdAddForm : Form
     {
-        public PanelIdAddForm()
+        PanelIdAddWork TheWorkMethod;
+        public PanelIdAddForm(PanelIdAddWork work)
         {
             InitializeComponent();
+            TheWorkMethod = work;
         }
-        List<PanelInfo> idarray;
         private void AVIbutton_Click(object sender, EventArgs e)
         {
-            foreach (var item in this.IdTextBox.Lines)
-            {
-                idarray.Add(new PanelInfo(item,InspectSection.AVI));
-            }
+            TheWorkMethod(this.IdTextBox.Lines, InspectSection.AVI);
             this.Close();
         }
         private void SviButton_Click(object sender, EventArgs e)
         {
-            foreach (var item in this.IdTextBox.Lines)
-            {
-                idarray.Add(new PanelInfo(item, InspectSection.SVI));
-            }
+            TheWorkMethod(this.IdTextBox.Lines, InspectSection.SVI);
             this.Close();
         }
-        public void BindIdArray(List<PanelInfo> id)
-        {
-            this.idarray = id;
-        }
-        
     }
 }
