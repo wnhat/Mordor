@@ -160,6 +160,8 @@ namespace ExamManager
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(247, 28);
             this.comboBox1.TabIndex = 12;
+            this.comboBox1.TextUpdate += new System.EventHandler(this.InfoFilterAdd);
+            this.comboBox1.SelectedValueChanged += new System.EventHandler(this.FilterChanged);
             // 
             // NewIdListBox
             // 
@@ -194,6 +196,7 @@ namespace ExamManager
             this.button4.TabIndex = 15;
             this.button4.Text = "添加";
             this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.AddButton_Click);
             // 
             // DefectcomboBox
             // 

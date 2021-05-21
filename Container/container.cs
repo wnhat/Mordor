@@ -215,6 +215,10 @@ namespace Container
             Section = section;
         }
         public Defect() { }
+        public override string ToString()
+        {
+            return DefectName;
+        }
     }
     public class Operator
     {
