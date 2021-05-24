@@ -78,9 +78,17 @@ namespace Container
                 return base.ToString();
             }
         }
-        InspectSection Section { get { return Path.PcSection; } }
-        bool ReadComplete { get { return Dir.ReadComplete && (dir!=null); } }
+        public InspectSection Section { get { return Path.PcSection; } }
+        public bool ReadComplete { get { return Dir.ReadComplete && (dir!=null); } }
         public DirContainer Dir { get { return dir; } }
+        public MemoryStream[] GetFile(string[] namelist)
+        {
+            MemoryStream[] returnarray = new MemoryStream[namelist.Length];
+            for (int i = 0; i < namelist.Length; i++)
+            {
+
+            }
+        }
     }
     public class InspectMission : Panel
     {

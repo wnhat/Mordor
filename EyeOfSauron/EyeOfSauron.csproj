@@ -118,7 +118,6 @@
     <Compile Include="InspectForm.Designer.cs">
       <DependentUpon>InspectForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Parameter.cs" />
     <Compile Include="PanelIdAddForm.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -1,24 +1,22 @@
-﻿using Container;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using System.Reflection;
 
-namespace EyeOfSauron
+namespace Container
 {
-    static class Parameter
+    public static class Parameter
     {
-        public static string    SavePath;
-        public static string[]  AviImageNameList;
-        public static string[]  SviImageNameList;
-        public static string[]  AppImageNameList;
-        public static int       PreLoadQuantity;
-        public static Defect[]  CodeNameList;
+        public static string SavePath;
+        public static string[] AviImageNameList;
+        public static string[] SviImageNameList;
+        public static string[] AppImageNameList;
+        public static int PreLoadQuantity;
+        public static Defect[] CodeNameList;
 
         static Parameter()
         {
