@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Container;
 
 namespace EyeOfSauron
 {
@@ -18,6 +20,7 @@ namespace EyeOfSauron
         PictureBox pictureBox1;
         PictureBox pictureBox2;
         PictureBox pictureBox3;
+        DirContainer dir;
         public ImageFormManager(params PictureBox[] boxlist)
         {
             pictureBox1 = boxlist[0];
@@ -32,21 +35,33 @@ namespace EyeOfSauron
         }
         public void RefreshForm()
         {
-            if ((Refreshflag) * 3 < ImageArray.Count())
+            if (ImageArray != null)
             {
-                SetImage(ImageArray.Skip((Refreshflag) * 3).Take(3).ToArray());
-                Refreshflag++;
-            }
-            else
-            {
-                Refreshflag = 0;
-                RefreshForm();
+                if ((Refreshflag) * 3 < ImageArray.Count())
+                {
+                    SetImage(ImageArray.Skip((Refreshflag) * 3).Take(3).ToArray());
+                    Refreshflag++;
+                }
+                else
+                {
+                    Refreshflag = 0;
+                    RefreshForm();
+                }
             }
         }
         public void SetImageArray(Bitmap[] imagearray)
         {
             ImageArray = imagearray;
             RefreshForm();
+        }
+        public void SetImageArray(MemoryStream[] streamarray)
+        {
+            Bitmap[] imagearray = new Bitmap[streamarray.Length];
+            for (int i = 0; i < streamarray.Length; i++)
+            {
+                imagearray[i] = new Bitmap(streamarray[i]);
+            }
+            SetImageArray(imagearray);
         }
     }
 }

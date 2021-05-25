@@ -127,7 +127,7 @@ WHERE [DelFlag] = '0'";
                         }
                         else
                         {
-                            this.waitqueue.Enqueue(new PanelImageContainer(panelid, item, true));
+                            this.waitqueue.Enqueue(new PanelImageContainer(panelid, item));
                         }
                     }
                 }
@@ -242,11 +242,23 @@ WHERE [DelFlag] = '0'";
             ListBox theListBox = (ListBox)sender;
             if (theListBox.SelectedItems.Count == 1)
             {
-                var item = (PanelImageContainer)theListBox.SelectedItem;
-                //item.Dir.GetFileFromMemory();
-                //imageFormManager.SetImageArray();
+                PanelImageContainer item = (PanelImageContainer)theListBox.SelectedItem;
+                if (item.Section == InspectSection.AVI)
+                {
+                    var filearray = item.GetFile(Parameter.AviImageNameList);
+                    imageFormManager.SetImageArray(filearray);
+                }
+                else if (item.Section == InspectSection.SVI)
+                {
+                    var filearray = item.GetFile(Parameter.SviImageNameList);
+                    imageFormManager.SetImageArray(filearray);
+                }
+                else if (item.Section == InspectSection.APP)
+                {
+                    var filearray = item.GetFile(Parameter.AppImageNameList);
+                    imageFormManager.SetImageArray(filearray);
+                }
             }
-            // 刷新界面图像
         }
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {

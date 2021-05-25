@@ -86,8 +86,9 @@ namespace Container
             MemoryStream[] returnarray = new MemoryStream[namelist.Length];
             for (int i = 0; i < namelist.Length; i++)
             {
-
+                returnarray[i] = dir.GetFileFromMemory(namelist[i]);
             }
+            return returnarray;
         }
     }
     public class InspectMission : Panel
