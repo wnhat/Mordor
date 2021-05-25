@@ -273,14 +273,14 @@ WHERE [DelFlag] = '0'";
             {
                 if (this.comboBox1.Text != "")
                 {
-                    foreach (PanelInfo item in this.NewIdListBox.SelectedItems)
+                    foreach (PanelImageContainer item in this.NewIdListBox.SelectedItems)
                     {
                         DataRow newRow = dataset.Tables[0].NewRow();
                         newRow[1] = item.PanelId;
                         newRow[2] = this.DefectcomboBox.Text == "S" ? "S" : "F";
                         newRow[3] = defect.DefectCode;
                         newRow[4] = defect.DefectName;
-                        newRow[5] = item.PcSection;
+                        newRow[5] = item.Section;
                         newRow[6] = this.comboBox1.Text;
                         newRow[7] = "0";
                         dataset.Tables[0].Rows.Add(newRow);
@@ -291,12 +291,12 @@ WHERE [DelFlag] = '0'";
                     adp.Fill(dataset);
                     TheDataBase.Close();
                     bdsource.DataSource = dataset.Tables[0];
-                    this.Refresh();
+                    //this.Refresh();
                 }
             }
             refreshDataSet();
             this.bdsource.EndEdit();
-            this.Refresh();
+            //this.Refresh();
         }
         private void FilterChanged(object sender, EventArgs e)
         {
