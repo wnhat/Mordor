@@ -87,7 +87,7 @@ namespace EyeOfSauron
         PanelMission GetPanelMission()
         {
             // get new panel mission from server;
-            BaseMessage newMessage = new BaseMessage(MessageType.CLINET_GET_MISSION_AVI);
+            BaseMessage newMessage = new BaseMessage(MessageType.CLINET_GET_PANEL_MISSION);
             request.SendMultipartMessage(newMessage);
             PanelMissionMessage returnMessage = new PanelMissionMessage(request.ReceiveMultipartMessage());
             return returnMessage.ThePanelMission;

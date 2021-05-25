@@ -43,13 +43,37 @@ namespace Container
                 return panelId;
             }
         }
+        public override string ToString()
+        {
+            return PanelId;
+        }
     }
-    public class PanelImageContainer:Panel
+    public class Lot
+    {
+        public List<PanelMission> panelcontainer = new List<PanelMission>();
+        public int count
+        {
+            get
+            {
+                return panelcontainer.Count();
+            }
+        }
+        public string LotId;
+        public Lot(string lotId)
+        {
+            LotId = lotId;
+        }
+        public void PanelFinish(PanelMissionResult finishedpanel)
+        {
+
+        }
+    }
+    public class PanelImageContainer : Panel
     {
         bool MutiFlag;  //如果有相同ID在不同设备出现时，设置该项为true，tostring将显示设备及投入时间
         PanelPathContainer Path;
         DirContainer dir = null; // 默认不提前读取;
-        public PanelImageContainer(string panelId, PanelPathContainer path, bool mutiFlag = false):base(panelId)
+        public PanelImageContainer(string panelId, PanelPathContainer path, bool mutiFlag = false) : base(panelId)
         {
             MutiFlag = mutiFlag;
             Path = path;
@@ -70,7 +94,7 @@ namespace Container
         {
             if (this.MutiFlag)
             {
-                string name = this.PanelId+ " #" + this.Path.EqId + " " + this.Dir.CreationTime.ToString("MM/dd HH:mm");
+                string name = this.PanelId + " #" + this.Path.EqId + " " + this.Dir.CreationTime.ToString("MM/dd HH:mm");
                 return name;
             }
             else
@@ -79,7 +103,7 @@ namespace Container
             }
         }
         public InspectSection Section { get { return Path.PcSection; } }
-        public bool ReadComplete { get { return Dir.ReadComplete && (dir!=null); } }
+        public bool ReadComplete { get { return Dir.ReadComplete && (dir != null); } }
         public DirContainer Dir { get { return dir; } }
         public MemoryStream[] GetFile(string[] namelist)
         {
@@ -116,7 +140,7 @@ namespace Container
             ImageNameList = imageNameList;
             MissionNumber = missioninfo.MissionNumber;
         }
-        public InspectMission(ExamMission missioninfo, string[] imageNameList):base(missioninfo.PanelId)
+        public InspectMission(ExamMission missioninfo, string[] imageNameList) : base(missioninfo.PanelId)
         {
             Container = new DirContainer(missioninfo.ResultPath);
             ImageNameList = imageNameList;
@@ -142,21 +166,8 @@ namespace Container
         public PanelPathContainer SviPanelPath;
         public PanelPathContainer AppPanelPath;
         public long MissionNumber;
-        public bool AviFinished;
-        public bool SviFinished;
-        public bool AppFinished;
-        public Operator AviOp;
-        public Operator SviOp;
-        public Operator AppOp;
-        public Defect AviDefect;
-        public Defect SviDefect;
-        public Defect AppDefect;
-        public JudgeGrade AviJudge;
-        public JudgeGrade SviJudge;
-        public JudgeGrade AppJudge;
+        public Operator Op;
         public JudgeGrade LastJudge;
-        public bool finished { get { return AviFinished & SviFinished & AppFinished; } }
-        public string AllDefect;
         // TODO: Add Defect rank later;
         public string DefectCode
         {
@@ -202,52 +213,15 @@ namespace Container
             Repetition = 1;                         // TODO:设置任务人员检查次数;
             Type = type;
             AddTime = DateTime.Now;
-            AviFinished = SviFinished = AppFinished = false;
-            AppFinished = true;                     // 暂时不管;
-            AviOp = SviOp = AppOp = null;
-            AviDefect = SviDefect = AppDefect = null;
             AviPanelPath = AvipanelPath;
             SviPanelPath = SvipanelPath;
             AppPanelPath = ApppanelPath;
             MissionNumber = missionnumber;
             DefectList = new List<Defect>();
         }
-        public bool Complete
-        {
-            get
-            {
-                return (AviFinished & SviFinished & AppFinished);
-            }
-        }
         public void AddResult(PanelMissionResult newresult)
         {
-            switch (newresult.Section)
-            {
-                case InspectSection.AVI:
-                    AviOp = newresult.Op;
-                    AviJudge = newresult.Judge;
-                    AviFinished = true;
-                    AviDefect = newresult.defect;
-                    break;
-                case InspectSection.SVI:
-                    SviOp = newresult.Op;
-                    SviJudge = newresult.Judge;
-                    SviFinished = true;
-                    SviDefect = newresult.defect;
-                    break;
-                case InspectSection.APP:
-                    AppOp = newresult.Op;
-                    AppJudge = newresult.Judge;
-                    AppFinished = true;
-                    AppDefect = newresult.defect;
-                    break;
-                default:
-                    break;
-            }
-            if (finished)
-            {
-                FinishTime = DateTime.Now;
-            }
+
         }
     }
     /// <summary>

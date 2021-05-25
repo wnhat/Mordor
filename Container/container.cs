@@ -62,31 +62,6 @@ namespace Container
         R_Drive,
         S_Drive,
     }
-    public struct Disk_part
-    {
-        string F_DRIVE { get { return "F_Drive"; } }
-        string G_DRIVE { get { return "G_Drive"; } }
-        string H_DRIVE { get { return "H_Drive"; } }
-        string I_DRIVE { get { return "I_Drive"; } }
-        string J_DRIVE { get { return "J_Drive"; } }
-        string K_DRIVE { get { return "K_Drive"; } }
-        string L_DRIVE { get { return "L_Drive"; } }
-        string M_DRIVE { get { return "M_Drive"; } }
-        string N_DRIVE { get { return "N_Drive"; } }
-        string O_DRIVE { get { return "O_Drive"; } }
-        string P_DRIVE { get { return "P_Drive"; } }
-        string Q_DRIVE { get { return "Q_Drive"; } }
-        string R_DRIVE { get { return "R_Drive"; } }
-        string S_DRIVE { get { return "S_Drive"; } }
-        public List<string> getall
-        {
-            get
-            {
-                return new List<string>{ "F_Drive", "G_Drive" , "H_Drive" , "I_Drive" , "J_Drive" ,
-                    "K_Drive" , "L_Drive" , "M_Drive" , "N_Drive" , "O_Drive" , "P_Drive", "Q_Drive", "R_Drive", "S_Drive" };
-            }
-        }
-    }
     public class PanelPathContainer:IComparable
     {
         public string PanelId { get; set; }
@@ -190,14 +165,12 @@ namespace Container
         public long MissionNumber;
         public JudgeGrade Judge;
         public Defect defect;
-        public InspectSection Section; // AVI OR SVI OR APP;
         public Operator Op;
         public PanelMissionResult(){ }
-        public PanelMissionResult(JudgeGrade judge, Defect defect, InspectSection section, Operator op, string panelId, long missionNumber)
+        public PanelMissionResult(JudgeGrade judge, Defect defect, Operator op, string panelId, long missionNumber)
         {
             Judge = judge;
             this.defect = defect;
-            Section = section;
             Op = op;
             PanelId = panelId;
             MissionNumber = missionNumber;

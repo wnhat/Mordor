@@ -81,7 +81,6 @@ namespace Sauron
             {
                 return null;
             }
-
         }
     }
     class INS_pc_manage
@@ -122,13 +121,11 @@ namespace Sauron
                         Log.Information("result or image file not exist; panel id : {0}; path: {1}", item.Substring(item.Length - 17), item);
                     }
                 }
-
                 catch (Exception e)
                 {
                     Log.Information("查询文件失败：{0}", e.Message);
                 }
             }
-
             Log.Information("pc: {0} finishied;", PcInfo.PcIp);
             new_panel_list.AddRange(panel_list);
         }

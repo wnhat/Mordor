@@ -11,30 +11,21 @@ using System.IO;
 
 namespace Sauron
 {
-    /* 
-    
-    */
     class MissionManager
     {
         SqlServerConnector Thesqlserver;
-        FileManager Thefilecontainer;  //管理设备文件路径；
+        FileManager Thefilecontainer;                               //管理设备文件路径；
         public Queue<PanelMission> MissionQueue;
         ILogger Logger;
-        public Queue<long> MissionNumberQueue; //Missionnumber是该任务在 OninspectMissionContainer 中的key，用于不同工位分时完成检查后进行结果的登录；
-        Dictionary<long, PanelMission> OninspectMissionContainer; //已被添加至任务队列的Panelmission储存器；
-        Queue<PanelMission> AviOnInspectMissionQueue;
-        Queue<PanelMission> SviOnInspectMissionQueue;
-        Queue<PanelMission> AppOnInspectMissionQueue;
-        Queue<PanelMission> FinishedMissionQueue;
+        public Queue<long> MissionNumberQueue;                      //Missionnumber是该任务在 OninspectMissionContainer 中的key，用于不同工位分时完成检查后进行结果的登录；
         List<ExamMission> ExamMissionList;
-
-
         public MissionManager()
         {
             string ip_path = @"D:\1218180\program2\c#\Mordor\Sauron\IP.json";
             IP_TR ip_tr = new IP_TR(ip_path);
             this.Thefilecontainer = new FileManager(ip_tr);
             this.Thesqlserver = new SqlServerConnector();
+            // TODO: 
             Logger = new LoggerConfiguration()
                 .WriteTo.File(@"D:\eye of sauron\log\missionmanager\log-.txt", rollingInterval: RollingInterval.Day)
                 .WriteTo.Console()
@@ -42,11 +33,6 @@ namespace Sauron
 
             MissionQueue = new Queue<PanelMission>();
             MissionNumberQueue = new Queue<long>();
-            AviOnInspectMissionQueue = new Queue<PanelMission>();
-            SviOnInspectMissionQueue = new Queue<PanelMission>();
-            AppOnInspectMissionQueue = new Queue<PanelMission>();
-            FinishedMissionQueue = new Queue<PanelMission>();
-            OninspectMissionContainer = new Dictionary<long, PanelMission>();
 
             long newmissionnumber = 0;
             for (int i = 0; i < 1000000; i++)

@@ -16,9 +16,7 @@ namespace Sauron
     {
         static void Main(string[] args)
         {
-            // release test 
             Server(); //启动服务器；
-            // release test 2
         }
         static void Server()
         {
@@ -27,14 +25,9 @@ namespace Sauron
             using (var poller = new NetMQPoller { responseSocket, timer })
             {
                 MissionManager TheMissionManager = new MissionManager();
-                // wait the async process finish;
-                Thread.Sleep(TimeSpan.FromSeconds(180));  // TODO：使用事件
-                // 图像路径爬取完成后从数据库获取任务；
-                //TheMissionManager.AddMissionByServer();
-                //Console.WriteLine("add mission finished.");
                 responseSocket.ReceiveReady += (s, a) =>
                 {
-                    /* 对客户端发送的事件进行分Type响应（按照Message首位） */
+                    /* 对客户端发送的事件进行分Type响应（按照Message首位）*/
                     NetMQMessage messageIn = a.Socket.ReceiveMultipartMessage();
                     // 转换为自定义Message类型；
                     BaseMessage switchmessage = new BaseMessage(messageIn);
@@ -51,17 +44,9 @@ namespace Sauron
                             TheMissionManager.FinishExam(finishedExam.ExamMissionList);
                             a.Socket.SignalOK();
                             break;
-                        case MessageType.CLINET_GET_MISSION_AVI:
+                        case MessageType.CLINET_GET_PANEL_MISSION:
                             PanelMissionMessage newavimission = new PanelMissionMessage(MessageType.SERVER_SEND_MISSION, TheMissionManager.GetAviMission());
                             a.Socket.SendMultipartMessage(newavimission);
-                            break;
-                        case MessageType.CLINET_GET_MISSION_SVI:
-                            PanelMissionMessage newsvimission = new PanelMissionMessage(MessageType.SERVER_SEND_MISSION, TheMissionManager.GetSviMission());
-                            a.Socket.SendMultipartMessage(newsvimission);
-                            break;
-                        case MessageType.CLINET_GET_MISSION_APP:
-                            PanelMissionMessage newappmission = new PanelMissionMessage(MessageType.SERVER_SEND_MISSION, TheMissionManager.GetAppMission());
-                            a.Socket.SendMultipartMessage(newappmission);
                             break;
                         case MessageType.CLINET_GET_EXAM_MISSION_LIST:
                             ExamMissionMessage newexammission = new ExamMissionMessage(MessageType.SERVER_SEND_MISSION, TheMissionManager.GetExamMission());
@@ -108,7 +93,6 @@ namespace Sauron
                     Console.WriteLine("start refresh the panel list");
                     TheMissionManager.RefreshFileContainer();
                 };
-
                 poller.Run(); // 启动轮询器
             }
         }
