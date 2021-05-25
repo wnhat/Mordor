@@ -121,9 +121,9 @@ namespace Container
         {
             return PanelId;
         }
-
         public int CompareTo(object obj)
         {
+            // 该操作IO延迟较高，可能引起反应迟钝；
             DirectoryInfo self = new DirectoryInfo(ResultPath);
             var other = (PanelPathContainer)obj;
             DirectoryInfo otherdir = new DirectoryInfo(other.ResultPath);
