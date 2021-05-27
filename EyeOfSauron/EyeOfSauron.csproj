@@ -104,6 +104,12 @@
     <Compile Include="ExamManageForm.Designer.cs">
       <DependentUpon>ExamManageForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ExamSelectForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ExamSelectForm.Designer.cs">
+      <DependentUpon>ExamSelectForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="ImageFormManager.cs" />
     <Compile Include="LoginForm.cs">
       <SubType>Form</SubType>
@@ -141,6 +147,9 @@
     </Compile>
     <EmbeddedResource Include="ExamManageForm.resx">
       <DependentUpon>ExamManageForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ExamSelectForm.resx">
+      <DependentUpon>ExamSelectForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="InspectForm.resx">
       <DependentUpon>InspectForm.cs</DependentUpon>

@@ -25,9 +25,7 @@ namespace ExamManager
         DataSet dataset;
         SqlConnection TheDataBase;
         BindingSource bdsource;
-        LoginForm TheParentForm;
         Defectcode defect_translator;
-        Manager TheManager;
         SqlCommandBuilder Builder;
         SqlDataAdapter adp;
         Queue<PanelImageContainer> waitqueue = new Queue<PanelImageContainer>();
@@ -36,13 +34,7 @@ namespace ExamManager
         public examManageForm()
         {
             InitializeComponent();
-        }
-        public examManageForm(LoginForm parentForm, Manager theManager)
-        {
-            InitializeComponent();
             dataInitial();
-            TheParentForm = parentForm;
-            TheManager = theManager;
             imageFormManager = new ImageFormManager(this.pictureBox1, this.pictureBox2, this.pictureBox3);
             defect_translator = new Defectcode(Parameter.CodeNameList);
             AddDefectCode();
@@ -320,32 +312,6 @@ WHERE [DelFlag] = '0'";
             InfoList.Add(this.comboBox1.Text);
             this.comboBox1.DataSource = InfoList;
             FilterChanged(sender, e);
-        }
-    }
-    public static class NewSeverConnecter
-    {
-        static private RequestSocket request;
-        static NewSeverConnecter()
-        {
-            request = new RequestSocket();
-            request.Connect("tcp://172.16.145.22:5555");
-        }
-        public static Operator CheckPassWord(Operator theuser)
-        {
-            UserCheckMessage newMessage = new UserCheckMessage(MessageType.CLINET_CHECK_USER, theuser);
-            request.SendMultipartMessage(newMessage);
-            UserCheckMessage returnUser = new UserCheckMessage(request.ReceiveMultipartMessage());
-            if (returnUser.TheMessageType == MessageType.SERVER_SEND_USER_TRUE)
-                return returnUser.TheOperator;
-            else
-                return null;
-        }
-        public static Dictionary<string, List<PanelPathContainer>> GetPanelPathByID(string[] panelIdList)
-        {
-            BaseMessage newmessage = new PanelPathMessage(MessageType.CLINET_GET_PANEL_PATH, panelIdList);
-            request.SendMultipartMessage(newmessage);
-            var returnmessage = new PanelPathMessage(request.ReceiveMultipartMessage());
-            return returnmessage.panelPathDic;
         }
     }
     static class ExamFileManager

@@ -49,7 +49,7 @@ namespace Sauron
                                     datestart, dateend);
             // 测试用↓
             commandstring = @"SELECT[EqpID],
-                                    [InspDate]
+                                    [InspDate]+
                                     ,[ModelID]
                                     ,[InnerID]
                                     ,[VcrID]
@@ -85,7 +85,7 @@ namespace Sauron
             string commandstring = string.Format(@"USE [EDIAS_DB] GO
 INSERT INTO [dbo].[AET_IMAGE_INSPECT_RESULT]
            ([PanelID]
-           ,[AVIOperaterID]
+           ,[OperaterID]
            ,[AVIOperaterName]
            ,[SVIOperaterID]
            ,[SVIOperaterName]
@@ -121,15 +121,8 @@ INSERT INTO [dbo].[AET_IMAGE_INSPECT_RESULT]
            ,’{16})
 GO", new object[] {
                 panel.PanelId,
-                panel.AviOp.Id,
-                panel.AviOp.Name,
-                panel.SviOp.Id,
-                panel.SviOp.Name,
-                panel.AppOp.Id,
-                panel.AppOp.Name,
-                panel.AviJudge,
-                panel.SviJudge,
-                panel.AppJudge,
+                panel.Op.Id,
+                panel.Op.Name,
                 panel.LastJudge,
                 panel.DefectCode,
                 panel.DefectName,
@@ -152,6 +145,7 @@ GO", new object[] {
       ,[DefectCode]
       ,[DefectName]
       ,[Section]
+      ,[Info]
   FROM [EDIAS_DB].[dbo].[AET_IMAGE_EXAM]");
             List<ExamMission> newPanelList = new List<ExamMission>();
             SqlCommand newcommand = new SqlCommand(commandstring, TheDataBase);
@@ -162,10 +156,11 @@ GO", new object[] {
                 while (newDataReader.Read())
                 {
                     string panelid = newDataReader["PanelId"].ToString();
+                    string info = newDataReader["Info"].ToString();
                     InspectSection section = (InspectSection)Enum.Parse(typeof(InspectSection), newDataReader["Section"].ToString(), false);
                     Defect newdefect = new Defect(newDataReader["DefectName"].ToString(), newDataReader["DefectCode"].ToString(), section);
                     JudgeGrade newjudge = (JudgeGrade)Enum.Parse(typeof(JudgeGrade), newDataReader["Judge"].ToString(), true);
-                    newPanelList.Add(new ExamMission(panelid, section, newdefect, newjudge));
+                    newPanelList.Add(new ExamMission(panelid, section, newdefect, newjudge, info));
                 }
             }
             TheDataBase.Close();

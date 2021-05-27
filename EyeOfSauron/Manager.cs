@@ -7,12 +7,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Container;
+using Container.Message;
 
 namespace EyeOfSauron
 {
     public class Manager
     {
-        Serverconnecter TheServerConnecter;
+        MissionBuffer TheMissionBuffer;
         Operator Operater;
         public InspectSection Section { get; set; }
         public InspectMission OnInspectedMission { get; set; }
@@ -22,27 +23,9 @@ namespace EyeOfSauron
         public string ImageSavingPath { get; set; }
         public int Count { get { return PreDownloadedMissionQueue.Count; } }
         public int FinishedMissionCount { get { return Operater.MissionFinished; } }
-        string[] ImageNameList
-        {
-            get
-            {
-                if (Section == InspectSection.AVI)
-                {
-                    return Parameter.AviImageNameList;
-                }
-                else if (Section == InspectSection.SVI)
-                {
-                    return Parameter.SviImageNameList;
-                }
-                else
-                {
-                    return Parameter.AppImageNameList;
-                }
-            }
-        }
         public bool PreLoadOneMission()
         {
-            var mission = TheServerConnecter.GetMission(Section);
+            var mission = TheMissionBuffer.GetMission(Section);
             if (mission != null)
             {
                 PreDownloadedMissionQueue.Enqueue(mission);
@@ -74,7 +57,7 @@ namespace EyeOfSauron
         }
         public Manager()
         {
-            TheServerConnecter = new Serverconnecter();
+            TheMissionBuffer = new MissionBuffer();
             Operater = null;
             OnInspectedMission = null;
             DownloadQuantity = Parameter.PreLoadQuantity;
@@ -86,13 +69,9 @@ namespace EyeOfSauron
             PreDownloadedMissionQueue = new Queue<InspectMission>();
             OnInspectedMission = null;
         }
-        public void ChangeDownloadQuantity()
-        {
-            DownloadQuantity += 40;
-        }
         public void AddExamMissions()
         {
-            TheServerConnecter.GetExamMissions();
+            TheMissionBuffer.GetExamMissions();
         }
         public bool NextMission()
         {
@@ -108,7 +87,7 @@ namespace EyeOfSauron
         }
         public Operator CheckUser(Operator newUser)
         {
-            return TheServerConnecter.CheckPassWord(newUser);
+            return NewSeverConnecter.CheckPassWord(newUser);
         }
         public void SetOperater(Operator newUser)
         {
@@ -118,7 +97,6 @@ namespace EyeOfSauron
         {
             Operater = null;
         }
-        public void SaveParameter() { }
         public void SetInspectSection(InspectSection section)
         {
             Section = section;
@@ -126,15 +104,104 @@ namespace EyeOfSauron
         public void InspectFinished(Defect defect, JudgeGrade judge)
         {
             PanelMissionResult newresult = new PanelMissionResult(judge, defect, this.Section, this.Operater,OnInspectedMission.PanelId,OnInspectedMission.MissionNumber);
-            TheServerConnecter.FinishMission(newresult);
+            TheMissionBuffer.FinishMission(newresult);
             FillPreDownloadMissionQueue();
             Operater.MissionFinished++;
         }
         public void SendUnfinishedMissionBackToServer()
         {
-            TheServerConnecter.SendUnfinishedMissionBack(Section);
+            TheMissionBuffer.SendUnfinishedMissionBack(Section);
             OnInspectedMission = null;
             PreDownloadedMissionQueue = new Queue<InspectMission>();
+        }
+    }
+    class MissionBuffer
+    {
+        Lot OnInspectLot;
+        public string ExamInfo;
+        Queue<ExamMission> ExamMissionList;
+        Queue<ExamMission> ExamBuffer;
+        List<ExamMission> ExamResult;
+        public MissionBuffer()
+        {
+            ExamMissionList = new Queue<ExamMission>();
+            ExamBuffer = new Queue<ExamMission>();
+            ExamResult = new List<ExamMission>();
+        }
+        public void FinishMission(PanelMissionResult finishedMission)
+        {
+            switch (finishedMission.Section)
+            {
+                case InspectSection.NORMAL:
+                    PanelResultMessage newMessage = new PanelResultMessage(MessageType.CLIENT_SEND_MISSION_RESULT, finishedMission);
+                    request.SendMultipartMessage(newMessage);
+                    request.ReceiveSignal();
+                    break;
+                case InspectSection.EXAM:
+                    var mission = ExamBuffer.Dequeue();
+                    mission.FinishExam(finishedMission);
+                    ExamResult.Add(mission);
+                    if (ExamBuffer.Count == 0)
+                    {
+                        NewSeverConnecter.SendExamMissionResult(ExamResult, ExamInfo);
+                        
+                    }
+                    break;
+            }
+        }
+        public void GetExamMissions(string examinfo)
+        {
+            NewSeverConnecter.
+            BaseMessage newmessage = new BaseMessage(MessageType.CLINET_GET_EXAM_MISSION_LIST);
+            request.SendMultipartMessage(newmessage);
+            var returnmessage = new ExamMissionMessage(request.ReceiveMultipartMessage());
+            foreach (var item in returnmessage.ExamMissionList)
+            {
+                ExamMissionList.Enqueue(item);
+            }
+        }
+        public InspectMission GetMission(InspectSection section)
+        {
+            string[] imagenamelist = Parameter.AviImageNameList;
+            if (section == InspectSection.AVI)
+            {
+                var newmission = GetPanelMission();
+                if (newmission != null)
+                {
+                    panelMissionList.Enqueue(newmission);
+                    return new InspectMission(newmission, section, Parameter.AviImageNameList);
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            else
+            {
+                if (ExamMissionList.Count > 0)
+                {
+                    ExamMission newExamMission = ExamMissionList.Dequeue();
+                    switch (newExamMission.PcSection)
+                    {
+                        case InspectSection.AVI:
+                            imagenamelist = Parameter.AviImageNameList;
+                            break;
+                        case InspectSection.SVI:
+                            imagenamelist = Parameter.SviImageNameList;
+                            break;
+                        case InspectSection.APP:
+                            imagenamelist = Parameter.AppImageNameList;
+                            break;
+                    }
+                    InspectMission newinspectmission = new InspectMission(newExamMission, imagenamelist);
+                    ExamBuffer.Enqueue(newExamMission);
+                    return newinspectmission;
+                }
+                else
+                {
+                    return null;
+                }
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -67,6 +68,13 @@ namespace Container
         {
 
         }
+        public void PanelFinish(PanelMissionResult[] finishedpanel)
+        {
+            foreach (var item in finishedpanel)
+            {
+                this.PanelFinish(item);
+            }
+        }
     }
     public class PanelImageContainer : Panel
     {
@@ -117,41 +125,29 @@ namespace Container
     }
     public class InspectMission : Panel
     {
-        public string[] ImageNameList;                         // The image name in reuslt file which we need to inspect
-        DirContainer Container;
-        public long MissionNumber;
-        public Defect[] DefectJudgeList;
-        public InspectMission(PanelMission missioninfo, InspectSection section, string[] imageNameList) : base(missioninfo.PanelId)
+        public string[] ImageNameList;// The image name in reuslt file which we need to inspect
+        public Bitmap[] ImageArray;
+        public int MissionIndex;
+        public InspectMission(PanelMission missioninfo, string[] imageNameList) : base(missioninfo.PanelId)
         {
-            switch (section)
-            {
-                case InspectSection.AVI:
-                    Container = new DirContainer(missioninfo.AviPanelPath.ResultPath);
-                    break;
-                case InspectSection.SVI:
-                    Container = new DirContainer(missioninfo.SviPanelPath.ResultPath);
-                    break;
-                case InspectSection.APP:
-                    Container = new DirContainer(missioninfo.AppPanelPath.ResultPath);
-                    break;
-                default:
-                    break;
-            }
             ImageNameList = imageNameList;
-            MissionNumber = missioninfo.MissionNumber;
+            MissionIndex = missioninfo.MissionNumber;
+            InitialImage(missioninfo.AviPanelPath.ResultPath, imageNameList);
         }
         public InspectMission(ExamMission missioninfo, string[] imageNameList) : base(missioninfo.PanelId)
         {
-            Container = new DirContainer(missioninfo.ResultPath);
             ImageNameList = imageNameList;
+            InitialImage(missioninfo.ResultPath, imageNameList);
         }
-        public void SaveFileInDisk(string SavePath)
+        public void InitialImage(string filepath,string[] imagenamelist)
         {
-            Container.SaveDirInDisk(SavePath);
-        }
-        public MemoryStream GetFileFromMemory(string filename)
-        {
-            return Container.GetFileFromMemory(filename);
+
+            DirContainer Container = new DirContainer(filepath);
+            ImageArray = new Bitmap[ImageNameList.Length];
+            for (int i = 0; i < ImageNameList.Length; i++)
+            {
+                ImageArray[i] = new Bitmap(Container.GetFileFromMemory(ImageNameList[i]));
+            }
         }
     }
     public class PanelMission
@@ -165,7 +161,7 @@ namespace Container
         public PanelPathContainer AviPanelPath;
         public PanelPathContainer SviPanelPath;
         public PanelPathContainer AppPanelPath;
-        public long MissionNumber;
+        public int MissionNumber;
         public Operator Op;
         public JudgeGrade LastJudge;
         // TODO: Add Defect rank later;
@@ -236,31 +232,31 @@ namespace Container
         public bool Exsit { get { return new DirectoryInfo(ResultPath).Exists; } }
         public Defect Defect;
         public JudgeGrade Judge;
-        public Defect DefectU;                          // op JUDGE;
-        public JudgeGrade JudgeU;                       // op JUDGE;
+        public Defect DefectU;                          // user JUDGE;
+        public JudgeGrade JudgeU;                       // user JUDGE;
         public Operator Op;
         public DateTime FinishTime;
-        public int sortint;                             // 用于任务随机排序；
+        public int sortint = 0;                             // 用于任务随机排序；
         public ExamMission()
         {
 
         }
-        public ExamMission(string panelId, string result_path, InspectSection pcSection, Defect defect, JudgeGrade judge)
+        public ExamMission(string panelId, string result_path, InspectSection pcSection, Defect defect, JudgeGrade judge, string info)
         {
             PanelId = panelId;
             ResultPath = result_path;
             PcSection = pcSection;
             Defect = defect;
             Judge = judge;
-            sortint = new Random().Next();
+            MissionInfo = info;
         }
-        public ExamMission(string panelId, InspectSection pcSection, Defect defect, JudgeGrade judge)
+        public ExamMission(string panelId, InspectSection pcSection, Defect defect, JudgeGrade judge, string info)
         {
             PanelId = panelId;
             PcSection = pcSection;
             Defect = defect;
             Judge = judge;
-            sortint = new Random().Next();
+            MissionInfo = info;
         }
         public void SetPath(string path)
         {

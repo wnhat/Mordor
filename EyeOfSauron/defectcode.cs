@@ -7,11 +7,12 @@ using Container;
 
 namespace EyeOfSauron
 {
-    public class Defectcode
+    public static class Defectcode
     {
-        Dictionary<string, string> translate_table;
-        public Defectcode(Defect[] defectlist)
+        static Dictionary<string, string> translate_table;
+        static Defectcode()
         {
+            Defect[] defectlist = Parameter.CodeNameList;
             translate_table = new Dictionary<string, string>();
             foreach (var item in defectlist)
             {
@@ -21,13 +22,13 @@ namespace EyeOfSauron
             translate_table.Add("S", " ");
         }
 
-        public string name2code(string defect_name)
+        public static string name2code(string defect_name)
         {
             string return_code = translate_table[defect_name];
             return return_code;
         }
 
-        public JudgeGrade name2judge(string defect_name)
+        public static JudgeGrade name2judge(string defect_name)
         {
             if (defect_name == "S")
             {
@@ -42,7 +43,5 @@ namespace EyeOfSauron
                 return JudgeGrade.F;
             }
         }
-
     }
-
 }

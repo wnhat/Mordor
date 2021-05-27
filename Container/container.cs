@@ -38,6 +38,7 @@ namespace Container
         PRE,
         POST,
         EXAM,
+        NORMAL,
     }
     public enum Side
     {

@@ -8,6 +8,8 @@ using Container;
 using Serilog;
 using System.Threading;
 using System.IO;
+using NetMQ;
+using Container.Message;
 
 namespace Sauron
 {
@@ -15,71 +17,43 @@ namespace Sauron
     {
         SqlServerConnector Thesqlserver;
         FileManager Thefilecontainer;                               //管理设备文件路径；
-        public Queue<PanelMission> MissionQueue;
         ILogger Logger;
-        public Queue<long> MissionNumberQueue;                      //Missionnumber是该任务在 OninspectMissionContainer 中的key，用于不同工位分时完成检查后进行结果的登录；
         List<ExamMission> ExamMissionList;
+        Dictionary<string, List<ExamMission>> ExamMissionDic = new Dictionary<string, List<ExamMission>>();
+        Dictionary<string, Lot> OnInspectLotDic = new Dictionary<string, Lot>();                     // MES下发任务；
+        Queue<Lot> LotWaitQueue = new Queue<Lot>();
         public MissionManager()
         {
             string ip_path = @"D:\1218180\program2\c#\Mordor\Sauron\IP.json";
             IP_TR ip_tr = new IP_TR(ip_path);
             this.Thefilecontainer = new FileManager(ip_tr);
             this.Thesqlserver = new SqlServerConnector();
-            // TODO: 
             Logger = new LoggerConfiguration()
                 .WriteTo.File(@"D:\eye of sauron\log\missionmanager\log-.txt", rollingInterval: RollingInterval.Day)
                 .WriteTo.Console()
                 .CreateLogger();
-
-            MissionQueue = new Queue<PanelMission>();
-            MissionNumberQueue = new Queue<long>();
-
-            long newmissionnumber = 0;
-            for (int i = 0; i < 1000000; i++)
-            {
-                MissionNumberQueue.Enqueue(newmissionnumber);
-                newmissionnumber += 1;
-            }
             RefreshExamList();
         }
-        public void AddMissionByServer()
+
+        private void AddMission(Lot lot)
         {
-            // 获取SQL server近一小时的C52000N站点近一小时E级产品添加任务；
-            List<string> missionDataSet = Thesqlserver.GetInputPanelMission();
-            foreach (var missionid in missionDataSet)
-            {
-                // TODO: 调查无法找到的id原因；新建异常类替换if语句；
-                List<PanelPathContainer> pathList = Thefilecontainer.GetPanelPathList(missionid);
-                if (pathList != null)
-                {
-                    // TODO: 当一张屏多次进入设备时返回的列表将不是单一值； 设备上无该图片时会发生错误；
-                    var avipath = pathList.Where(x => x.PcSection == InspectSection.AVI).ToArray()[0];
-                    var svipath = pathList.Where(x => x.PcSection == InspectSection.AVI).ToArray()[0];
-                    // TODO: ADD Section app;
-                    MissionQueue.Enqueue(new PanelMission(missionid, MissionType.PRODUCITVE, MissionNumberQueue.Dequeue(), avipath, svipath));
-                }
-                else
-                {
-                    Logger.Information("can not find panel path in the PathContainer, PanelId : {0}", missionid);
-                }
-            }
-            Logger.Information("Inspect mission add finished；");
+            LotWaitQueue.Enqueue(lot);
         }
         public void RefreshExamList()
         {
-            List<ExamMission> newExamMissionList = new List<ExamMission>();
+            Dictionary<string, List<ExamMission>> newExamMissionDic = new Dictionary<string, List<ExamMission>>();
             var missionlist = Thesqlserver.GetExamMission();
-            string[] aviExamFileList = Directory.GetDirectories("\\\\172.16.145.22\\NetworkDrive\\D_Drive\\Mordor\\ExamSimple\\AVI"); 
+            string[] aviExamFileList = Directory.GetDirectories("\\\\172.16.145.22\\NetworkDrive\\D_Drive\\Mordor\\ExamSimple\\AVI");
             string[] sviExamFileList = Directory.GetDirectories("\\\\172.16.145.22\\NetworkDrive\\D_Drive\\Mordor\\ExamSimple\\SVI");
             string[] aviid = new string[aviExamFileList.Length];
             for (int i = 0; i < aviExamFileList.Length; i++)
             {
-                aviid[i] = aviExamFileList[i].Substring(aviExamFileList[i].Length -17);
+                aviid[i] = aviExamFileList[i].Substring(aviExamFileList[i].Length - 17);
             }
             string[] sviid = new string[sviExamFileList.Length];
             for (int i = 0; i < sviExamFileList.Length; i++)
             {
-                sviid[i] = sviExamFileList[i].Substring(sviExamFileList[i].Length -17);
+                sviid[i] = sviExamFileList[i].Substring(sviExamFileList[i].Length - 17);
             }
             foreach (var item in missionlist)
             {
@@ -89,65 +63,82 @@ namespace Sauron
                         if (aviid.Contains(item.PanelId))
                         {
                             var filepath = aviExamFileList.Where(x => x.Substring(x.Length - 17) == item.PanelId).First();
-                            newExamMissionList.Add(new ExamMission(item.PanelId, filepath, item.PcSection, item.Defect, item.Judge));
+                            ExamMission newmission = new ExamMission(item.PanelId, filepath, item.PcSection, item.Defect, item.Judge,item.MissionInfo);
+                            if (newExamMissionDic.ContainsKey(newmission.MissionInfo))
+                            {
+                                newExamMissionDic[newmission.MissionInfo].Add(newmission);
+                            }
+                            else
+                            {
+                                newExamMissionDic.Add(newmission.MissionInfo, new List<ExamMission>() { newmission });
+                            }
                         }
                         else
                         {
-                            Logger.Error("panel ID: {0} ,do not have result file in {1}",item.PanelId); // TODO:ADD FILE path
+                            Logger.Error("panel ID: {0} ,do not have result file in {1}", item.PanelId); // TODO:ADD FILE path
                         }
                         break;
                     case InspectSection.SVI:
                         if (sviid.Contains(item.PanelId))
                         {
                             var filepath = sviExamFileList.Where(x => x.Substring(x.Length - 17) == item.PanelId).First();
-                            newExamMissionList.Add(new ExamMission(item.PanelId, filepath, item.PcSection, item.Defect, item.Judge));
+                            ExamMission newmission = new ExamMission(item.PanelId, filepath, item.PcSection, item.Defect, item.Judge, item.MissionInfo);
+                            if (newExamMissionDic.ContainsKey(newmission.MissionInfo))
+                            {
+                                newExamMissionDic[newmission.MissionInfo].Add(newmission);
+                            }
+                            else
+                            {
+                                newExamMissionDic.Add(newmission.MissionInfo, new List<ExamMission>() { newmission });
+                            }
                         }
                         else
                         {
-                            Logger.Error("panel ID: {0} ,do not have result file in {1}",item.PanelId); // TODO:ADD FILE path
+                            Logger.Error("panel ID: {0} ,do not have result file in {1}", item.PanelId); // TODO:ADD FILE path
                         }
                         break;
                 }
             }
-            ExamMissionList = newExamMissionList;
+            ExamMissionDic = newExamMissionDic;
         }
-        public PanelMission GetAviMission()
+        public void GetMission(NetMQSocketEventArgs a)
         {
-            if (AviOnInspectMissionQueue.Count == 0)
+            if (LotWaitQueue.Count == 0)
             {
-                AddMissionInQueue();
+                a.Socket.SendMultipartMessage(new PanelMissionMessage(MessageType.SERVER_SEND_MISSION, null));
             }
-            PanelMission newpanelmission = AviOnInspectMissionQueue.Dequeue();
-            return newpanelmission;
-        }
-        public PanelMission GetSviMission()
-        {
-            if (SviOnInspectMissionQueue.Count == 0)
+            else
             {
-                AddMissionInQueue();
+                Lot newlot = LotWaitQueue.Dequeue();
+                OnInspectLotDic.Add(newlot.LotId, newlot);
+                a.Socket.SendMultipartMessage(new PanelMissionMessage(MessageType.SERVER_SEND_MISSION, newlot));
             }
-            PanelMission newpanelmission = SviOnInspectMissionQueue.Dequeue();
-            return newpanelmission;
         }
-        public PanelMission GetAppMission()
+        public void FinishMission(NetMQSocketEventArgs a, NetMQMessage M)
         {
-            if (AppOnInspectMissionQueue.Count == 0)
-            {
-                AddMissionInQueue();
-            }
-            PanelMission newpanelmission = AppOnInspectMissionQueue.Dequeue();
-            return newpanelmission;
+            PanelMissionMessage finishedMission = new PanelMissionMessage(M);
+            OnInspectLotDic.Remove(finishedMission.ThePanelMissionLot.LotId);
+            // TODO: 发送mes，添加sqlserver；
+            a.Socket.SignalOK();
         }
-        public List<ExamMission> GetExamMission()
+        public void GetExamMission(NetMQSocketEventArgs a, NetMQMessage M)
         {
+            ExamMissionMessage newexammission = new ExamMissionMessage(M);
+            string examinfo = newexammission.ExamRequestInfo;
             var rnd = new Random();
-            foreach (var item in ExamMissionList)
+            foreach (var item in ExamMissionDic[examinfo])
             {
                 item.sortint = rnd.Next();
             }
-            ExamMissionList.Sort();
-            return ExamMissionList;
+            ExamMissionDic[examinfo].Sort();
+            a.Socket.SendMultipartMessage(new ExamMissionMessage(MessageType.SERVER_SEND_MISSION, ExamMissionDic[examinfo], examinfo));
         }
+        public void AddMissionByServer(NetMQSocketEventArgs a, NetMQMessage M)
+        {
+            PanelMissionMessage Mission = new PanelMissionMessage(M);
+            AddMission(Mission.ThePanelMissionLot);
+        }
+
         public Dictionary<string, List<PanelPathContainer>> GetPanelPathList(string[] SampleInfoList)
         {
             Dictionary<string, List<PanelPathContainer>> newPanelPathDic = new Dictionary<string, List<PanelPathContainer>>();
@@ -158,27 +149,6 @@ namespace Sauron
                 newPanelPathDic.Add(item, panelPathContainer);
             }
             return newPanelPathDic;
-        }
-        private void AddMissionInQueue()
-        {
-            PanelMission newmission = MissionQueue.Dequeue();
-            OninspectMissionContainer.Add(newmission.MissionNumber, newmission);
-            AviOnInspectMissionQueue.Enqueue(newmission);
-            SviOnInspectMissionQueue.Enqueue(newmission);
-            //AppOnInspectMissionQueue.Enqueue(newmission);
-        }
-        public void SendResult(PanelMissionResult newresult)
-        {
-            // Add result sended form the clint,if finished add to queue waitting for insert to database;
-            PanelMission thePanelMission = OninspectMissionContainer[newresult.MissionNumber];
-            thePanelMission.AddResult(newresult);
-            if (thePanelMission.finished)
-            {
-                FinishedMissionQueue.Enqueue(thePanelMission);
-                OninspectMissionContainer.Remove(thePanelMission.MissionNumber);
-                MissionNumberQueue.Enqueue(thePanelMission.MissionNumber);
-                Thesqlserver.InsertFinishedMission(thePanelMission);
-            }
         }
         public void RefreshFileContainer()
         {

@@ -10,7 +10,6 @@ namespace Container.Message
 {
     public enum MessageType
     {
-        CLIENT_GET_PANEL_GREAD,
         CLIENT_SEND_MISSION_RESULT,
         CLIENT_SEND_EXAM_RESULT,
         CLINET_GET_PANEL_MISSION,
@@ -49,29 +48,27 @@ namespace Container.Message
     }
     public class PanelMissionMessage : BaseMessage
     {
-        public PanelMission ThePanelMission;
-
+        public Lot ThePanelMissionLot;
         public PanelMissionMessage(BaseMessage theMessage) : base(theMessage)
         {
-            ThePanelMission = TransferToMission(theMessage[1].ConvertToString());
+            ThePanelMissionLot = TransferToMission(theMessage[1].ConvertToString());
         }
         public PanelMissionMessage(NetMQMessage theMessage):base()
         {
-            ThePanelMission = TransferToMission(theMessage[1].ConvertToString());
+            ThePanelMissionLot = TransferToMission(theMessage[1].ConvertToString());
         }
-        public PanelMissionMessage(MessageType messageType, PanelMission panelMission) : base(messageType)
+        public PanelMissionMessage(MessageType messageType, Lot panelMission) : base(messageType)
         {
-            ThePanelMission = panelMission;
-            this.Append(TransferToString(ThePanelMission));
+            ThePanelMissionLot = panelMission;
+            this.Append(TransferToString(ThePanelMissionLot));
         }
-        string TransferToString(PanelMission panelMission)
+        string TransferToString(Lot panelMission)
         {
             return JsonConvert.SerializeObject(panelMission, new JsonSerializerSettings() { StringEscapeHandling = StringEscapeHandling.EscapeNonAscii });
         }
-
-        PanelMission TransferToMission(string missionstring)
+        Lot TransferToMission(string missionstring)
         {
-            return JsonConvert.DeserializeObject<PanelMission>(missionstring, new JsonSerializerSettings() { StringEscapeHandling = StringEscapeHandling.EscapeNonAscii });
+            return JsonConvert.DeserializeObject<Lot>(missionstring, new JsonSerializerSettings() { StringEscapeHandling = StringEscapeHandling.EscapeNonAscii });
         }
     }
     public class UserCheckMessage : BaseMessage
@@ -119,15 +116,19 @@ namespace Container.Message
     }
     public class ExamMissionMessage : BaseMessage
     {
+        public string ExamRequestInfo;
         public List<ExamMission> ExamMissionList;
-        public ExamMissionMessage(MessageType messageType, List<ExamMission> examMissionList) : base(messageType)
+        public ExamMissionMessage(MessageType messageType, List<ExamMission> examMissionList,string examRequestInfo) : base(messageType)
         {
-            ExamMissionList = examMissionList;
+            this.ExamMissionList = examMissionList;
+            this.ExamRequestInfo = examRequestInfo;
             this.Append(TransferToString(ExamMissionList));
+            this.Append(ExamRequestInfo);
         }
         public ExamMissionMessage(NetMQMessage message):base()
         {
             ExamMissionList = TransferToResult(message[1].ConvertToString());
+            ExamRequestInfo = message[2].ConvertToString();
         }
         string TransferToString(List<ExamMission> result)
         {

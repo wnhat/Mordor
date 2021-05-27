@@ -29,26 +29,23 @@
         private void InitializeComponent()
         {
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.Avibutton = new System.Windows.Forms.Button();
             this.ExamManagerButton = new System.Windows.Forms.Button();
             this.EvilButton = new System.Windows.Forms.Button();
             this.userid_box = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.Svibutton = new System.Windows.Forms.Button();
-            this.Avibutton = new System.Windows.Forms.Button();
             this.tableLayoutPanel1.SuspendLayout();
-            this.tableLayoutPanel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // tableLayoutPanel1
             // 
             this.tableLayoutPanel1.ColumnCount = 1;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.Controls.Add(this.Avibutton, 0, 2);
             this.tableLayoutPanel1.Controls.Add(this.ExamManagerButton, 0, 4);
             this.tableLayoutPanel1.Controls.Add(this.EvilButton, 0, 3);
             this.tableLayoutPanel1.Controls.Add(this.userid_box, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.label1, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel2, 0, 2);
             this.tableLayoutPanel1.Location = new System.Drawing.Point(89, 23);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 5;
@@ -59,6 +56,21 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(408, 326);
             this.tableLayoutPanel1.TabIndex = 0;
+            // 
+            // Avibutton
+            // 
+            this.Avibutton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
+            this.Avibutton.BackColor = System.Drawing.Color.Cornsilk;
+            this.Avibutton.Font = new System.Drawing.Font("Microsoft YaHei", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.Avibutton.ForeColor = System.Drawing.Color.DarkGreen;
+            this.Avibutton.Location = new System.Drawing.Point(149, 139);
+            this.Avibutton.Margin = new System.Windows.Forms.Padding(10, 9, 10, 9);
+            this.Avibutton.Name = "Avibutton";
+            this.Avibutton.Size = new System.Drawing.Size(109, 47);
+            this.Avibutton.TabIndex = 3;
+            this.Avibutton.Text = "量产检查";
+            this.Avibutton.UseVisualStyleBackColor = false;
+            this.Avibutton.Click += new System.EventHandler(this.Inspectbutton_Click);
             // 
             // ExamManagerButton
             // 
@@ -114,54 +126,6 @@
             this.label1.Text = "请输入工号";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // tableLayoutPanel2
-            // 
-            this.tableLayoutPanel2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.tableLayoutPanel2.ColumnCount = 2;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.Controls.Add(this.Svibutton, 1, 0);
-            this.tableLayoutPanel2.Controls.Add(this.Avibutton, 0, 0);
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 133);
-            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 1;
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 34F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(402, 59);
-            this.tableLayoutPanel2.TabIndex = 3;
-            // 
-            // Svibutton
-            // 
-            this.Svibutton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
-            this.Svibutton.BackColor = System.Drawing.Color.Cornsilk;
-            this.Svibutton.Font = new System.Drawing.Font("Microsoft YaHei", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.Svibutton.ForeColor = System.Drawing.Color.DarkGreen;
-            this.Svibutton.Location = new System.Drawing.Point(247, 9);
-            this.Svibutton.Margin = new System.Windows.Forms.Padding(10, 9, 10, 9);
-            this.Svibutton.Name = "Svibutton";
-            this.Svibutton.Size = new System.Drawing.Size(109, 41);
-            this.Svibutton.TabIndex = 1;
-            this.Svibutton.Text = "SVI";
-            this.Svibutton.UseVisualStyleBackColor = false;
-            this.Svibutton.Click += new System.EventHandler(this.Svibutton_Click);
-            // 
-            // Avibutton
-            // 
-            this.Avibutton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
-            this.Avibutton.BackColor = System.Drawing.Color.Cornsilk;
-            this.Avibutton.Font = new System.Drawing.Font("Microsoft YaHei", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.Avibutton.ForeColor = System.Drawing.Color.DarkGreen;
-            this.Avibutton.Location = new System.Drawing.Point(46, 9);
-            this.Avibutton.Margin = new System.Windows.Forms.Padding(10, 9, 10, 9);
-            this.Avibutton.Name = "Avibutton";
-            this.Avibutton.Size = new System.Drawing.Size(109, 41);
-            this.Avibutton.TabIndex = 3;
-            this.Avibutton.Text = "AVI";
-            this.Avibutton.UseVisualStyleBackColor = false;
-            this.Avibutton.Click += new System.EventHandler(this.Avibutton_Click);
-            // 
             // LoginForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -174,7 +138,6 @@
             this.Text = "用户登录";
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
-            this.tableLayoutPanel2.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -185,8 +148,6 @@
         private System.Windows.Forms.TextBox userid_box;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button EvilButton;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
-        private System.Windows.Forms.Button Svibutton;
         private System.Windows.Forms.Button Avibutton;
         private System.Windows.Forms.Button ExamManagerButton;
     }

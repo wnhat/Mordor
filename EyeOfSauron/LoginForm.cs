@@ -14,15 +14,9 @@ namespace EyeOfSauron
 {
     public partial class LoginForm : Form
     {
-        private Manager TheManager;
-        private InspectForm TheInspectForm;
-        private examManageForm TheExamManageForm;
         public LoginForm()
         {
             InitializeComponent();
-            TheManager = new Manager();
-            TheInspectForm = new InspectForm(this,TheManager);
-            TheExamManageForm = new examManageForm(this, TheManager);
         }
         private void userid_box_KeyDown(object sender, KeyEventArgs e)
         {
@@ -32,47 +26,41 @@ namespace EyeOfSauron
             //    Avibutton_Click(sender, e);
             //}
         }
-        private void UserCheckIn(InspectForm form)
+        private void UserCheckIn(InspectSection section)
         {
             // 检查用户名密码正确后 显示检查界面
             Operator newoperater = new Operator(this.userid_box.Text, this.userid_box.Text);
-            var user = TheManager.CheckUser(newoperater);
+            var user = NewSeverConnecter.CheckPassWord(newoperater);
             if (user != null)
             {
-                TheManager.SetOperater(user);
+                InspectForm newinspectform = new InspectForm();
+                Manager newmanager = new Manager();
+                newmanager.SetInspectSection(section);
+                newmanager.SetOperater(user);
+                newinspectform.ConnectManager(newmanager);
                 this.Hide();
-                //ProcessForm newDownloadProcess = new ProcessForm(TheManager.PreLoadOneMission); // 初始化预加载界面；
-                TheManager.ChangeDownloadQuantity();
-                form.login(user);   // 写入用户
-                form.ReadData();    // 刷新数据
-                form.ShowDialog();
+                newinspectform.login(user);   // 写入用户
+                newinspectform.ReadData();    // 刷新数据
+                newinspectform.ShowDialog();
             }
             else
             {
                 MessageBox.Show("用户名密码错误");
             }
         }
-        private void Avibutton_Click(object sender, EventArgs e)
+        private void Inspectbutton_Click(object sender, EventArgs e)
         {
-            TheManager.SetInspectSection(InspectSection.AVI);
-            UserCheckIn(TheInspectForm);
-        }
-        private void Svibutton_Click(object sender, EventArgs e)
-        {
-            TheManager.SetInspectSection(InspectSection.SVI);
-            UserCheckIn(TheInspectForm);
+            UserCheckIn(InspectSection.AVI);
         }
         private void Evilbutton_Click(object sender, EventArgs e)
         {
-            // 考试
-            TheManager.SetInspectSection(InspectSection.EXAM);
-            TheManager.AddExamMissions();
-            UserCheckIn(TheInspectForm);
+            UserCheckIn(InspectSection.EXAM);
         }
         private void ExamManagerButton_Click(object sender, EventArgs e)
         {
+            examManageForm newexamform = new examManageForm();
             this.Hide();
-            TheExamManageForm.ShowDialog();
+            newexamform.ShowDialog();
         }
     }
 }

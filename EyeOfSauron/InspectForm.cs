@@ -15,21 +15,19 @@ namespace EyeOfSauron
 {
     public partial class InspectForm : Form
     {
-        LoginForm TheParentForm;
-        Defectcode defect_translator;
         Manager TheManager;
-        int Refreshflag;
-        Bitmap[] ImageArray;
+        ImageFormManager imageManager;
         string[] ImageNameArray;
-        public InspectForm(LoginForm parentForm, Manager theManager)
+        public InspectForm()
         {
-            // initial AviInspectForm:
+            // initial InspectForm:
             InitializeComponent();
-            TheParentForm = parentForm;
-            TheManager = theManager;
-            Refreshflag = 0;
-            defect_translator = new Defectcode(Parameter.CodeNameList);
+            imageManager = new ImageFormManager(this.pictureBox1, this.pictureBox2, this.pictureBox3);
             SetDefectButton();
+        }
+        public void ConnectManager(Manager M)
+        {
+            TheManager = M;
         }
         private void SetDefectButton()
         {
@@ -46,41 +44,12 @@ namespace EyeOfSauron
             this.defect_button_11.Text = Parameter.CodeNameList[10].DefectName;
             this.defect_button_12.Text = Parameter.CodeNameList[11].DefectName;
         }
-        public void SetImageLabel(string[] imagenamelist)
-        {
-            imagelabel1.Text = imagenamelist[0];
-            imagelabel2.Text = imagenamelist[1];
-            imagelabel3.Text = imagenamelist[2];
-        }
-        public void SetImage(Bitmap[] imagearray)
-        {
-            pictureBox1.Image = imagearray[0];
-            pictureBox2.Image = imagearray[1];
-            pictureBox3.Image = imagearray[2];
-        }
-        public void RefreshForm()
-        {
-            if((Refreshflag)*3 < ImageArray.Count())
-            {
-                SetImageLabel(ImageNameArray.Skip((Refreshflag)*3).Take(3).ToArray());
-                SetImage(ImageArray.Skip((Refreshflag)*3).Take(3).ToArray());
-                Refreshflag++;
-            }
-            else
-            {
-                Refreshflag = 0;
-                RefreshForm();
-            }
-            // 刷新文本内容
-            cell_id_label.Text = TheManager.OnInspectedMission.PanelId;
-            remain_label.Text = string.Format("已进行：{0}",TheManager.FinishedMissionCount.ToString());
-        }
         private void judge_function(object sender, EventArgs e)
         {
             Button sender_button = (Button)sender;
             string defectname = sender_button.Text;
-            string defectcode = defect_translator.name2code(sender_button.Text);
-            JudgeGrade newjudge = defect_translator.name2judge(sender_button.Text);
+            string defectcode = Defectcode.name2code(sender_button.Text);
+            JudgeGrade newjudge = Defectcode.name2judge(sender_button.Text);
             Defect newdefect = new Defect(defectname, defectcode, TheManager.Section);
             TheManager.InspectFinished(newdefect,newjudge);
             ReadData();
@@ -95,15 +64,7 @@ namespace EyeOfSauron
             else
             {
                 ImageNameArray = TheManager.OnInspectedMission.ImageNameList;
-                Bitmap[] newImageArray = new Bitmap[ImageNameArray.Length];
-                for (int i = 0; i < ImageNameArray.Length; i++)
-                {
-                    var imagestream = TheManager.OnInspectedMission.GetFileFromMemory(ImageNameArray[i]);
-                    newImageArray[i] = new Bitmap(imagestream);
-                }
-                ImageArray = newImageArray;
-                Refreshflag = 0;
-                RefreshForm();
+                imageManager.SetImageArray(TheManager.OnInspectedMission.ImageArray);
             }
         }
         private void logout(object sender, EventArgs e)
@@ -111,7 +72,7 @@ namespace EyeOfSauron
             login_button.Text = "用户登录";
             login_button.BackColor = System.Drawing.Color.SandyBrown;
             this.Close();
-            TheParentForm.Show();
+            this.Parent.Show();
         }
         public void login(Operator newop)
         {
@@ -122,14 +83,14 @@ namespace EyeOfSauron
         {
             TheManager.SendUnfinishedMissionBackToServer();
             TheManager.OperaterCheckOut();
-            TheParentForm.Show();
+            this.Parent.Show();
             base.OnFormClosed(e);
         }
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
             if (keyData == Keys.Tab)
             {
-                RefreshForm();
+                imageManager.RefreshForm();
                 return true;
             }
             else
