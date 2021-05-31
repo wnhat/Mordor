@@ -69,6 +69,7 @@ namespace EyeOfSauron
         }
         private void logout(object sender, EventArgs e)
         {
+            // TODO: 确认后登出；
             login_button.Text = "用户登录";
             login_button.BackColor = System.Drawing.Color.SandyBrown;
             this.Close();
@@ -81,7 +82,6 @@ namespace EyeOfSauron
         }
         protected override void OnFormClosed(FormClosedEventArgs e)
         {
-            TheManager.SendUnfinishedMissionBackToServer();
             TheManager.OperaterCheckOut();
             this.Parent.Show();
             base.OnFormClosed(e);

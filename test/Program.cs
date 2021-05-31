@@ -21,9 +21,9 @@ namespace test
         [STAThread]
         static void Main(string[] args)
         {
-            testclass a = new testclass("zhangshaobo", 18);
-            changename(ref a);
-            Console.WriteLine(a);
+            int[] a = new int[2] { 0, 21 };
+            int[] b = new int[2] { 3, 2 };
+            a.CopyTo(b,b.Length);
         }
         static private void changename(ref testclass strin)
         {

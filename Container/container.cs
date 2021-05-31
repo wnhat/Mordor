@@ -163,18 +163,16 @@ namespace Container
     public class PanelMissionResult
     {
         public string PanelId;
-        public long MissionNumber;
         public JudgeGrade Judge;
         public Defect defect;
         public Operator Op;
         public PanelMissionResult(){ }
-        public PanelMissionResult(JudgeGrade judge, Defect defect, Operator op, string panelId, long missionNumber)
+        public PanelMissionResult(JudgeGrade judge, Defect defect, Operator op, string panelId)
         {
             Judge = judge;
             this.defect = defect;
             Op = op;
             PanelId = panelId;
-            MissionNumber = missionNumber;
         }
     }
     public class Defect

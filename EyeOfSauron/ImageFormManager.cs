@@ -20,7 +20,6 @@ namespace EyeOfSauron
         PictureBox pictureBox1;
         PictureBox pictureBox2;
         PictureBox pictureBox3;
-        DirContainer dir;
         public ImageFormManager(params PictureBox[] boxlist)
         {
             pictureBox1 = boxlist[0];

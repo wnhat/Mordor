@@ -66,13 +66,33 @@ namespace Container
         }
         public void PanelFinish(PanelMissionResult finishedpanel)
         {
-
+            foreach (var item in panelcontainer)
+            {
+                if (item.PanelId == finishedpanel.PanelId)
+                {
+                    item.AddResult(finishedpanel);
+                }
+            }
         }
         public void PanelFinish(PanelMissionResult[] finishedpanel)
         {
             foreach (var item in finishedpanel)
             {
                 this.PanelFinish(item);
+            }
+        }
+        public bool Complete
+        {
+            get
+            {
+                foreach (var item in panelcontainer)
+                {
+                    if (!item.Complete)
+                    {
+                        return false;
+                    }
+                }
+                return true;
             }
         }
     }
@@ -128,26 +148,44 @@ namespace Container
         public string[] ImageNameList;// The image name in reuslt file which we need to inspect
         public Bitmap[] ImageArray;
         public int MissionIndex;
-        public InspectMission(PanelMission missioninfo, string[] imageNameList) : base(missioninfo.PanelId)
+        public InspectMission(PanelMission missioninfo) : base(missioninfo.PanelId)
         {
-            ImageNameList = imageNameList;
+            var newimagenamelist = Parameter.AviImageNameList.ToList();
+            newimagenamelist.AddRange(Parameter.SviImageNameList);
+            newimagenamelist.AddRange(Parameter.AppImageNameList);
+            ImageNameList = newimagenamelist.ToArray();
             MissionIndex = missioninfo.MissionNumber;
-            InitialImage(missioninfo.AviPanelPath.ResultPath, imageNameList);
+            List<Bitmap> newimagearray = new List<Bitmap>();
+            newimagearray.AddRange(InitialImage(missioninfo.AviPanelPath.ResultPath, Parameter.AviImageNameList));
+            newimagearray.AddRange(InitialImage(missioninfo.SviPanelPath.ResultPath, Parameter.SviImageNameList));
+            newimagearray.AddRange(InitialImage(missioninfo.AppPanelPath.ResultPath, Parameter.AppImageNameList));
+            ImageArray = newimagearray.ToArray();
         }
-        public InspectMission(ExamMission missioninfo, string[] imageNameList) : base(missioninfo.PanelId)
+        public InspectMission(ExamMission missioninfo) : base(missioninfo.PanelId)
         {
-            ImageNameList = imageNameList;
-            InitialImage(missioninfo.ResultPath, imageNameList);
+            if (missioninfo.PcSection == InspectSection.AVI)
+            {
+                ImageNameList = Parameter.AviImageNameList;
+            }
+            else if (missioninfo.PcSection == InspectSection.SVI)
+            {
+                ImageNameList = Parameter.SviImageNameList;
+            }
+            else if (missioninfo.PcSection == InspectSection.APP)
+            {
+                ImageNameList = Parameter.AppImageNameList;
+            }
+            ImageArray = InitialImage(missioninfo.ResultPath, ImageNameList);
         }
-        public void InitialImage(string filepath,string[] imagenamelist)
+        public Bitmap[] InitialImage(string filepath, string[] NameList)
         {
-
             DirContainer Container = new DirContainer(filepath);
-            ImageArray = new Bitmap[ImageNameList.Length];
+            Bitmap[] NewImageArray = new Bitmap[NameList.Length];
             for (int i = 0; i < ImageNameList.Length; i++)
             {
-                ImageArray[i] = new Bitmap(Container.GetFileFromMemory(ImageNameList[i]));
+                NewImageArray[i] = new Bitmap(Container.GetFileFromMemory(NameList[i]));
             }
+            return NewImageArray;
         }
     }
     public class PanelMission
@@ -163,7 +201,7 @@ namespace Container
         public PanelPathContainer AppPanelPath;
         public int MissionNumber;
         public Operator Op;
-        public JudgeGrade LastJudge;
+        public JudgeGrade LastJudge = JudgeGrade.U;
         // TODO: Add Defect rank later;
         public string DefectCode
         {
@@ -203,7 +241,7 @@ namespace Container
                 }
             }
         }
-        public PanelMission(string panelId, MissionType type, long missionnumber, PanelPathContainer AvipanelPath, PanelPathContainer SvipanelPath = null, PanelPathContainer ApppanelPath = null)
+        public PanelMission(string panelId, MissionType type, int missionnumber, PanelPathContainer AvipanelPath, PanelPathContainer SvipanelPath = null, PanelPathContainer ApppanelPath = null)
         {
             PanelId = panelId;
             Repetition = 1;                         // TODO:设置任务人员检查次数;
@@ -217,7 +255,17 @@ namespace Container
         }
         public void AddResult(PanelMissionResult newresult)
         {
-
+            FinishTime = DateTime.Now;
+            Op = newresult.Op;
+            LastJudge = newresult.Judge;
+            DefectList.Add(newresult.defect);
+        }
+        public bool Complete
+        {
+            get
+            {
+                return LastJudge != JudgeGrade.U ? true : false;
+            }
         }
     }
     /// <summary>

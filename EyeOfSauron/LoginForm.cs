@@ -21,46 +21,68 @@ namespace EyeOfSauron
         private void userid_box_KeyDown(object sender, KeyEventArgs e)
         {
             // binding with the keyboard enter.
-            //if (e.KeyCode == Keys.Enter)
-            //{
-            //    Avibutton_Click(sender, e);
-            //}
+            if (e.KeyCode == Keys.Enter)
+            {
+                Inspectbutton_Click(sender, e);
+            }
         }
-        private void UserCheckIn(InspectSection section)
+        private void Inspectbutton_Click(object sender, EventArgs e)
         {
-            // 检查用户名密码正确后 显示检查界面
             Operator newoperater = new Operator(this.userid_box.Text, this.userid_box.Text);
             var user = NewSeverConnecter.CheckPassWord(newoperater);
             if (user != null)
             {
                 InspectForm newinspectform = new InspectForm();
                 Manager newmanager = new Manager();
-                newmanager.SetInspectSection(section);
+                newmanager.SetInspectSection(InspectSection.NORMAL);
                 newmanager.SetOperater(user);
                 newinspectform.ConnectManager(newmanager);
-                this.Hide();
-                newinspectform.login(user);   // 写入用户
-                newinspectform.ReadData();    // 刷新数据
-                newinspectform.ShowDialog();
+                try
+                {
+                    newmanager.TheMissionBuffer.GetPanelMission();
+                    this.Hide();
+                    newinspectform.login(user);   // 写入用户
+                    newinspectform.ReadData();    // 刷新数据
+                    newinspectform.ShowDialog();
+                }
+                catch (Exception a)
+                {
+                    MessageBox.Show(a.Message);
+                }
             }
             else
             {
                 MessageBox.Show("用户名密码错误");
             }
         }
-        private void Inspectbutton_Click(object sender, EventArgs e)
-        {
-            UserCheckIn(InspectSection.AVI);
-        }
         private void Evilbutton_Click(object sender, EventArgs e)
         {
-            UserCheckIn(InspectSection.EXAM);
+            Operator newoperater = new Operator(this.userid_box.Text, this.userid_box.Text);
+            var user = NewSeverConnecter.CheckPassWord(newoperater);
+            if (user != null)
+            {
+                ExamSelectForm selectform = new ExamSelectForm(user);
+                selectform.ShowDialog();
+            }
+            else
+            {
+                MessageBox.Show("用户名密码错误");
+            }
         }
         private void ExamManagerButton_Click(object sender, EventArgs e)
         {
-            examManageForm newexamform = new examManageForm();
-            this.Hide();
-            newexamform.ShowDialog();
+            Operator newoperater = new Operator(this.userid_box.Text, this.userid_box.Text);
+            var user = NewSeverConnecter.CheckPassWord(newoperater);
+            if (user != null)
+            {
+                examManageForm newexamform = new examManageForm();
+                this.Hide();
+                newexamform.ShowDialog();
+            }
+            else
+            {
+                MessageBox.Show("用户名密码错误");
+            }
         }
     }
 }

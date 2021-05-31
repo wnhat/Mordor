@@ -34,30 +34,34 @@
             // 
             // ExamIfoncomboBox
             // 
-            this.ExamIfoncomboBox.Font = new System.Drawing.Font("SimSun", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.ExamIfoncomboBox.Font = new System.Drawing.Font("宋体", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.ExamIfoncomboBox.FormattingEnabled = true;
-            this.ExamIfoncomboBox.Location = new System.Drawing.Point(49, 60);
+            this.ExamIfoncomboBox.Location = new System.Drawing.Point(74, 90);
+            this.ExamIfoncomboBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.ExamIfoncomboBox.Name = "ExamIfoncomboBox";
-            this.ExamIfoncomboBox.Size = new System.Drawing.Size(197, 37);
+            this.ExamIfoncomboBox.Size = new System.Drawing.Size(294, 52);
             this.ExamIfoncomboBox.TabIndex = 0;
             // 
             // Startbutton
             // 
-            this.Startbutton.Font = new System.Drawing.Font("Microsoft YaHei", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.Startbutton.Location = new System.Drawing.Point(49, 171);
+            this.Startbutton.Font = new System.Drawing.Font("微软雅黑", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.Startbutton.Location = new System.Drawing.Point(74, 256);
+            this.Startbutton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Startbutton.Name = "Startbutton";
-            this.Startbutton.Size = new System.Drawing.Size(197, 86);
+            this.Startbutton.Size = new System.Drawing.Size(296, 129);
             this.Startbutton.TabIndex = 1;
             this.Startbutton.Text = "开始考试";
             this.Startbutton.UseVisualStyleBackColor = true;
+            this.Startbutton.Click += new System.EventHandler(this.Startbutton_Click);
             // 
             // ExamSelectForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(290, 305);
+            this.ClientSize = new System.Drawing.Size(435, 458);
             this.Controls.Add(this.Startbutton);
             this.Controls.Add(this.ExamIfoncomboBox);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "ExamSelectForm";
             this.Text = "ExamSelectForm";
             this.ResumeLayout(false);

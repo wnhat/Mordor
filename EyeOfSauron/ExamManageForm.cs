@@ -25,7 +25,6 @@ namespace ExamManager
         DataSet dataset;
         SqlConnection TheDataBase;
         BindingSource bdsource;
-        Defectcode defect_translator;
         SqlCommandBuilder Builder;
         SqlDataAdapter adp;
         Queue<PanelImageContainer> waitqueue = new Queue<PanelImageContainer>();
@@ -36,7 +35,6 @@ namespace ExamManager
             InitializeComponent();
             dataInitial();
             imageFormManager = new ImageFormManager(this.pictureBox1, this.pictureBox2, this.pictureBox3);
-            defect_translator = new Defectcode(Parameter.CodeNameList);
             AddDefectCode();
             AddInfoFilter();
         }
@@ -312,6 +310,11 @@ WHERE [DelFlag] = '0'";
             InfoList.Add(this.comboBox1.Text);
             this.comboBox1.DataSource = InfoList;
             FilterChanged(sender, e);
+        }
+        protected override void OnFormClosed(FormClosedEventArgs e)
+        {
+            this.Parent.Show();
+            base.OnFormClosed(e);
         }
     }
     static class ExamFileManager
