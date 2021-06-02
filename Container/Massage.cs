@@ -15,10 +15,8 @@ namespace Container.Message
         CLINET_GET_PANEL_MISSION,
         CLINET_GET_PANEL_PATH,
         CLINET_GET_EXAM_MISSION_LIST,
+        CLINET_GET_EXAMINFO,
         CLINET_CHECK_USER,
-        CLINET_SEND_UNFINISHED_MISSION_AVI,
-        CLINET_SEND_UNFINISHED_MISSION_SVI,
-        CLINET_SEND_UNFINISHED_MISSION_APP,
 
         CONTROLER_CLEAR_MISSION,
         CONTROLER_ADD_MISSION,
@@ -26,6 +24,7 @@ namespace Container.Message
         SERVER_SEND_MISSION,
         SERVER_SEND_FINISH,
         SERVER_SEND_EORRO,
+        SERVER_SEND_EXAMINFO,
         SERVER_SEND_PANEL_GREAD,
         SERVER_SEND_USER_FLASE,
         SERVER_SEND_USER_TRUE,
@@ -123,12 +122,12 @@ namespace Container.Message
             this.ExamMissionList = examMissionList;
             this.ExamRequestInfo = examRequestInfo;
             this.Append(TransferToString(ExamMissionList));
-            this.Append(ExamRequestInfo);
+            this.Append(new NetMQFrame(ExamRequestInfo,Encoding.UTF8));
         }
         public ExamMissionMessage(NetMQMessage message):base()
         {
             ExamMissionList = TransferToResult(message[1].ConvertToString());
-            ExamRequestInfo = message[2].ConvertToString();
+            ExamRequestInfo = message[2].ConvertToString(Encoding.UTF8);
         }
         string TransferToString(List<ExamMission> result)
         {
@@ -137,6 +136,27 @@ namespace Container.Message
         List<ExamMission> TransferToResult(string resultstring)
         {
             return JsonConvert.DeserializeObject<List<ExamMission>>(resultstring, new JsonSerializerSettings(){StringEscapeHandling = StringEscapeHandling.EscapeNonAscii });
+        }
+    }
+    public class ExamInfoMessage : BaseMessage
+    {
+        public string[] ExamInfoArray;
+        public ExamInfoMessage(string[] examInfo) : base(MessageType.SERVER_SEND_EXAMINFO)
+        {
+            this.ExamInfoArray = examInfo;
+            this.Append(TransferToString(ExamInfoArray));
+        }
+        public ExamInfoMessage(NetMQMessage message) : base()
+        {
+            ExamInfoArray = TransferToResult(message[1].ConvertToString());
+        }
+        string TransferToString(string[] result)
+        {
+            return JsonConvert.SerializeObject(result, new JsonSerializerSettings() { StringEscapeHandling = StringEscapeHandling.EscapeNonAscii });
+        }
+        string[] TransferToResult(string resultstring)
+        {
+            return JsonConvert.DeserializeObject<string[]>(resultstring, new JsonSerializerSettings() { StringEscapeHandling = StringEscapeHandling.EscapeNonAscii });
         }
     }
     public class PanelPathMessage : BaseMessage

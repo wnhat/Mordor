@@ -17,9 +17,13 @@ namespace EyeOfSauron
     {
         int Refreshflag = 0;
         Bitmap[] ImageArray;
+        string[] ImageNameArray;
         PictureBox pictureBox1;
         PictureBox pictureBox2;
         PictureBox pictureBox3;
+        Label label1;
+        Label label2;
+        Label label3;
         public ImageFormManager(params PictureBox[] boxlist)
         {
             pictureBox1 = boxlist[0];
@@ -32,6 +36,12 @@ namespace EyeOfSauron
             pictureBox2.Image = imagearray[1];
             pictureBox3.Image = imagearray[2];
         }
+        public void BindLabel(params Label[] labellist)
+        {
+            this.label1 = labellist[0];
+            this.label2 = labellist[1];
+            this.label3 = labellist[2];
+        }
         public void RefreshForm()
         {
             if (ImageArray != null)
@@ -39,6 +49,10 @@ namespace EyeOfSauron
                 if ((Refreshflag) * 3 < ImageArray.Count())
                 {
                     SetImage(ImageArray.Skip((Refreshflag) * 3).Take(3).ToArray());
+                    if (label1!=null)
+                    {
+                        SetLabel(ImageNameArray.Skip((Refreshflag) * 3).Take(3).ToArray());
+                    }
                     Refreshflag++;
                 }
                 else
@@ -47,6 +61,18 @@ namespace EyeOfSauron
                     RefreshForm();
                 }
             }
+        }
+        public void SetLabel(string[] stringarray)
+        {
+            label1.Text = stringarray[0];
+            label2.Text = stringarray[1];
+            label3.Text = stringarray[2];
+        }
+        public void SetArray(Bitmap[] imagearray, string[] imagenamearray)
+        {
+            ImageArray = imagearray;
+            ImageNameArray = imagenamearray;
+            RefreshForm();
         }
         public void SetImageArray(Bitmap[] imagearray)
         {

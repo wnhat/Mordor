@@ -48,6 +48,7 @@ namespace Container
     }
     public enum DiskPart
     {
+        E_Drive,
         F_Drive,
         G_Drive,
         H_Drive,
@@ -74,6 +75,7 @@ namespace Container
             PcInfo = pc;
             this.diskName = diskName;
         }
+        public string EqName { get { return PcInfo.EqName; } }
         public string EqId { get { return PcInfo.EqId.ToString(); } }
         public string DiskName { get { return diskName.ToString(); } }
         public InspectSection PcSection { get { return PcInfo.PcName; } }
@@ -226,6 +228,17 @@ namespace Container
     }
     public class PC
     {
+        public string EqName { get
+            {
+                if (EqId>9)
+                {
+                    return "7CTCT" + EqId.ToString();
+                }
+                else
+                {
+                    return "7CTCT0" + EqId.ToString();
+                }
+            } }
         public int EqId { get; set; }
         public string PcIp { get; set; }
         public InspectSection PcName { get; set; }

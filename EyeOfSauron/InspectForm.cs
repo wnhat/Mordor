@@ -17,12 +17,12 @@ namespace EyeOfSauron
     {
         Manager TheManager;
         ImageFormManager imageManager;
-        string[] ImageNameArray;
         public InspectForm()
         {
             // initial InspectForm:
             InitializeComponent();
             imageManager = new ImageFormManager(this.pictureBox1, this.pictureBox2, this.pictureBox3);
+            imageManager.BindLabel(this.imagelabel1,this.imagelabel2,this.imagelabel3);
             SetDefectButton();
         }
         public void ConnectManager(Manager M)
@@ -63,9 +63,16 @@ namespace EyeOfSauron
             }
             else
             {
-                ImageNameArray = TheManager.OnInspectedMission.ImageNameList;
-                imageManager.SetImageArray(TheManager.OnInspectedMission.ImageArray);
+                
+                imageManager.SetArray(TheManager.OnInspectedMission.ImageArray, TheManager.OnInspectedMission.ImageNameList);
             }
+        }
+        protected override void OnShown(EventArgs e)
+        {
+            ProcessForm newprocessform = new ProcessForm(this.TheManager.PreLoadMissions);
+            newprocessform.ShowDialog();
+            base.OnShown(e);
+            this.ReadData();
         }
         private void logout(object sender, EventArgs e)
         {
@@ -73,7 +80,6 @@ namespace EyeOfSauron
             login_button.Text = "用户登录";
             login_button.BackColor = System.Drawing.Color.SandyBrown;
             this.Close();
-            this.Parent.Show();
         }
         public void login(Operator newop)
         {
@@ -83,7 +89,6 @@ namespace EyeOfSauron
         protected override void OnFormClosed(FormClosedEventArgs e)
         {
             TheManager.OperaterCheckOut();
-            this.Parent.Show();
             base.OnFormClosed(e);
         }
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)

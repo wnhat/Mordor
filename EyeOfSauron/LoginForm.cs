@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Container;
 using ExamManager;
+using Container.SeverConnection;
 
 namespace EyeOfSauron
 {
@@ -29,7 +30,7 @@ namespace EyeOfSauron
         private void Inspectbutton_Click(object sender, EventArgs e)
         {
             Operator newoperater = new Operator(this.userid_box.Text, this.userid_box.Text);
-            var user = NewSeverConnecter.CheckPassWord(newoperater);
+            var user = SeverConnecter.CheckPassWord(newoperater);
             if (user != null)
             {
                 InspectForm newinspectform = new InspectForm();
@@ -42,8 +43,8 @@ namespace EyeOfSauron
                     newmanager.TheMissionBuffer.GetPanelMission();
                     this.Hide();
                     newinspectform.login(user);   // 写入用户
-                    newinspectform.ReadData();    // 刷新数据
                     newinspectform.ShowDialog();
+                    this.Show();
                 }
                 catch (Exception a)
                 {
@@ -57,12 +58,15 @@ namespace EyeOfSauron
         }
         private void Evilbutton_Click(object sender, EventArgs e)
         {
+            // 考试；
             Operator newoperater = new Operator(this.userid_box.Text, this.userid_box.Text);
-            var user = NewSeverConnecter.CheckPassWord(newoperater);
+            var user = SeverConnecter.CheckPassWord(newoperater);
             if (user != null)
             {
                 ExamSelectForm selectform = new ExamSelectForm(user);
+                this.Hide();
                 selectform.ShowDialog();
+                this.Show();
             }
             else
             {
@@ -72,12 +76,13 @@ namespace EyeOfSauron
         private void ExamManagerButton_Click(object sender, EventArgs e)
         {
             Operator newoperater = new Operator(this.userid_box.Text, this.userid_box.Text);
-            var user = NewSeverConnecter.CheckPassWord(newoperater);
+            var user = SeverConnecter.CheckPassWord(newoperater);
             if (user != null)
             {
                 examManageForm newexamform = new examManageForm();
                 this.Hide();
                 newexamform.ShowDialog();
+                this.Show();
             }
             else
             {

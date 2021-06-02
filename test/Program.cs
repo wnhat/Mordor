@@ -25,11 +25,6 @@ namespace test
             int[] b = new int[2] { 3, 2 };
             a.CopyTo(b,b.Length);
         }
-        static private void changename(ref testclass strin)
-        {
-            testclass b = new testclass("wangxue", 16);
-            strin = b;
-        }
         static private void TestDB()
         {
             SqlConnection TheDataBase = new SqlConnection("server=172.16.150.200;UID=sa;PWD=1qaz@WSX;Database=EDIAS_DB;Trusted_connection=False");
@@ -88,72 +83,6 @@ namespace test
                     }
                 }
 
-            }
-        }
-    }
-    class testclass
-    {
-        public string name;
-        public int age;
-        public testclass(string aname, int aage)
-        {
-            name = aname;
-            age = aage;
-        }
-    }
-    static class Parameter
-    {
-        public static string SavePath;
-        public static string[] AviImageNameList;
-        public static string[] SviImageNameList;
-        public static string[] AppImageNameList;
-        public static int PreLoadQuantity;
-        public static Defect[] CodeNameList;
-
-        static Parameter()
-        {
-            string sysConfigPath = @"\\172.16.145.22\NetworkDrive\D_Drive\Mordor\sysconfig.json";
-            FileInfo sysconfig = new FileInfo(sysConfigPath);
-            if (sysconfig.Exists)
-            {
-                var jsonreader = new StreamReader(sysconfig.OpenRead());
-                var jsonstring = jsonreader.ReadToEnd();
-                JObject jsonobj = JObject.Parse(jsonstring);
-                var fieldcollection = typeof(Parameter).GetFields();
-                var asd = fieldcollection.ToArray();
-                List<string> fieldnamelist = new List<string>();
-                List<string> jsonnamelist = new List<string>();
-                foreach (var item in fieldcollection)
-                {
-                    fieldnamelist.Add(item.Name);
-                }
-                foreach (var item in jsonobj)
-                {
-                    jsonnamelist.Add(item.Key);
-                }
-                if (fieldnamelist.Except(jsonnamelist).Count() != 0)
-                {
-                    throw new ApplicationException("系统参数多于文件记录，请检查版本对应关系");
-                }
-                else if (jsonnamelist.Except(fieldnamelist).Count() != 0)
-                {
-                    throw new ApplicationException("文件记录多于系统参数，请检查版本对应关系");
-                }
-                else
-                {
-                    foreach (var item in fieldcollection)
-                    {
-                        var propertyName = item.Name;
-                        var value = jsonobj.GetValue(propertyName);
-                        Type propertytype = item.FieldType;
-                        var convertvalue = value.ToObject(propertytype);
-                        item.SetValue(null,convertvalue);
-                    }
-                }
-            }
-            else
-            {
-                throw new ApplicationException("sysconfig.json 文件不存在，请检查与 145.22电脑的链接或相应地址是否存在设置文件；");
             }
         }
     }

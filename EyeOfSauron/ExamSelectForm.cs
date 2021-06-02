@@ -1,4 +1,5 @@
 ﻿using Container;
+using Container.SeverConnection;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,6 +15,7 @@ namespace EyeOfSauron
     public partial class ExamSelectForm : Form
     {
         Operator user;
+        string[] ExamInfoArray;
         public ExamSelectForm(Operator op)
         {
             InitializeComponent();
@@ -22,7 +24,8 @@ namespace EyeOfSauron
         }
         public void InitalComboBox()
         {
-
+            ExamInfoArray = SeverConnecter.GetExamInfo();
+            this.ExamIfoncomboBox.DataSource = ExamInfoArray;
         }
         private void Startbutton_Click(object sender, EventArgs e)
         {
@@ -33,14 +36,12 @@ namespace EyeOfSauron
             newinspectform.ConnectManager(newmanager);
             newmanager.TheMissionBuffer.GetExamMissions(this.ExamIfoncomboBox.Text);
             this.Hide();
-            newinspectform.login(user);   // 写入用户
-            newinspectform.ReadData();    // 刷新数据
+            newinspectform.login(user);         // 写入用户
             newinspectform.ShowDialog();
             this.Close();
         }
         protected override void OnFormClosed(FormClosedEventArgs e)
         {
-            this.Parent.Show();
             base.OnFormClosed(e);
         }
     }

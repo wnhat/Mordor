@@ -12,7 +12,9 @@ namespace Sauron
         static ILogger Logger;
         static FilePathLogClass()
         {
-            
+            Logger = new LoggerConfiguration()
+                .WriteTo.File(@"D:\eye of sauron\log\missionmanager\log-.txt", rollingInterval: RollingInterval.Day)
+                .CreateLogger();
         }
     }
 }

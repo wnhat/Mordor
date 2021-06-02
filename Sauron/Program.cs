@@ -47,6 +47,9 @@ namespace Sauron
                         case MessageType.CLINET_GET_EXAM_MISSION_LIST:
                             TheMissionManager.GetExamMission(a, messageIn);
                             break;
+                        case MessageType.CLINET_GET_EXAMINFO:
+                            TheMissionManager.GetExamInfo(a);
+                            break;
                         case MessageType.CLINET_GET_PANEL_PATH:
                             PanelPathMessage panelIdInfo = new PanelPathMessage(messageIn);
                             var newPanelPathDic = TheMissionManager.GetPanelPathList(panelIdInfo.panelPathDic.Keys.ToArray());
@@ -54,9 +57,6 @@ namespace Sauron
                             a.Socket.SendMultipartMessage(newpanelinfomassage);
                             break;
                         case MessageType.CONTROLER_CLEAR_MISSION:
-                            Console.WriteLine("start clean mission queue;");
-                            BaseMessage clearMissionMessage = new BaseMessage(MessageType.SERVER_SEND_FINISH);
-                            a.Socket.SendMultipartMessage(clearMissionMessage);
                             break;
                         case MessageType.CONTROLER_ADD_MISSION:
                             TheMissionManager.AddMissionByServer(a,messageIn);
@@ -81,8 +81,9 @@ namespace Sauron
                 };
                 timer.Elapsed += (s, a) =>
                 {
-                    Console.WriteLine("start refresh the panel list");
+                    Console.WriteLine("start refresh the panel list and add mission(test);");
                     TheMissionManager.RefreshFileContainer();
+                    TheMissionManager.AddMissionTest();
                 };
                 poller.Run(); // 启动轮询器
             }

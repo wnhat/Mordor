@@ -20,6 +20,7 @@ namespace Sauron
         {
             Logger = new LoggerConfiguration()
                 .WriteTo.File(@"D:\eye of sauron\log\filemanager\log-.txt", rollingInterval: RollingInterval.Hour)
+                .WriteTo.Console()
                 .CreateLogger();
             this.InsPCList = new List<INS_pc_manage>();
             this.PathManager = new PanelPathManager();
@@ -30,9 +31,8 @@ namespace Sauron
             {
                 InsPCList.Add(new INS_pc_manage(pc, Logger));
             }
-            RefreshFileList();
         }
-        public async void RefreshFileList()
+        public async Task RefreshFileList()
         {
             Logger.Information("start to refresh the file dict, time is {0}", DateTime.Now);
             PanelPathManager newPanelPathManager = new PanelPathManager();
@@ -118,7 +118,7 @@ namespace Sauron
                     }
                     foreach (var item in image_directory_list.Except(result_directory_list))
                     {
-                        Log.Information("result or image file not exist; panel id : {0}; path: {1}", item.Substring(item.Length - 17), item);
+                        //Log.Information("result or image file not exist; panel id : {0}; path: {1}", item.Substring(item.Length - 17), item);
                     }
                 }
                 catch (Exception e)

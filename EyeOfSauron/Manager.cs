@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Container;
 using Container.Message;
+using Container.SeverConnection;
 
 namespace EyeOfSauron
 {
@@ -23,6 +24,19 @@ namespace EyeOfSauron
         public string ImageSavingPath { get; set; }
         public int MissionLeft { get { return PreDownloadedMissionQueue.Count; } }
         public int FinishedMissionCount { get { return Operater.MissionFinished; } }
+        public int PreLoadMissions()
+        {
+            var mission = TheMissionBuffer.GetMission();
+            if (mission != null)
+            {
+                PreDownloadedMissionQueue.Enqueue(mission);
+                return 100 * PreDownloadedMissionQueue.Count/Parameter.PreLoadQuantity;
+            }
+            else
+            {
+                return 100;
+            }
+        }
         public bool PreLoadOneMission()
         {
             var mission = TheMissionBuffer.GetMission();
@@ -83,7 +97,7 @@ namespace EyeOfSauron
         }
         public Operator CheckUser(Operator newUser)
         {
-            return NewSeverConnecter.CheckPassWord(newUser);
+            return SeverConnecter.CheckPassWord(newUser);
         }
         public void SetOperater(Operator newUser)
         {
@@ -127,7 +141,7 @@ namespace EyeOfSauron
                     OnInspectLot.PanelFinish(finishedMission);
                     if (OnInspectLot.Complete)
                     {
-                        NewSeverConnecter.SendPanelMissionResult(OnInspectLot);
+                        SeverConnecter.SendPanelMissionResult(OnInspectLot);
                         OnInspectLot = null;
                     }
                     break;
@@ -137,14 +151,14 @@ namespace EyeOfSauron
                     ExamResult.Add(mission);
                     if (ExamBuffer.Count == 0)
                     {
-                        NewSeverConnecter.SendExamMissionResult(ExamResult, ExamInfo);
+                        SeverConnecter.SendExamMissionResult(ExamResult, ExamInfo);
                     }
                     break;
             }
         }
         public void GetPanelMission()
         {
-            var newlot = NewSeverConnecter.GetPanelMission();
+            var newlot = SeverConnecter.GetPanelMission();
             if (newlot == null)
             {
                 throw new ApplicationException("没有剩余任务以供检查，请退出");
@@ -153,10 +167,14 @@ namespace EyeOfSauron
             {
                 OnInspectLot = newlot;
             }
+            foreach (var item in OnInspectLot.panelcontainer)
+            {
+                waitMissionQueue.Enqueue(item);
+            }
         }
         public void GetExamMissions(string examinfo)
         {
-            var NewMissionList = NewSeverConnecter.GetExamMission(examinfo);
+            var NewMissionList = SeverConnecter.GetExamMission(examinfo);
             foreach (var item in NewMissionList)
             {
                 ExamMissionList.Enqueue(item);

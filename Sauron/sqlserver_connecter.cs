@@ -13,6 +13,7 @@ namespace Sauron
     {
         SqlConnection TheDataBase;
         DateTime LastDate;
+        string[] ModelId = new string[] { "606_AUTO_ET_L5", "606_AUTO_ET_B11" };
         public SqlServerConnector()
         {
             TheDataBase = new SqlConnection("server=172.16.150.200;UID=sa;PWD=1qaz@WSX;Database=EDIAS_DB;Trusted_connection=False");
@@ -23,7 +24,7 @@ namespace Sauron
             return thedate.ToString("yyyyMMddHH0000");
         }
         /* 从服务器中获取近一小时N站点生产的cell数据 */
-        public List<string> GetInputPanelMission()
+        public List<string[]> GetInputPanelMission()
         {
             string datestart = FormateDateString(LastDate);
             LastDate = LastDate.AddHours(1);
@@ -43,30 +44,11 @@ namespace Sauron
                                     ,[ProductType]
                                     ,[MergeToolJudge]
                                     ,[DefectName]
-                                    FROM[EDIAS_DB].[dbo].[TAX_PRODUCT_TEST]
-                                    WHERE InspDate BETWEEN '{0}' AND '{1}'
-                                    AND OperationID = 'C52000N' AND LastJudge = 'E'",
-                                    datestart, dateend);
-            // 测试用↓
-            commandstring = @"SELECT[EqpID],
-                                    [InspDate]+
-                                    ,[ModelID]
-                                    ,[InnerID]
-                                    ,[VcrID]
-                                    ,[MviUser]
-                                    ,[LastResult]
-                                    ,[LastJudge]
-                                    ,[DbInTime]
-                                    ,[OperationID]
-                                    ,[StageID]
-                                    ,[LastResultName]
-                                    ,[ProductType]
-                                    ,[MergeToolJudge]
-                                    ,[DefectName]
-        FROM[EDIAS_DB].[dbo].[TAX_PRODUCT_TEST]
-        WHERE InspDate BETWEEN '20210510000000' AND '20210513180000' AND EqpID = '7CTCT27' AND OperationID = 'C52000N' AND LastJudge = 'E'";
-
-            List<string> newPanelList = new List<string>();
+            FROM[EDIAS_DB].[dbo].[TAX_PRODUCT_TEST]
+            WHERE InspDate BETWEEN '{0}' AND '{1}' 
+            AND OperationID = 'C52000N' 
+            AND LastJudge = 'E'", datestart, dateend);
+            List<string[]> newPanelList = new List<string[]>();
             SqlCommand newcommand = new SqlCommand(commandstring, TheDataBase);
             TheDataBase.Open();
             SqlDataReader newDataReader = newcommand.ExecuteReader();
@@ -74,52 +56,44 @@ namespace Sauron
             {
                 while (newDataReader.Read())
                 {
-                    newPanelList.Add(newDataReader["VcrID"].ToString());
+                    if (ModelId.Contains(newDataReader["ModelID"].ToString()))
+                    {
+                        newPanelList.Add(new string[] { newDataReader["VcrID"].ToString(), newDataReader["EqpID"].ToString() });
+                    }
                 }
             }
             TheDataBase.Close();
             return newPanelList;
         }
-        public void InsertFinishedMission(PanelMission panel)
+        public void InsertFinishedMission(PanelMission[] panellist)
         {
-            string commandstring = string.Format(@"USE [EDIAS_DB] GO
+            TheDataBase.Open();
+            foreach (var panel in panellist)
+            {
+                string commandstring = string.Format(@"USE [EDIAS_DB] GO
 INSERT INTO [dbo].[AET_IMAGE_INSPECT_RESULT]
            ([PanelID]
-           ,[OperaterID]
-           ,[AVIOperaterName]
-           ,[SVIOperaterID]
-           ,[SVIOperaterName]
-           ,[APPOperaterID]
-           ,[APPOperaterName]
-           ,[AviJudge]
-           ,[SviJudge]
-           ,[AppJudge]
-           ,[LastJudge]
-           ,[DefectCode]
-           ,[DefectName]
-           ,[MissionAddTime]
-           ,[MissionFinishTime]
-           ,[AllDefect]
-           ,[ImageEqpID])
+      ,[OperaterID]
+      ,[OperaterName]
+      ,[Judge]
+      ,[DefectCode]
+      ,[DefectName]
+      ,[MissionAddTime]
+      ,[MissionFinishTime]
+      ,[AllDefect]
+      ,[ImageEqpID])
      VALUES
            (‘{0}’
            ,‘{1}’
            ,N‘{2}’
            ,‘{3}’
-           ,N‘{4}’
-           ,‘{5}’
-           ,N’{6}’
+           ,‘{4}’
+           ,N‘{5}’
+           ,’{6}’
            ,‘{7}‘
-           ,’{8}’
-           ,‘{9}’
-           ,’{10}‘
-           ,‘{11}’
-           ,N’{12}‘
-           ,‘{13}’
-           ,’{14}‘
-           ,N‘{15}’
-           ,’{16})
-GO", new object[] {
+           ,N’{8}’
+           ,‘{9}’)GO"
+                , new object[] {
                 panel.PanelId,
                 panel.Op.Id,
                 panel.Op.Name,
@@ -131,9 +105,10 @@ GO", new object[] {
                 panel.DefectName,
                 panel.AviPanelPath.EqId,
             });
-            SqlCommand newcommand = new SqlCommand(commandstring, TheDataBase);
-            TheDataBase.Open();
-            newcommand.ExecuteNonQuery();
+                SqlCommand newcommand = new SqlCommand(commandstring, TheDataBase);
+                newcommand.ExecuteNonQuery();
+            }
+            TheDataBase.Close();
         }
         /* 
         从服务器中获取考试任务

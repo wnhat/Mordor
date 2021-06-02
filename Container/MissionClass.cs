@@ -52,7 +52,7 @@ namespace Container
     public class Lot
     {
         public List<PanelMission> panelcontainer = new List<PanelMission>();
-        public int count
+        public int Count
         {
             get
             {
@@ -60,9 +60,22 @@ namespace Container
             }
         }
         public string LotId;
+
+        public Lot(string lotId, PanelMission[] panelid)
+        {
+            LotId = lotId;
+            panelcontainer.AddRange(panelid);
+        }
         public Lot(string lotId)
         {
             LotId = lotId;
+        }
+        public Lot()
+        {
+        }
+        public void AddPanel(PanelMission panel)
+        {
+            panelcontainer.Add(panel);
         }
         public void PanelFinish(PanelMissionResult finishedpanel)
         {
@@ -147,18 +160,16 @@ namespace Container
     {
         public string[] ImageNameList;// The image name in reuslt file which we need to inspect
         public Bitmap[] ImageArray;
-        public int MissionIndex;
         public InspectMission(PanelMission missioninfo) : base(missioninfo.PanelId)
         {
             var newimagenamelist = Parameter.AviImageNameList.ToList();
             newimagenamelist.AddRange(Parameter.SviImageNameList);
             newimagenamelist.AddRange(Parameter.AppImageNameList);
             ImageNameList = newimagenamelist.ToArray();
-            MissionIndex = missioninfo.MissionNumber;
             List<Bitmap> newimagearray = new List<Bitmap>();
             newimagearray.AddRange(InitialImage(missioninfo.AviPanelPath.ResultPath, Parameter.AviImageNameList));
             newimagearray.AddRange(InitialImage(missioninfo.SviPanelPath.ResultPath, Parameter.SviImageNameList));
-            newimagearray.AddRange(InitialImage(missioninfo.AppPanelPath.ResultPath, Parameter.AppImageNameList));
+            //newimagearray.AddRange(InitialImage(missioninfo.AppPanelPath.ResultPath, Parameter.AppImageNameList));
             ImageArray = newimagearray.ToArray();
         }
         public InspectMission(ExamMission missioninfo) : base(missioninfo.PanelId)
@@ -181,7 +192,7 @@ namespace Container
         {
             DirContainer Container = new DirContainer(filepath);
             Bitmap[] NewImageArray = new Bitmap[NameList.Length];
-            for (int i = 0; i < ImageNameList.Length; i++)
+            for (int i = 0; i < NameList.Length; i++)
             {
                 NewImageArray[i] = new Bitmap(Container.GetFileFromMemory(NameList[i]));
             }
@@ -199,7 +210,6 @@ namespace Container
         public PanelPathContainer AviPanelPath;
         public PanelPathContainer SviPanelPath;
         public PanelPathContainer AppPanelPath;
-        public int MissionNumber;
         public Operator Op;
         public JudgeGrade LastJudge = JudgeGrade.U;
         // TODO: Add Defect rank later;
@@ -241,7 +251,7 @@ namespace Container
                 }
             }
         }
-        public PanelMission(string panelId, MissionType type, int missionnumber, PanelPathContainer AvipanelPath, PanelPathContainer SvipanelPath = null, PanelPathContainer ApppanelPath = null)
+        public PanelMission(string panelId, MissionType type, PanelPathContainer AvipanelPath, PanelPathContainer SvipanelPath = null, PanelPathContainer ApppanelPath = null)
         {
             PanelId = panelId;
             Repetition = 1;                         // TODO:设置任务人员检查次数;
@@ -250,7 +260,6 @@ namespace Container
             AviPanelPath = AvipanelPath;
             SviPanelPath = SvipanelPath;
             AppPanelPath = ApppanelPath;
-            MissionNumber = missionnumber;
             DefectList = new List<Defect>();
         }
         public void AddResult(PanelMissionResult newresult)

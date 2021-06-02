@@ -16,6 +16,7 @@ using Container;
 using NetMQ.Sockets;
 using Container.Message;
 using NetMQ;
+using Container.SeverConnection;
 
 namespace ExamManager
 {
@@ -100,7 +101,7 @@ WHERE [DelFlag] = '0'";
         private void AddPanelId(string[] panelidarray, InspectSection section)
         {
             // 将 ID array 中的id添加任务；预加载图片及添加至newidlistbox中；
-            var pathdic = NewSeverConnecter.GetPanelPathByID(panelidarray);
+            var pathdic = SeverConnecter.GetPanelPathByID(panelidarray);
             for (int i = 0; i < panelidarray.Length; i++)
             {
                 var panelid = panelidarray[i];
@@ -313,7 +314,6 @@ WHERE [DelFlag] = '0'";
         }
         protected override void OnFormClosed(FormClosedEventArgs e)
         {
-            this.Parent.Show();
             base.OnFormClosed(e);
         }
     }
