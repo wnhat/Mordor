@@ -297,6 +297,7 @@ WHERE [DelFlag] = '0'";
                         newRow[6] = this.comboBox1.Text;
                         newRow[7] = "0";
                         dataset.Tables[0].Rows.Add(newRow);
+                        item.Save(@"\\172.16.145.22\NetworkDrive2\D_Drive\Mordor\ExamSimple\"+ item.Section);
                     }
                     refreshDataSet();
                     dataset.Clear();
@@ -304,16 +305,17 @@ WHERE [DelFlag] = '0'";
                     adp.Fill(dataset);
                     TheDataBase.Close();
                     bdsource.DataSource = dataset.Tables[0];
-                    //this.Refresh();
                 }
             }
             refreshDataSet();
             this.bdsource.EndEdit();
-            //this.Refresh();
+            this.ExamDBGridView.ClearSelection();
+            this.Refresh();
         }
         private void FilterChanged(object sender, EventArgs e)
         {
             bdsource.Filter = "info = '" + this.comboBox1.Text + "'";
+            this.ExamDBGridView.ClearSelection();
         }
         private void InfoFilterAdd(object sender, EventArgs e)
         {

@@ -241,10 +241,14 @@ namespace Container
             {
                 file.SaveFileInDisk(subDir.FullName);
             }
-            foreach (var Dir in DirContainerArray)
+            if (DirContainerArray != null)
             {
-                Dir.SaveDirInDisk(subDir.FullName);
+                foreach (var Dir in DirContainerArray)
+                {
+                    Dir.SaveDirInDisk(subDir.FullName);
+                } 
             }
+
         }
         public MemoryStream GetFileFromMemory(string fileName)
         {

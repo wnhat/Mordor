@@ -43,6 +43,10 @@ namespace Container
                 return panelId;
             }
         }
+        public override string ToString()
+        {
+            return PanelId;
+        }
     }
     public class PanelImageContainer:Panel
     {
