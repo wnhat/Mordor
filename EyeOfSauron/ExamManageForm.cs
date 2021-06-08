@@ -51,7 +51,7 @@ namespace ExamManager
       ,[Info]
       ,[DelFlag]
   FROM [EDIAS_DB].[dbo].[AET_IMAGE_EXAM]
-WHERE [DelFlag] = '0'";
+WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
             SqlCommand newcommand = new SqlCommand(querystring, TheDataBase);
             TheDataBase.Open();
             adp = new SqlDataAdapter();
@@ -191,7 +191,20 @@ WHERE [DelFlag] = '0'";
         {
             for (int i = 0; i < this.ExamDBGridView.Rows.Count; i++)
             {
-                this.ExamDBGridView.Rows[i].DefaultCellStyle.BackColor = Convert.ToInt16(this.ExamDBGridView.Rows[i].Cells[7].Value) == 1 ? Color.LightPink : Color.White;
+                switch (Convert.ToInt16(this.ExamDBGridView.Rows[i].Cells[7].Value))
+                {
+                    case 0:
+                        this.ExamDBGridView.Rows[i].DefaultCellStyle.BackColor = Color.White;
+                        break;
+                    case 1:
+                        this.ExamDBGridView.Rows[i].DefaultCellStyle.BackColor = Color.FromArgb(255,255,200,221);
+                        break;
+                    case 2:
+                        this.ExamDBGridView.Rows[i].DefaultCellStyle.BackColor = Color.FromArgb(255,189,224,254);
+                        break;
+                    default:
+                        break;
+                }
             }
         }
         private void CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -210,23 +223,11 @@ WHERE [DelFlag] = '0'";
         private void NewIdListBox_Click(object sender, EventArgs e)
         {
             this.ExamDBGridView.ClearSelection();
-
-            this.button4.Text = "添加";
-            this.button4.BackColor = Color.FromArgb(255, 240, 240, 240);
-            this.Refresh();
+            this.AddButton.Text = "添加";
         }
         private void ExamDBGridView_MouseClick(object sender, MouseEventArgs e)
         {
             this.NewIdListBox.ClearSelected();
-            if (this.ExamDBGridView.SelectedRows.Count != 0)
-            {
-                this.button3.Text = Convert.ToInt16(this.ExamDBGridView.CurrentRow.Cells[7].Value) == 0 ? "删除" : "取消删除";
-                var color = this.button3.BackColor;
-                this.button3.BackColor = Convert.ToInt16(this.ExamDBGridView.CurrentRow.Cells[7].Value) == 0 ? Color.Orange : Color.FromArgb(255, 240, 240, 240);
-            }
-            this.button4.Text = "修改";
-            this.button4.BackColor = Color.GreenYellow;
-            this.Refresh();
         }
         private void NewIdListBox_SelectedValueChanged(object sender, EventArgs e)
         {
@@ -286,7 +287,7 @@ WHERE [DelFlag] = '0'";
                         newRow[4] = defect.DefectName;
                         newRow[5] = item.Section;
                         newRow[6] = this.comboBox1.Text;
-                        newRow[7] = "0";
+                        newRow[7] = "2";
                         dataset.Tables[0].Rows.Add(newRow);
                         item.Save(@"\\172.16.145.22\NetworkDrive2\D_Drive\Mordor\ExamSimple\"+ item.Section);
                     }
@@ -317,6 +318,61 @@ WHERE [DelFlag] = '0'";
         protected override void OnFormClosed(FormClosedEventArgs e)
         {
             base.OnFormClosed(e);
+        }
+        private void dataGridviewSelectChange(object sender, EventArgs e)
+        {
+            if (this.ExamDBGridView.SelectedRows.Count != 0)
+            {
+                switch (Convert.ToInt16(this.ExamDBGridView.CurrentRow.Cells[7].Value))
+                {
+                    case 0:
+                    case 2:
+                        this.DelButton.Text = "删除";
+                        break;
+                    case 1:
+                        this.DelButton.Text = "取消删除";
+                        break;
+                    default:
+                        break;
+                }
+           }
+            this.AddButton.Text = "修改";
+        }
+        private void CommitButtonClick(object sender, MouseEventArgs e)
+        {
+            for (int i = 0; i < this.ExamDBGridView.Rows.Count; i++)
+            {
+                if (Convert.ToInt16(this.ExamDBGridView.Rows[i].Cells[7].Value) == 2)
+                {
+                    this.ExamDBGridView.Rows[i].Cells[7].Value = 0;
+                }
+            }
+            refreshDataSet();
+        }
+        private void ButtonBackColorChange(object sender, EventArgs e)
+        {
+            switch (this.DelButton.Text)
+            {
+                case "删除":
+                    this.DelButton.BackColor = Color.FromArgb(255, 85, 91, 110);
+                    break;
+                case "取消删除":
+                    this.DelButton.BackColor = Color.FromArgb(255, 250, 249, 249);
+                    break;
+                default:
+                    break;
+            }
+            switch (this.AddButton.Text)
+            {
+                case "添加":
+                    this.DelButton.BackColor = Color.FromArgb(255, 85, 91, 110);
+                    break;
+                case "修改":
+                    this.DelButton.BackColor = Color.FromArgb(255, 250, 249, 249);
+                    break;
+                default:
+                    break;
+            }
         }
     }
     static class ExamFileManager
