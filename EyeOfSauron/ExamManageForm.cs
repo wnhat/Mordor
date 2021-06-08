@@ -105,9 +105,9 @@ WHERE [DelFlag] = '0'";
             for (int i = 0; i < panelidarray.Length; i++)
             {
                 var panelid = panelidarray[i];
-                if (pathdic.ContainsKey(panelid))
+                var pathlist = pathdic[panelid];
+                try
                 {
-                    var pathlist = pathdic[panelid];
                     pathlist = pathlist.Where(x => (x.PcSection == section)).ToList();
                     foreach (var item in pathlist)
                     {
@@ -122,10 +122,9 @@ WHERE [DelFlag] = '0'";
                         }
                     }
                 }
-                else
+                catch (ArgumentNullException)
                 {
                     string errorString = string.Format("panel: {0} cannot find the path", panelid);
-                    throw new ApplicationException(errorString);
                 }
             }
             ProcessForm newprocessform = new ProcessForm(AddOnePanelSafe);
@@ -223,6 +222,31 @@ WHERE [DelFlag] = '0'";
                 this.button3.Text = Convert.ToInt16(this.ExamDBGridView.CurrentRow.Cells[7].Value) == 0 ? "删除" : "取消删除";
                 var color = this.button3.BackColor;
                 this.button3.BackColor = Convert.ToInt16(this.ExamDBGridView.CurrentRow.Cells[7].Value) == 0 ? Color.Orange : Color.FromArgb(255, 240, 240, 240);
+                string panelid = this.ExamDBGridView.SelectedRows[0].Cells[1].Value.ToString();
+                InspectSection section = (InspectSection)Enum.Parse(typeof(InspectSection),this.ExamDBGridView.SelectedRows[0].Cells[5].Value.ToString());
+                try
+                {
+                    if (section == InspectSection.AVI)
+                    {
+                        string newpanelpath = @"\\172.16.145.22\NetworkDrive\D_Drive\Mordor\ExamSimple\AVI\" + panelid;
+                        PanelImageContainer newpanel = new PanelImageContainer(panelid, newpanelpath, section);
+                        MemoryStream[] filearray = newpanel.GetFile(Parameter.AviImageNameList);
+                        imageFormManager.SetImageArray(filearray);
+                    }
+                    else if (section == InspectSection.SVI)
+                    {
+                        string newpanelpath = @"\\172.16.145.22\NetworkDrive\D_Drive\Mordor\ExamSimple\SVI\" + panelid;
+                        PanelImageContainer newpanel = new PanelImageContainer(panelid, newpanelpath, section);
+                        var filearray = newpanel.GetFile(Parameter.SviImageNameList);
+                        imageFormManager.SetImageArray(filearray);
+                    }
+                }
+                catch (FileContainerException)
+                {
+                    string errorstring = string.Format("考试文件不存在，请检查文件夹中的内容，panel id：{0}", panelid);
+                    MessageBox.Show(errorstring);
+                }
+                
             }
             this.button4.Text = "修改";
             this.button4.BackColor = Color.GreenYellow;
@@ -249,18 +273,6 @@ WHERE [DelFlag] = '0'";
                     var filearray = item.GetFile(Parameter.AppImageNameList);
                     imageFormManager.SetImageArray(filearray);
                 }
-            }
-        }
-        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
-        {
-            if (keyData == Keys.Tab)
-            {
-                imageFormManager.RefreshForm();
-                return true;
-            }
-            else
-            {
-                return base.ProcessCmdKey(ref msg, keyData);
             }
         }
         private void AddButton_Click(object sender, EventArgs e)
@@ -317,6 +329,34 @@ WHERE [DelFlag] = '0'";
         protected override void OnFormClosed(FormClosedEventArgs e)
         {
             base.OnFormClosed(e);
+        }
+        private void ExplorePath(string path)
+        {
+            System.Diagnostics.Process.Start("explorer.exe", path);
+        }
+        private void NewIdListBox_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            PanelImageContainer panel = (PanelImageContainer)this.NewIdListBox.SelectedItem;
+            string path = SeverConnecter.GetPanelPathByID(panel.PanelId)[panel.PanelId].Where(x => x.PcSection ==InspectSection.AVI).First().OriginImagePath;
+            ExplorePath(path);
+        }
+        private void NewIdListBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Control && e.KeyCode == Keys.A)
+            {
+                Explore(InspectSection.AVI);
+            }
+            else if (e.Control && e.KeyCode == Keys.S)
+            {
+                Explore(InspectSection.SVI);
+            }
+        }
+        private void Explore(InspectSection section)
+        {
+            PanelImageContainer panel = (PanelImageContainer)this.NewIdListBox.SelectedItem;
+            var eqid = panel.path.EqId;
+            string path = SeverConnecter.GetPanelPathByID(panel.PanelId)[panel.PanelId].Where(x => x.PcSection == section && x.EqId == eqid).First().OriginImagePath;
+            ExplorePath(path);
         }
     }
     static class ExamFileManager

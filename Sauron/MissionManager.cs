@@ -17,7 +17,6 @@ namespace Sauron
     {
         SqlServerConnector Thesqlserver;
         FileManager Thefilecontainer;                               //管理设备文件路径；
-        ILogger Logger;
         Dictionary<string, List<ExamMission>> ExamMissionDic = new Dictionary<string, List<ExamMission>>();
         Dictionary<string, Lot> OnInspectLotDic = new Dictionary<string, Lot>();                     // MES下发任务；
         Queue<Lot> LotWaitQueue = new Queue<Lot>();
@@ -27,16 +26,16 @@ namespace Sauron
             IP_TR ip_tr = new IP_TR(ip_path);
             this.Thefilecontainer = new FileManager(ip_tr);
             this.Thesqlserver = new SqlServerConnector();
-            Logger = new LoggerConfiguration()
-                .WriteTo.File(@"D:\eye of sauron\log\missionmanager\log-.txt", rollingInterval: RollingInterval.Day)
-                .WriteTo.Console()
-                .CreateLogger();
             RefreshExamList();
+            ConsoleLogClass.Logger.Information("服务器启动中------开始刷新设备文件路径");
             Task refreshtask = RefreshFileContainer();
             while (!refreshtask.IsCompleted)
             {
             }
+            ConsoleLogClass.Logger.Information("服务器启动中------文件路径刷新完成");
+            ConsoleLogClass.Logger.Information("服务器启动中------开始添加任务（测试版）");
             AddMissionTest();
+            ConsoleLogClass.Logger.Information("服务器启动中------任务添加完成");
         }
         private void AddMission(Lot lot)
         {
@@ -44,6 +43,7 @@ namespace Sauron
         }
         public void RefreshExamList()
         {
+            ConsoleLogClass.Logger.Information("开始考试文件刷新；");
             Dictionary<string, List<ExamMission>> newExamMissionDic = new Dictionary<string, List<ExamMission>>();
             var missionlist = Thesqlserver.GetExamMission();
             string[] aviExamFileList = Directory.GetDirectories("\\\\172.16.145.22\\NetworkDrive\\D_Drive\\Mordor\\ExamSimple\\AVI");
@@ -78,7 +78,7 @@ namespace Sauron
                         }
                         else
                         {
-                            Logger.Error("Refresh Exam; panel ID: {0} ,do not have result file in {1}", item.PanelId); // TODO:ADD FILE path
+                            ConsoleLogClass.Logger.Error("Refresh Exam; panel ID: {0} ,do not have result file in {1}", item.PanelId); // TODO:ADD FILE path
                         }
                         break;
                     case InspectSection.SVI:
@@ -97,12 +97,13 @@ namespace Sauron
                         }
                         else
                         {
-                            Logger.Error("Refresh Exam; panel ID: {0} ,do not have result file in {1}", item.PanelId); // TODO:ADD FILE path
+                            ConsoleLogClass.Logger.Error("Refresh Exam; panel ID: {0} ,do not have result file in {1}", item.PanelId); // TODO:ADD FILE path
                         }
                         break;
                 }
             }
             ExamMissionDic = newExamMissionDic;
+            ConsoleLogClass.Logger.Information("考试文件刷新结束；");
         }
         public void GetMission(NetMQSocketEventArgs a)
         {
@@ -121,9 +122,9 @@ namespace Sauron
         {
             PanelMissionMessage finishedMission = new PanelMissionMessage(M);
             OnInspectLotDic.Remove(finishedMission.ThePanelMissionLot.LotId);
-            // TODO: 发送mes，添加sqlserver；
-            Thesqlserver.InsertFinishedMission(finishedMission.ThePanelMissionLot.panelcontainer.ToArray());
             a.Socket.SignalOK();
+            // TODO: 发送mes；
+            Thesqlserver.InsertFinishedMission(finishedMission.ThePanelMissionLot.panelcontainer.ToArray());
         }
         public void GetExamMission(NetMQSocketEventArgs a, NetMQMessage M)
         {
@@ -141,7 +142,7 @@ namespace Sauron
             }
             else
             {
-                Logger.Error("没有找到相关的任务名， 任务名： {0}",examinfo);
+                ConsoleLogClass.Logger.Error("没有找到相关的任务名， 任务名： {0}",examinfo);
             }
         }
         public void GetExamInfo(NetMQSocketEventArgs a)
@@ -160,7 +161,6 @@ namespace Sauron
             Dictionary<string, List<PanelPathContainer>> newPanelPathDic = new Dictionary<string, List<PanelPathContainer>>();
             foreach (var item in SampleInfoList)
             {
-                //TODO:
                 var panelPathContainer = Thefilecontainer.GetPanelPathList(item);
                 newPanelPathDic.Add(item, panelPathContainer);
             }
@@ -220,9 +220,13 @@ namespace Sauron
                     }
                     catch (Exception e)
                     {
-                        Logger.Error(e.Message);
-                        Logger.Error("文件存在问题； panelid：{0}",panelid);
+                        ConsoleLogClass.Logger.Error(e.Message);
+                        ConsoleLogClass.Logger.Error("文件存在问题； panelid：{0}",panelid);
                     }
+                }
+                else
+                {
+                    ConsoleLogClass.Logger.Error("未查找到文件路径； panelid：{0}", panelid);
                 }
             }
             var randomstring = new Random();

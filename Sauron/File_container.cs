@@ -12,16 +12,11 @@ namespace Sauron
     class FileManager
     {
         PanelPathManager PathManager;
-        ILogger Logger;
         IP_TR ip_tr;
         List<INS_pc_manage> InsPCList;
 
         public FileManager(IP_TR ip_tr_)
         {
-            Logger = new LoggerConfiguration()
-                .WriteTo.File(@"D:\eye of sauron\log\filemanager\log-.txt", rollingInterval: RollingInterval.Hour)
-                .WriteTo.Console()
-                .CreateLogger();
             this.InsPCList = new List<INS_pc_manage>();
             this.PathManager = new PanelPathManager();
             ip_tr = ip_tr_;
@@ -29,12 +24,12 @@ namespace Sauron
             List<PC> refresh_pc_list = ip_tr.name_to_ip(new InspectSection[] { InspectSection.AVI,InspectSection.SVI,InspectSection.APP});
             foreach (var pc in refresh_pc_list)
             {
-                InsPCList.Add(new INS_pc_manage(pc, Logger));
+                InsPCList.Add(new INS_pc_manage(pc));
             }
         }
         public async Task RefreshFileList()
         {
-            Logger.Information("start to refresh the file dict, time is {0}", DateTime.Now);
+            FilePathLogClass.Logger.Information("start to refresh the file dict, time is {0}", DateTime.Now);
             PanelPathManager newPanelPathManager = new PanelPathManager();
             List<Task> task_list = new List<Task>();
             foreach (var pc in InsPCList)
@@ -43,7 +38,7 @@ namespace Sauron
                 task_list.Add(refresh_task);
             }
             await Task.WhenAll(task_list);
-            Logger.Information("finished Refresh, time is {0}", DateTime.Now);
+            FilePathLogClass.Logger.Information("finished Refresh, time is {0}", DateTime.Now);
             PathManager = newPanelPathManager;
             GC.Collect();
         }
@@ -85,12 +80,10 @@ namespace Sauron
     }
     class INS_pc_manage
     {
-        ILogger Log;
         PC PcInfo;
-        public INS_pc_manage(PC input_pc, ILogger log)
+        public INS_pc_manage(PC input_pc)
         {
             PcInfo = input_pc;
-            Log = log;
         }
         public void Serch_file(PanelPathManager new_panel_list)
         {
@@ -118,15 +111,15 @@ namespace Sauron
                     }
                     foreach (var item in image_directory_list.Except(result_directory_list))
                     {
-                        //Log.Information("result or image file not exist; panel id : {0}; path: {1}", item.Substring(item.Length - 17), item);
+                        FilePathLogClass.Logger.Information("result or image file not exist; panel id : {0}; path: {1}", item.Substring(item.Length - 17), item);
                     }
                 }
                 catch (Exception e)
                 {
-                    Log.Information("查询文件失败：{0}", e.Message);
+                    FilePathLogClass.Logger.Information("查询文件失败：{0}", e.Message);
                 }
             }
-            Log.Information("pc: {0} finishied;", PcInfo.PcIp);
+            FilePathLogClass.Logger.Information("pc: {0} finishied;", PcInfo.PcIp);
             new_panel_list.AddRange(panel_list);
         }
     }

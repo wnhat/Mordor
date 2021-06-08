@@ -9,11 +9,22 @@ namespace Sauron
 {
     public static class FilePathLogClass
     {
-        static ILogger Logger;
+        public static ILogger Logger;
         static FilePathLogClass()
         {
             Logger = new LoggerConfiguration()
-                .WriteTo.File(@"D:\eye of sauron\log\missionmanager\log-.txt", rollingInterval: RollingInterval.Day)
+                .WriteTo.File(@"D:\Mordor\LOG\File search\log-.txt", rollingInterval: RollingInterval.Day)
+                .CreateLogger();
+        }
+    }
+    public static class ConsoleLogClass
+    {
+        public static ILogger Logger;
+        static ConsoleLogClass()
+        {
+            Logger = new LoggerConfiguration()
+                .WriteTo.File(@"D:\Mordor\LOG\Console\log-.txt", rollingInterval: RollingInterval.Day)
+                .WriteTo.Console()
                 .CreateLogger();
         }
     }

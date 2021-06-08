@@ -177,6 +177,8 @@ namespace ExamManager
             this.NewIdListBox.TabIndex = 13;
             this.NewIdListBox.Click += new System.EventHandler(this.NewIdListBox_Click);
             this.NewIdListBox.SelectedValueChanged += new System.EventHandler(this.NewIdListBox_SelectedValueChanged);
+            this.NewIdListBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NewIdListBox_KeyDown);
+            this.NewIdListBox.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.NewIdListBox_MouseDoubleClick);
             // 
             // button3
             // 

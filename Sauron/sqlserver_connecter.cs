@@ -70,8 +70,7 @@ namespace Sauron
             TheDataBase.Open();
             foreach (var panel in panellist)
             {
-                string commandstring = string.Format(@"USE [EDIAS_DB] GO
-INSERT INTO [dbo].[AET_IMAGE_INSPECT_RESULT]
+                string commandstring = string.Format(@"INSERT INTO [dbo].[AET_IMAGE_INSPECT_RESULT]
            ([PanelID]
       ,[OperaterID]
       ,[OperaterName]
@@ -83,16 +82,16 @@ INSERT INTO [dbo].[AET_IMAGE_INSPECT_RESULT]
       ,[AllDefect]
       ,[ImageEqpID])
      VALUES
-           (‘{0}’
-           ,‘{1}’
-           ,N‘{2}’
-           ,‘{3}’
-           ,‘{4}’
-           ,N‘{5}’
-           ,’{6}’
-           ,‘{7}‘
-           ,N’{8}’
-           ,‘{9}’)GO"
+           ('{0}'
+           ,'{1}'
+           ,N'{2}'
+           ,'{3}'
+           ,'{4}'
+           ,N'{5}'
+           ,'{6}'
+           ,'{7}'
+           ,N'{8}'
+           ,'{9}')"
                 , new object[] {
                 panel.PanelId,
                 panel.Op.Id,

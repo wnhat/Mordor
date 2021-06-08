@@ -34,6 +34,7 @@ namespace Sauron
                     switch (switchmessage.TheMessageType)
                     {
                         case MessageType.CLIENT_SEND_MISSION_RESULT:
+                            ConsoleLogClass.Logger.Information("收到完成的任务");
                             TheMissionManager.FinishMission(a,messageIn);
                             break;
                         case MessageType.CLIENT_SEND_EXAM_RESULT:
@@ -81,7 +82,7 @@ namespace Sauron
                 };
                 timer.Elapsed += (s, a) =>
                 {
-                    Console.WriteLine("start refresh the panel list and add mission(test);");
+                    ConsoleLogClass.Logger.Error("start refresh the panel list and add mission(test);");
                     TheMissionManager.RefreshFileContainer();
                     TheMissionManager.AddMissionTest();
                 };

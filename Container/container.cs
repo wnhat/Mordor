@@ -155,7 +155,7 @@ namespace Container
         }
         public void Read(string dirPath)
         {
-            Dir = new DirContainer(dirPath);
+            Dir = new DirContainer(dirPath,true);
         }
         public MemoryStream GetFile(string fileName)
         {

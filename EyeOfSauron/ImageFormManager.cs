@@ -70,12 +70,14 @@ namespace EyeOfSauron
         }
         public void SetArray(Bitmap[] imagearray, string[] imagenamearray)
         {
+            Refreshflag = 0;
             ImageArray = imagearray;
             ImageNameArray = imagenamearray;
             RefreshForm();
         }
         public void SetImageArray(Bitmap[] imagearray)
         {
+            Refreshflag = 0;
             ImageArray = imagearray;
             RefreshForm();
         }

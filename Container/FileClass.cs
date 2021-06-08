@@ -11,35 +11,39 @@ namespace Container
 {
     public class FileContainer
     {
-        FileInfo fileInformation;
-        MemoryStream FileMemory = new MemoryStream();
+        string name;
+        string path;
+        MemoryStream FileMemory = null;
         public bool ReadComplete
         {
             get
             {
-                return FileMemory.CanRead;
+                return FileMemory != null;
             }
         }
-        public FileContainer(FileInfo fileInformation)
+        public string FullName { get { return Path.Combine(path, name); } }
+        public FileContainer(string filepath, bool downloadFlag = false)
         {
-            this.fileInformation = fileInformation;
-        }
-        public FileContainer(string filepath)
-        {
-            this.fileInformation = new FileInfo(filepath);
+            this.name = Path.GetFileName(filepath);
+            this.path = Path.GetDirectoryName(filepath);
+            if (downloadFlag)
+            {
+                ReadFileInMemory();
+            }
         }
         public void ReadFileInMemory()
         {
             try
             {
-                fileInformation.OpenRead().CopyTo(FileMemory);
+                FileMemory = new MemoryStream();
+                FileInfo Newfile = new FileInfo(FullName);
+                Newfile.OpenRead().CopyTo(FileMemory);
             }
             catch
             {
-                string errorstring = String.Format("file Read Error,path:{0}", fileInformation.FullName);
+                string errorstring = String.Format("file Read Error,path:{0}", FullName);
                 throw new FileContainerException(errorstring);
             }
-            
         }
         public void SaveFileInDisk(string savePath)
         {
@@ -48,9 +52,10 @@ namespace Container
             {
                 ReadFileInMemory();
             }
-            FileInfo newsavefile = new FileInfo(Path.Combine(savePath, fileInformation.Name));
+            FileInfo newsavefile = new FileInfo(Path.Combine(savePath, Name));
             var writestream = newsavefile.OpenWrite();
             FileMemory.CopyTo(writestream);
+            writestream.Close();
         }
         public MemoryStream FileFromMemory
         {
@@ -67,10 +72,10 @@ namespace Container
         {
             get
             {
-                return fileInformation.Name;
+                return this.name;
             }
         }
-        public FileInfo FileInformation { get { return fileInformation; } }
+        public FileInfo FileInformation { get { return new FileInfo(FullName); } }
     }
     /// <summary>
     /// copy the giving path dir(and it`s subdir) to local memory;
@@ -107,15 +112,11 @@ namespace Container
         }
         public string Name { get { return DirInfo.Name; } }
         public DateTime CreationTime{get{return DirInfo.CreationTime;}}
-        public DirContainer(string dirPath)
-        {
-            Initial(dirPath,true);
-        }
-        public DirContainer(string dirPath,bool downloadflag)
+        public DirContainer(string dirPath,bool downloadflag = false)
         {
             Initial(dirPath,downloadflag);
         }
-        public void Initial(string dirPath, bool downloadflag)
+        public void Initial(string dirPath, bool downloadflag = false)
         {
             DirInfo = new DirectoryInfo(dirPath);
             if (!DirInfo.Exists)
@@ -123,22 +124,22 @@ namespace Container
                 string errorstring = String.Format("Directory not exist, path:{0}", dirPath);
                 throw new FileContainerException(errorstring);
             }
-            InitialFile();
+            InitialFile(downloadflag);
             InitialDir(downloadflag);
             if (downloadflag)
             {
                 Read();
             }
         }
-        void InitialFile()
+        void InitialFile(bool downloadFlag)
         {
-            FileInfo[] filearray = DirInfo.GetFiles();
-            if (filearray.Count() > 0)
+            string[] filenamearray = Directory.GetFiles(DirInfo.FullName);
+            if (filenamearray.Count() > 0)
             {
-                FileContainerArray = new FileContainer[filearray.Count()];
+                FileContainerArray = new FileContainer[filenamearray.Count()];
                 for (int i = 0; i < FileContainerArray.Count(); i++)
                 {
-                    FileContainerArray[i] = new FileContainer(filearray[i]);
+                    FileContainerArray[i] = new FileContainer(filenamearray[i], downloadFlag);
                 }
             }
         }
@@ -248,7 +249,6 @@ namespace Container
                     Dir.SaveDirInDisk(subDir.FullName);
                 } 
             }
-
         }
         public MemoryStream GetFileFromMemory(string fileName)
         {

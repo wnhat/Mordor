@@ -111,19 +111,32 @@ namespace Container
     }
     public class PanelImageContainer : Panel
     {
-        bool MutiFlag;  //如果有相同ID在不同设备出现时，设置该项为true，tostring将显示设备及投入时间
-        PanelPathContainer Path;
-        DirContainer dir = null; // 默认不提前读取;
+        string MutiString;
+        bool MutiFlag = false;
+        //如果有相同ID在不同设备出现时，设置该项为true，tostring将显示设备及投入时间
+        DirContainer dir; // 默认不提前读取;
+        string ResultPath;
+        public InspectSection Section;
+        public PanelPathContainer path;
         public PanelImageContainer(string panelId, PanelPathContainer path, bool mutiFlag = false) : base(panelId)
         {
+            this.path = path;
             MutiFlag = mutiFlag;
-            Path = path;
+            ResultPath = path.ResultPath;
+            this.dir = new DirContainer(ResultPath);
+            Section = path.PcSection;
+            MutiString = this.PanelId + " #" + path.EqId + " " + this.Dir.CreationTime.ToString("MM/dd HH:mm");
+        }
+        public PanelImageContainer(string panelId, string path,InspectSection section) : base(panelId)
+        {
+            ResultPath = path;
+            this.dir = new DirContainer(ResultPath);
+            Section = section;
         }
         public void Download()
         {
-            if (dir == null || !dir.ReadComplete)
+            if (!dir.ReadComplete)
             {
-                this.dir = new DirContainer(this.Path.ResultPath);
                 Dir.Read();
             }
         }
@@ -135,19 +148,21 @@ namespace Container
         {
             if (this.MutiFlag)
             {
-                string name = this.PanelId + " #" + this.Path.EqId + " " + this.Dir.CreationTime.ToString("MM/dd HH:mm");
-                return name;
+                return MutiString;
             }
             else
             {
                 return base.ToString();
             }
         }
-        public InspectSection Section { get { return Path.PcSection; } }
-        public bool ReadComplete { get { return Dir.ReadComplete && (dir != null); } }
+        public bool ReadComplete { get { return Dir.ReadComplete; } }
         public DirContainer Dir { get { return dir; } }
         public MemoryStream[] GetFile(string[] namelist)
         {
+            if (!ReadComplete)
+            {
+                Download();
+            }
             MemoryStream[] returnarray = new MemoryStream[namelist.Length];
             for (int i = 0; i < namelist.Length; i++)
             {
@@ -190,11 +205,20 @@ namespace Container
         }
         public Bitmap[] InitialImage(string filepath, string[] NameList)
         {
-            DirContainer Container = new DirContainer(filepath);
+            DirContainer Container = new DirContainer(filepath,true);
             Bitmap[] NewImageArray = new Bitmap[NameList.Length];
             for (int i = 0; i < NameList.Length; i++)
             {
-                NewImageArray[i] = new Bitmap(Container.GetFileFromMemory(NameList[i]));
+                var file = Container.GetFileFromMemory(NameList[i]);
+                if (file != null)
+                {
+                    NewImageArray[i] = new Bitmap(file);
+                }
+                else
+                {
+                    string errorstring = string.Format("文件夹中缺少必要文件，panel id：{0},file name {1}", PanelId, NameList[i]);
+                    throw new FileNotFoundException(errorstring);
+                }
             }
             return NewImageArray;
         }

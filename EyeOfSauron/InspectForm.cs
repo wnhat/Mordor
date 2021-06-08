@@ -63,7 +63,8 @@ namespace EyeOfSauron
             }
             else
             {
-                
+                this.cell_id_label.Text = TheManager.OnInspectedMission.PanelId;
+                this.remain_label.Text = string.Format("已完成：{0}\n 剩余：{1}",TheManager.FinishedMissionCount,TheManager.MissionLeft);
                 imageManager.SetArray(TheManager.OnInspectedMission.ImageArray, TheManager.OnInspectedMission.ImageNameList);
             }
         }

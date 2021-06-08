@@ -22,7 +22,7 @@ namespace EyeOfSauron
         readonly object Predownloadlock = new object();
         private int DownloadQuantity;                                   //预加载图像文件的个数
         public string ImageSavingPath { get; set; }
-        public int MissionLeft { get { return PreDownloadedMissionQueue.Count; } }
+        public int MissionLeft { get { return PreDownloadedMissionQueue.Count + TheMissionBuffer.MissionLeft; } }
         public int FinishedMissionCount { get { return Operater.MissionFinished; } }
         public int PreLoadMissions()
         {
@@ -130,6 +130,7 @@ namespace EyeOfSauron
         Queue<ExamMission> ExamMissionList = new Queue<ExamMission>();
         Queue<ExamMission> ExamBuffer = new Queue<ExamMission>();
         List<ExamMission> ExamResult = new List<ExamMission>();
+        public int MissionLeft { get { return waitMissionQueue.Count; } }
         public MissionBuffer()
         {
         }
@@ -187,7 +188,18 @@ namespace EyeOfSauron
                 if (waitMissionQueue.Count != 0)
                 {
                     var newmission = waitMissionQueue.Dequeue();
-                    return new InspectMission(newmission);
+                    try
+                    {
+                        return new InspectMission(newmission);
+                    }
+                    catch (FileNotFoundException)
+                    {
+                        Operator autoop = new Operator("000000","auto","0000000");
+                        Defect EjudgeDefect = new Defect("FileError","DE00000",InspectSection.NORMAL);
+                        PanelMissionResult missionresult = new PanelMissionResult(JudgeGrade.E,EjudgeDefect,autoop,newmission.PanelId);
+                        FinishMission(missionresult);
+                        return GetMission();
+                    }
                 }
                 else
                 {
