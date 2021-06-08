@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Drawing;
+using System.IO;
 namespace ExamManager
 {
     partial class examManageForm
@@ -38,11 +39,12 @@ namespace ExamManager
             this.Cleanbutton = new System.Windows.Forms.Button();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.NewIdListBox = new System.Windows.Forms.ListBox();
-            this.button3 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
+            this.DelButton = new System.Windows.Forms.Button();
+            this.AddButton = new System.Windows.Forms.Button();
             this.DefectcomboBox = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.CommitButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -126,7 +128,9 @@ namespace ExamManager
             this.ExamDBGridView.Size = new System.Drawing.Size(789, 438);
             this.ExamDBGridView.TabIndex = 11;
             this.ExamDBGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.CellContentClick);
+            this.ExamDBGridView.CurrentCellChanged += new System.EventHandler(this.dataGridviewSelectChange);
             this.ExamDBGridView.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.dataGridViewRowPrePaint);
+            this.ExamDBGridView.SelectionChanged += new System.EventHandler(this.dataGridviewSelectChange);
             this.ExamDBGridView.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ExamDBGridView_MouseClick);
             // 
             // AddPanelIdbutton
@@ -180,31 +184,33 @@ namespace ExamManager
             this.NewIdListBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NewIdListBox_KeyDown);
             this.NewIdListBox.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.NewIdListBox_MouseDoubleClick);
             // 
-            // button3
+            // DelButton
             // 
-            this.button3.Location = new System.Drawing.Point(1407, 905);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(131, 82);
-            this.button3.TabIndex = 14;
-            this.button3.Text = "删除";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.del_button_Click);
+            this.DelButton.Location = new System.Drawing.Point(1247, 905);
+            this.DelButton.Name = "DelButton";
+            this.DelButton.Size = new System.Drawing.Size(131, 82);
+            this.DelButton.TabIndex = 14;
+            this.DelButton.Text = "删除";
+            this.DelButton.UseVisualStyleBackColor = true;
+            this.DelButton.TextChanged += new System.EventHandler(this.ButtonBackColorChange);
+            this.DelButton.Click += new System.EventHandler(this.del_button_Click);
             // 
-            // button4
+            // AddButton
             // 
-            this.button4.Location = new System.Drawing.Point(1759, 905);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(131, 82);
-            this.button4.TabIndex = 15;
-            this.button4.Text = "添加";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.AddButton_Click);
+            this.AddButton.Location = new System.Drawing.Point(1599, 905);
+            this.AddButton.Name = "AddButton";
+            this.AddButton.Size = new System.Drawing.Size(131, 82);
+            this.AddButton.TabIndex = 15;
+            this.AddButton.Text = "添加";
+            this.AddButton.UseVisualStyleBackColor = true;
+            this.AddButton.TextChanged += new System.EventHandler(this.ButtonBackColorChange);
+            this.AddButton.Click += new System.EventHandler(this.AddButton_Click);
             // 
             // DefectcomboBox
             // 
             this.DefectcomboBox.Font = new System.Drawing.Font("SimSun", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.DefectcomboBox.FormattingEnabled = true;
-            this.DefectcomboBox.Location = new System.Drawing.Point(1563, 952);
+            this.DefectcomboBox.Location = new System.Drawing.Point(1403, 952);
             this.DefectcomboBox.Name = "DefectcomboBox";
             this.DefectcomboBox.Size = new System.Drawing.Size(167, 35);
             this.DefectcomboBox.TabIndex = 16;
@@ -213,7 +219,7 @@ namespace ExamManager
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("SimSun", 25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label1.Location = new System.Drawing.Point(1557, 905);
+            this.label1.Location = new System.Drawing.Point(1397, 905);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(185, 34);
             this.label1.TabIndex = 17;
@@ -229,15 +235,27 @@ namespace ExamManager
             this.label2.TabIndex = 18;
             this.label2.Text = "样本任务集选择";
             // 
+            // CommitButton
+            // 
+            this.CommitButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(227)))), ((int)(((byte)(219)))));
+            this.CommitButton.Location = new System.Drawing.Point(1756, 905);
+            this.CommitButton.Name = "CommitButton";
+            this.CommitButton.Size = new System.Drawing.Size(131, 82);
+            this.CommitButton.TabIndex = 19;
+            this.CommitButton.Text = "提交添加";
+            this.CommitButton.UseVisualStyleBackColor = true;
+            this.CommitButton.MouseClick += new System.Windows.Forms.MouseEventHandler(this.CommitButtonClick);
+            // 
             // examManageForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(1902, 999);
+            this.Controls.Add(this.CommitButton);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.DefectcomboBox);
-            this.Controls.Add(this.button4);
-            this.Controls.Add(this.button3);
+            this.Controls.Add(this.AddButton);
+            this.Controls.Add(this.DelButton);
             this.Controls.Add(this.NewIdListBox);
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.Cleanbutton);
@@ -269,12 +287,13 @@ namespace ExamManager
         private System.Windows.Forms.Button Cleanbutton;
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.ListBox NewIdListBox;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button DelButton;
+        private System.Windows.Forms.Button AddButton;
         private System.Windows.Forms.ComboBox DefectcomboBox;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.DataGridView ExamDBGridView;
+        private System.Windows.Forms.Button CommitButton;
     }
 }
 
