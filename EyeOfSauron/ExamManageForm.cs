@@ -91,7 +91,7 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
                     InfoList.Add(info);
                 }
             }
-            this.comboBox1.DataSource = InfoList;
+            this.ExamInfocomboBox.DataSource = InfoList;
         }
         private void AddPanelIdbutton_Click(object sender, EventArgs e)
         {
@@ -196,10 +196,10 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
                         this.ExamDBGridView.Rows[i].DefaultCellStyle.BackColor = Color.White;
                         break;
                     case 1:
-                        this.ExamDBGridView.Rows[i].DefaultCellStyle.BackColor = Color.FromArgb(255,255,200,221);
+                        this.ExamDBGridView.Rows[i].DefaultCellStyle.BackColor = Color.FromArgb(255, 255, 200, 221);
                         break;
                     case 2:
-                        this.ExamDBGridView.Rows[i].DefaultCellStyle.BackColor = Color.FromArgb(255,189,224,254);
+                        this.ExamDBGridView.Rows[i].DefaultCellStyle.BackColor = Color.FromArgb(255, 189, 224, 254);
                         break;
                     default:
                         break;
@@ -230,19 +230,19 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
             if (this.ExamDBGridView.SelectedRows.Count != 0)
             {
                 string panelid = this.ExamDBGridView.SelectedRows[0].Cells[1].Value.ToString();
-                InspectSection section = (InspectSection)Enum.Parse(typeof(InspectSection),this.ExamDBGridView.SelectedRows[0].Cells[5].Value.ToString());
+                InspectSection section = (InspectSection)Enum.Parse(typeof(InspectSection), this.ExamDBGridView.SelectedRows[0].Cells[5].Value.ToString());
                 try
                 {
                     if (section == InspectSection.AVI)
                     {
-                        string newpanelpath = @"\\172.16.145.22\NetworkDrive\D_Drive\Mordor\ExamSimple\AVI\" + panelid;
+                        string newpanelpath = Path.Combine(Parameter.AviExamFilePath, this.ExamInfocomboBox.Text,panelid);
                         PanelImageContainer newpanel = new PanelImageContainer(panelid, newpanelpath, section);
                         MemoryStream[] filearray = newpanel.GetFile(Parameter.AviImageNameList);
                         imageFormManager.SetImageArray(filearray);
                     }
                     else if (section == InspectSection.SVI)
                     {
-                        string newpanelpath = @"\\172.16.145.22\NetworkDrive\D_Drive\Mordor\ExamSimple\SVI\" + panelid;
+                        string newpanelpath = Path.Combine(Parameter.SviExamFilePath, this.ExamInfocomboBox.Text, panelid);
                         PanelImageContainer newpanel = new PanelImageContainer(panelid, newpanelpath, section);
                         var filearray = newpanel.GetFile(Parameter.SviImageNameList);
                         imageFormManager.SetImageArray(filearray);
@@ -253,7 +253,7 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
                     string errorstring = string.Format("考试文件不存在，请检查文件夹中的内容，panel id：{0}", panelid);
                     MessageBox.Show(errorstring);
                 }
-                
+
             }
         }
         private void NewIdListBox_SelectedValueChanged(object sender, EventArgs e)
@@ -262,20 +262,28 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
             if (theListBox.SelectedItems.Count == 1)
             {
                 PanelImageContainer item = (PanelImageContainer)theListBox.SelectedItem;
-                if (item.Section == InspectSection.AVI)
+                if (item.HasMajorFile)
                 {
-                    var filearray = item.GetFile(Parameter.AviImageNameList);
-                    imageFormManager.SetImageArray(filearray);
+                    if (item.Section == InspectSection.AVI)
+                    {
+                        var filearray = item.GetFile(Parameter.AviImageNameList);
+                        imageFormManager.SetImageArray(filearray);
+                    }
+                    else if (item.Section == InspectSection.SVI)
+                    {
+                        var filearray = item.GetFile(Parameter.SviImageNameList);
+                        imageFormManager.SetImageArray(filearray);
+                    }
+                    else if (item.Section == InspectSection.APP)
+                    {
+                        var filearray = item.GetFile(Parameter.AppImageNameList);
+                        imageFormManager.SetImageArray(filearray);
+                    }
                 }
-                else if (item.Section == InspectSection.SVI)
+                else
                 {
-                    var filearray = item.GetFile(Parameter.SviImageNameList);
-                    imageFormManager.SetImageArray(filearray);
-                }
-                else if (item.Section == InspectSection.APP)
-                {
-                    var filearray = item.GetFile(Parameter.AppImageNameList);
-                    imageFormManager.SetImageArray(filearray);
+                    string message = string.Format("panel id: {0} 的图像文件不存在，请检查原设备情况，",item.MutiString);
+                    MessageBox.Show(message);
                 }
             }
         }
@@ -287,11 +295,11 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
                 this.ExamDBGridView.SelectedRows[0].Cells[2].Value = this.DefectcomboBox.Text == "S" ? "S" : "F";
                 this.ExamDBGridView.SelectedRows[0].Cells[3].Value = defect.DefectCode;
                 this.ExamDBGridView.SelectedRows[0].Cells[4].Value = this.DefectcomboBox.Text == "S" ? "" : defect.DefectName;
-                this.ExamDBGridView.SelectedRows[0].Cells[6].Value = this.comboBox1.Text;
+                this.ExamDBGridView.SelectedRows[0].Cells[6].Value = this.ExamInfocomboBox.Text;
             }
             else
             {
-                if (this.comboBox1.Text != "")
+                if (this.ExamInfocomboBox.Text != "")
                 {
                     foreach (PanelImageContainer item in this.NewIdListBox.SelectedItems)
                     {
@@ -301,10 +309,10 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
                         newRow[3] = defect.DefectCode;
                         newRow[4] = defect.DefectName;
                         newRow[5] = item.Section;
-                        newRow[6] = this.comboBox1.Text;
+                        newRow[6] = this.ExamInfocomboBox.Text;
                         newRow[7] = "2";
                         dataset.Tables[0].Rows.Add(newRow);
-                        item.Save(@"\\172.16.145.22\NetworkDrive2\D_Drive\Mordor\ExamSimple\"+ item.Section);
+                        item.Save(@"\\172.16.145.22\NetworkDrive2\D_Drive\Mordor\ExamSimple\" + item.Section);
                     }
                     refreshDataSet();
                     dataset.Clear();
@@ -321,13 +329,13 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
         }
         private void FilterChanged(object sender, EventArgs e)
         {
-            bdsource.Filter = "info = '" + this.comboBox1.Text + "'";
+            bdsource.Filter = "info = '" + this.ExamInfocomboBox.Text + "'";
             this.ExamDBGridView.ClearSelection();
         }
         private void InfoFilterAdd(object sender, EventArgs e)
         {
-            InfoList.Add(this.comboBox1.Text);
-            this.comboBox1.DataSource = InfoList;
+            InfoList.Add(this.ExamInfocomboBox.Text);
+            this.ExamInfocomboBox.DataSource = InfoList;
             FilterChanged(sender, e);
         }
         protected override void OnFormClosed(FormClosedEventArgs e)
@@ -340,27 +348,63 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
         }
         private void NewIdListBox_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            PanelImageContainer panel = (PanelImageContainer)this.NewIdListBox.SelectedItem;
-            string path = SeverConnecter.GetPanelPathByID(panel.PanelId)[panel.PanelId].Where(x => x.PcSection ==InspectSection.AVI).First().OriginImagePath;
-            ExplorePath(path);
+            if (this.NewIdListBox.SelectedItems.Count == 1)
+            {
+                PanelImageContainer panel = (PanelImageContainer)this.NewIdListBox.SelectedItem;
+                string path = SeverConnecter.GetPanelPathByID(panel.PanelId)[panel.PanelId].Where(x => x.PcSection == InspectSection.AVI).First().OriginImagePath;
+                ExplorePath(path);
+            }
         }
         private void NewIdListBox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Control && e.KeyCode == Keys.A)
             {
-                Explore(InspectSection.AVI);
+                ExploreOrigin(InspectSection.AVI);
             }
             else if (e.Control && e.KeyCode == Keys.S)
             {
-                Explore(InspectSection.SVI);
+                ExploreOrigin(InspectSection.SVI);
+            }
+            else if (e.Alt && e.KeyCode == Keys.A)
+            {
+                ExploreResult(InspectSection.AVI);
+            }
+            else if (e.Alt && e.KeyCode == Keys.S)
+            {
+                ExploreResult(InspectSection.SVI);
             }
         }
-        private void Explore(InspectSection section)
+        private void ExploreOrigin(InspectSection section)
         {
             PanelImageContainer panel = (PanelImageContainer)this.NewIdListBox.SelectedItem;
             var eqid = panel.path.EqId;
-            string path = SeverConnecter.GetPanelPathByID(panel.PanelId)[panel.PanelId].Where(x => x.PcSection == section && x.EqId == eqid).First().OriginImagePath;
-            ExplorePath(path);
+            var pathlist = SeverConnecter.GetPanelPathByID(panel.PanelId)[panel.PanelId].Where(x => x.PcSection == section && x.EqId == eqid);
+            if (pathlist.Count() > 0)
+            {
+                string path = pathlist.First().OriginImagePath;
+                ExplorePath(path);
+            }
+            else
+            {
+                string message = string.Format("panel id：{0} 的 {1} Origin 文件夹不存在；", panel.PanelId, section);
+                MessageBox.Show(message);
+            }
+        }
+        private void ExploreResult(InspectSection section)
+        {
+            PanelImageContainer panel = (PanelImageContainer)this.NewIdListBox.SelectedItem;
+            var eqid = panel.path.EqId;
+            var pathlist = SeverConnecter.GetPanelPathByID(panel.PanelId)[panel.PanelId].Where(x => x.PcSection == section && x.EqId == eqid);
+            if (pathlist.Count() > 0)
+            {
+                string path = pathlist.First().ResultPath;
+                ExplorePath(path);
+            }
+            else
+            {
+                string message = string.Format("panel id：{0} 的 {1} Result 文件夹不存在；", panel.PanelId, section);
+                MessageBox.Show(message);
+            }
         }
         private void dataGridviewSelectChange(object sender, EventArgs e)
         {
@@ -378,7 +422,7 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
                     default:
                         break;
                 }
-           }
+            }
             this.AddButton.Text = "修改";
         }
         private void CommitButtonClick(object sender, MouseEventArgs e)
