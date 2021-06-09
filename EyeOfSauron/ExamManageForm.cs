@@ -31,6 +31,12 @@ namespace ExamManager
         Queue<PanelImageContainer> waitqueue = new Queue<PanelImageContainer>();
         ImageFormManager imageFormManager;
         List<string> InfoList;
+        enum DelFlag
+        {
+            NORMAL,
+            DELETE,
+            ADD
+        };
         public examManageForm()
         {
             InitializeComponent();
@@ -227,34 +233,8 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
         private void ExamDBGridView_MouseClick(object sender, MouseEventArgs e)
         {
             this.NewIdListBox.ClearSelected();
-            if (this.ExamDBGridView.SelectedRows.Count != 0)
-            {
-                string panelid = this.ExamDBGridView.SelectedRows[0].Cells[1].Value.ToString();
-                InspectSection section = (InspectSection)Enum.Parse(typeof(InspectSection), this.ExamDBGridView.SelectedRows[0].Cells[5].Value.ToString());
-                try
-                {
-                    if (section == InspectSection.AVI)
-                    {
-                        string newpanelpath = Path.Combine(Parameter.AviExamFilePath, this.ExamInfocomboBox.Text,panelid);
-                        PanelImageContainer newpanel = new PanelImageContainer(panelid, newpanelpath, section);
-                        MemoryStream[] filearray = newpanel.GetFile(Parameter.AviImageNameList);
-                        imageFormManager.SetImageArray(filearray);
-                    }
-                    else if (section == InspectSection.SVI)
-                    {
-                        string newpanelpath = Path.Combine(Parameter.SviExamFilePath, this.ExamInfocomboBox.Text, panelid);
-                        PanelImageContainer newpanel = new PanelImageContainer(panelid, newpanelpath, section);
-                        var filearray = newpanel.GetFile(Parameter.SviImageNameList);
-                        imageFormManager.SetImageArray(filearray);
-                    }
-                }
-                catch (FileContainerException)
-                {
-                    string errorstring = string.Format("考试文件不存在，请检查文件夹中的内容，panel id：{0}", panelid);
-                    MessageBox.Show(errorstring);
-                }
-
-            }
+            ExamDBGridView_SelectChange(sender,e);
+            ButtonTextChange(sender,e);
         }
         private void NewIdListBox_SelectedValueChanged(object sender, EventArgs e)
         {
@@ -313,7 +293,7 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
                         newRow[6] = this.ExamInfocomboBox.Text;
                         newRow[7] = "2";
                         dataset.Tables[0].Rows.Add(newRow);
-                        item.Save(Path.Combine(Parameter.SviExamFilePath, this.ExamInfocomboBox.Text, item.Section));
+                        item.Save(Path.Combine(ExamFileManager.examFilePath, item.Section.ToString(), this.ExamInfocomboBox.Text));
                     }
                     refreshDataSet();
                     dataset.Clear();
@@ -326,13 +306,13 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
             refreshDataSet();
             this.bdsource.EndEdit();
             this.ExamDBGridView.ClearSelection();
-            dataGridviewSelectChange(sender, e);
+            ButtonTextChange(sender, e);
         }
         private void FilterChanged(object sender, EventArgs e)
         {
             bdsource.Filter = "info = '" + this.ExamInfocomboBox.Text + "'";
             this.ExamDBGridView.ClearSelection();
-            dataGridviewSelectChange(sender, e);
+            ButtonTextChange(sender, e);
 
         }
         private void InfoFilterAdd(object sender, EventArgs e)
@@ -409,17 +389,18 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
                 MessageBox.Show(message);
             }
         }
-        private void dataGridviewSelectChange(object sender, EventArgs e)
+        private void ButtonTextChange(object sender, EventArgs e)
         {
+            this.AddButton.Text = "添加";
             if (this.ExamDBGridView.SelectedRows.Count != 0)
             {
-                switch (Convert.ToInt16(this.ExamDBGridView.CurrentRow.Cells[7].Value))
+                switch ((DelFlag)Convert.ToInt32(this.ExamDBGridView.CurrentRow.Cells[7].Value))
                 {
-                    case 0:
-                    case 2:
+                    case DelFlag.NORMAL:
+                    case DelFlag.ADD:
                         this.DelButton.Text = "删除";
                         break;
-                    case 1:
+                    case DelFlag.DELETE:
                         this.DelButton.Text = "取消删除";
                         break;
                     default:
@@ -427,7 +408,6 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
                 }
                 this.AddButton.Text = "修改";
             }
-            this.AddButton.Text = "添加";
         }
         private void CommitButtonClick(object sender, MouseEventArgs e)
         {
@@ -465,10 +445,41 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
                     break;
             }
         }
+        private void ExamDBGridView_SelectChange(object sender, EventArgs e)
+        {
+            if (this.ExamDBGridView.SelectedRows.Count != 0)
+            {
+                string panelid = this.ExamDBGridView.SelectedRows[0].Cells[1].Value.ToString();
+                InspectSection section = (InspectSection)Enum.Parse(typeof(InspectSection), this.ExamDBGridView.SelectedRows[0].Cells[5].Value.ToString());
+                try
+                {
+                    if (section == InspectSection.AVI)
+                    {
+                        string newpanelpath = Path.Combine(Parameter.AviExamFilePath, this.ExamInfocomboBox.Text, panelid);
+                        PanelImageContainer newpanel = new PanelImageContainer(panelid, newpanelpath, section);
+                        MemoryStream[] filearray = newpanel.GetFile(Parameter.AviImageNameList);
+                        imageFormManager.SetImageArray(filearray);
+                    }
+                    else if (section == InspectSection.SVI)
+                    {
+                        string newpanelpath = Path.Combine(Parameter.SviExamFilePath, this.ExamInfocomboBox.Text, panelid);
+                        PanelImageContainer newpanel = new PanelImageContainer(panelid, newpanelpath, section);
+                        var filearray = newpanel.GetFile(Parameter.SviImageNameList);
+                        imageFormManager.SetImageArray(filearray);
+                    }
+                }
+                catch (FileContainerException)
+                {
+                    string errorstring = string.Format("考试文件不存在，请检查文件夹中的内容，panel id：{0}", panelid);
+                    MessageBox.Show(errorstring);
+                }
+
+            }
+        }
     }
     static class ExamFileManager
     {
-        static string examFilePath = @"\\172.16.145.22\NetworkDrive\D_Drive\Mordor\ExamSimple";
+        public static string examFilePath = @"\\172.16.145.22\NetworkDrive\D_Drive\Mordor\ExamSimple";
         public static void DeleteFile(string panelid, InspectSection section)
         {
             // 当同一张屏存在与不同任务集中时不删除；

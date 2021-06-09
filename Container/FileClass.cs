@@ -53,7 +53,8 @@ namespace Container
                 ReadFileInMemory();
             }
             FileInfo newsavefile = new FileInfo(Path.Combine(savePath, Name));
-            var writestream = newsavefile.OpenWrite();
+            FileStream writestream = newsavefile.OpenWrite();
+            FileMemory.Position = 0;
             FileMemory.CopyTo(writestream);
             writestream.Close();
         }
