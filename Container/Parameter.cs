@@ -17,6 +17,8 @@ namespace Container
         public static string[] AppImageNameList;
         public static int PreLoadQuantity;
         public static Defect[] CodeNameList;
+        public static string AviExamFilePath;
+        public static string SviExamFilePath;
 
         static Parameter()
         {

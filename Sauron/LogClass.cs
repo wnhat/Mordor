@@ -13,7 +13,7 @@ namespace Sauron
         static FilePathLogClass()
         {
             Logger = new LoggerConfiguration()
-                .WriteTo.File(@"D:\Mordor\LOG\File search\log-.txt", rollingInterval: RollingInterval.Day)
+                .WriteTo.File(@"D:\Mordor\LOG\File search\log-.txt", rollingInterval: RollingInterval.Hour)
                 .CreateLogger();
         }
     }

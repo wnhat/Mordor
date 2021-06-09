@@ -111,13 +111,32 @@ namespace Container
     }
     public class PanelImageContainer : Panel
     {
-        string MutiString;
+        public string MutiString;
         bool MutiFlag = false;
         //如果有相同ID在不同设备出现时，设置该项为true，tostring将显示设备及投入时间
         DirContainer dir; // 默认不提前读取;
         string ResultPath;
         public InspectSection Section;
         public PanelPathContainer path;
+        public bool HasMajorFile
+        {
+            get
+            {
+                if (Section == InspectSection.AVI)
+                {
+                    return Dir.Contains(Parameter.AviImageNameList);
+                }
+                else if(Section == InspectSection.SVI)
+                {
+                    return Dir.Contains(Parameter.SviImageNameList);
+                }
+                else
+                {
+                    return dir.Contains(Parameter.AppImageNameList);
+                }
+                
+            }
+        }
         public PanelImageContainer(string panelId, PanelPathContainer path, bool mutiFlag = false) : base(panelId)
         {
             this.path = path;

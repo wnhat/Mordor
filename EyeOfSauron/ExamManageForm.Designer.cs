@@ -37,7 +37,7 @@ namespace ExamManager
             this.ExamDBGridView = new System.Windows.Forms.DataGridView();
             this.AddPanelIdbutton = new System.Windows.Forms.Button();
             this.Cleanbutton = new System.Windows.Forms.Button();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.ExamInfocomboBox = new System.Windows.Forms.ComboBox();
             this.NewIdListBox = new System.Windows.Forms.ListBox();
             this.DelButton = new System.Windows.Forms.Button();
             this.AddButton = new System.Windows.Forms.Button();
@@ -153,17 +153,17 @@ namespace ExamManager
             this.Cleanbutton.UseVisualStyleBackColor = true;
             this.Cleanbutton.Click += new System.EventHandler(this.Cleanbutton_Click);
             // 
-            // comboBox1
+            // ExamInfocomboBox
             // 
-            this.comboBox1.Font = new System.Drawing.Font("SimSun", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.ItemHeight = 20;
-            this.comboBox1.Location = new System.Drawing.Point(304, 952);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(247, 28);
-            this.comboBox1.TabIndex = 12;
-            this.comboBox1.TextUpdate += new System.EventHandler(this.InfoFilterAdd);
-            this.comboBox1.SelectedValueChanged += new System.EventHandler(this.FilterChanged);
+            this.ExamInfocomboBox.Font = new System.Drawing.Font("SimSun", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.ExamInfocomboBox.FormattingEnabled = true;
+            this.ExamInfocomboBox.ItemHeight = 20;
+            this.ExamInfocomboBox.Location = new System.Drawing.Point(304, 952);
+            this.ExamInfocomboBox.Name = "ExamInfocomboBox";
+            this.ExamInfocomboBox.Size = new System.Drawing.Size(247, 28);
+            this.ExamInfocomboBox.TabIndex = 12;
+            this.ExamInfocomboBox.TextUpdate += new System.EventHandler(this.InfoFilterAdd);
+            this.ExamInfocomboBox.SelectedValueChanged += new System.EventHandler(this.FilterChanged);
             // 
             // NewIdListBox
             // 
@@ -255,7 +255,7 @@ namespace ExamManager
             this.Controls.Add(this.AddButton);
             this.Controls.Add(this.DelButton);
             this.Controls.Add(this.NewIdListBox);
-            this.Controls.Add(this.comboBox1);
+            this.Controls.Add(this.ExamInfocomboBox);
             this.Controls.Add(this.Cleanbutton);
             this.Controls.Add(this.AddPanelIdbutton);
             this.Controls.Add(this.tableLayoutPanel1);
@@ -283,7 +283,7 @@ namespace ExamManager
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Button AddPanelIdbutton;
         private System.Windows.Forms.Button Cleanbutton;
-        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.ComboBox ExamInfocomboBox;
         private System.Windows.Forms.ListBox NewIdListBox;
         private System.Windows.Forms.Button DelButton;
         private System.Windows.Forms.Button AddButton;
