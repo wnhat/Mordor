@@ -277,6 +277,7 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
                     var filearray = item.GetFile(Parameter.AppImageNameList);
                     imageFormManager.SetImageArray(filearray);
                 }
+
             }
         }
         private void AddButton_Click(object sender, EventArgs e)
@@ -304,7 +305,7 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
                         newRow[6] = this.comboBox1.Text;
                         newRow[7] = "2";
                         dataset.Tables[0].Rows.Add(newRow);
-                        item.Save(@"\\172.16.145.22\NetworkDrive2\D_Drive\Mordor\ExamSimple\"+ item.Section);
+                        //item.Save(@"\\172.16.145.22\NetworkDrive2\D_Drive\Mordor\ExamSimple\"+ item.Section);
                     }
                     refreshDataSet();
                     dataset.Clear();
@@ -317,12 +318,14 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
             refreshDataSet();
             this.bdsource.EndEdit();
             this.ExamDBGridView.ClearSelection();
-            this.Refresh();
+            dataGridviewSelectChange(sender, e);
         }
         private void FilterChanged(object sender, EventArgs e)
         {
             bdsource.Filter = "info = '" + this.comboBox1.Text + "'";
             this.ExamDBGridView.ClearSelection();
+            dataGridviewSelectChange(sender, e);
+
         }
         private void InfoFilterAdd(object sender, EventArgs e)
         {
@@ -343,6 +346,7 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
             PanelImageContainer panel = (PanelImageContainer)this.NewIdListBox.SelectedItem;
             string path = SeverConnecter.GetPanelPathByID(panel.PanelId)[panel.PanelId].Where(x => x.PcSection ==InspectSection.AVI).First().OriginImagePath;
             ExplorePath(path);
+            dataGridviewSelectChange(sender, e);
         }
         private void NewIdListBox_KeyDown(object sender, KeyEventArgs e)
         {
@@ -378,8 +382,9 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
                     default:
                         break;
                 }
-           }
-            this.AddButton.Text = "修改";
+                this.AddButton.Text = "修改";
+            }
+            this.AddButton.Text = "添加";
         }
         private void CommitButtonClick(object sender, MouseEventArgs e)
         {
