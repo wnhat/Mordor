@@ -293,7 +293,7 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
                         newRow[6] = this.ExamInfocomboBox.Text;
                         newRow[7] = "2";
                         dataset.Tables[0].Rows.Add(newRow);
-                        item.Save(Path.Combine(ExamFileManager.examFilePath, item.Section.ToString(), this.ExamInfocomboBox.Text));
+                        item.Save(Path.Combine(@"\\172.16.145.22\NetworkDrive\D_Drive\Mordor\ExamSimple", item.Section.ToString(), this.ExamInfocomboBox.Text));
                     }
                     refreshDataSet();
                     dataset.Clear();
