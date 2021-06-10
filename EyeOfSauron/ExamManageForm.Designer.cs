@@ -129,6 +129,7 @@ namespace ExamManager
             this.ExamDBGridView.TabIndex = 11;
             this.ExamDBGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.CellContentClick);
             this.ExamDBGridView.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.dataGridViewRowPrePaint);
+            this.ExamDBGridView.SelectionChanged += new System.EventHandler(this.ExamDBGridView_SelectChange);
             this.ExamDBGridView.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ExamDBGridView_MouseClick);
             // 
             // AddPanelIdbutton
