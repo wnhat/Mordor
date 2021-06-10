@@ -82,8 +82,8 @@
             this.tableLayoutPanel1.Controls.Add(this.defect_button_4, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.defect_button_5, 1, 1);
             this.tableLayoutPanel1.Controls.Add(this.defect_button_6, 2, 1);
-            this.tableLayoutPanel1.Controls.Add(this.s_grade_button, 1, 4);
-            this.tableLayoutPanel1.Controls.Add(this.e_grade_button, 0, 4);
+            this.tableLayoutPanel1.Controls.Add(this.s_grade_button, 0, 4);
+            this.tableLayoutPanel1.Controls.Add(this.e_grade_button, 2, 4);
             this.tableLayoutPanel1.Location = new System.Drawing.Point(1365, 669);
             this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(2);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -259,10 +259,10 @@
             this.s_grade_button.Dock = System.Windows.Forms.DockStyle.Fill;
             this.s_grade_button.Font = new System.Drawing.Font("Microsoft YaHei", 28F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.s_grade_button.ForeColor = System.Drawing.Color.ForestGreen;
-            this.s_grade_button.Location = new System.Drawing.Point(175, 278);
+            this.s_grade_button.Location = new System.Drawing.Point(2, 278);
             this.s_grade_button.Margin = new System.Windows.Forms.Padding(2);
             this.s_grade_button.Name = "s_grade_button";
-            this.s_grade_button.Size = new System.Drawing.Size(344, 67);
+            this.s_grade_button.Size = new System.Drawing.Size(342, 67);
             this.s_grade_button.TabIndex = 6;
             this.s_grade_button.Text = "S";
             this.s_grade_button.UseVisualStyleBackColor = true;
@@ -273,10 +273,10 @@
             this.e_grade_button.Dock = System.Windows.Forms.DockStyle.Fill;
             this.e_grade_button.Font = new System.Drawing.Font("Microsoft YaHei", 26F, System.Drawing.FontStyle.Bold);
             this.e_grade_button.ForeColor = System.Drawing.SystemColors.Highlight;
-            this.e_grade_button.Location = new System.Drawing.Point(2, 278);
+            this.e_grade_button.Location = new System.Drawing.Point(348, 278);
             this.e_grade_button.Margin = new System.Windows.Forms.Padding(2);
             this.e_grade_button.Name = "e_grade_button";
-            this.e_grade_button.Size = new System.Drawing.Size(169, 67);
+            this.e_grade_button.Size = new System.Drawing.Size(171, 67);
             this.e_grade_button.TabIndex = 7;
             this.e_grade_button.Text = "E";
             this.e_grade_button.UseVisualStyleBackColor = true;
