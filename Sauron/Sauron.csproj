@@ -99,6 +99,7 @@
     <Compile Include="IP_TR.cs" />
     <Compile Include="LogClass.cs" />
     <Compile Include="MissionManager.cs" />
+    <Compile Include="NewFileContainer.cs" />
     <Compile Include="PanelPathManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

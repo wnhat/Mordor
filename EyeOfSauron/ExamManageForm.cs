@@ -304,16 +304,19 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
                 {
                     foreach (PanelImageContainer item in this.NewIdListBox.SelectedItems)
                     {
-                        DataRow newRow = dataset.Tables[0].NewRow();
-                        newRow[1] = item.PanelId;
-                        newRow[2] = this.DefectcomboBox.Text == "S" ? "S" : "F";
-                        newRow[3] = defect.DefectCode;
-                        newRow[4] = defect.DefectName;
-                        newRow[5] = item.Section;
-                        newRow[6] = this.ExamInfocomboBox.Text;
-                        newRow[7] = "2";
-                        dataset.Tables[0].Rows.Add(newRow);
-                        item.Save(Path.Combine(Parameter.SviExamFilePath, this.ExamInfocomboBox.Text, item.Section));
+                        if (item.HasMajorFile)
+                        {
+                            DataRow newRow = dataset.Tables[0].NewRow();
+                            newRow[1] = item.PanelId;
+                            newRow[2] = this.DefectcomboBox.Text == "S" ? "S" : "F";
+                            newRow[3] = defect.DefectCode;
+                            newRow[4] = defect.DefectName;
+                            newRow[5] = item.Section;
+                            newRow[6] = this.ExamInfocomboBox.Text;
+                            newRow[7] = "2";
+                            dataset.Tables[0].Rows.Add(newRow);
+                            item.Save(Path.Combine(@"\\172.16.145.22\NetworkDrive\D_Drive\Mordor\ExamSimple", item.Section.ToString(), this.ExamInfocomboBox.Text));
+                        }
                     }
                     refreshDataSet();
                     dataset.Clear();
@@ -463,39 +466,6 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
                     break;
                 default:
                     break;
-            }
-        }
-    }
-    static class ExamFileManager
-    {
-        static string examFilePath = @"\\172.16.145.22\NetworkDrive\D_Drive\Mordor\ExamSimple";
-        public static void DeleteFile(string panelid, InspectSection section)
-        {
-            // 当同一张屏存在与不同任务集中时不删除；
-            string filePath = examFilePath;
-            if (section == InspectSection.AVI)
-            {
-                filePath += @"\AVI";
-            }
-            else if (section == InspectSection.SVI)
-            {
-                filePath += @"\SVI";
-            }
-            DirectoryInfo dir = new DirectoryInfo(filePath);
-            if (dir.Exists)
-            {
-                dir.Delete();
-            }
-        }
-        public static void AddFile(DirContainer dir, InspectSection section)
-        {
-            if (section == InspectSection.AVI)
-            {
-                dir.SaveDirInDisk(examFilePath + @"\AVI");
-            }
-            else if (section == InspectSection.SVI)
-            {
-                dir.SaveDirInDisk(examFilePath + @"\SVI");
             }
         }
     }
