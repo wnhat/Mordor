@@ -28,7 +28,9 @@ namespace ExamManager
         BindingSource bdsource;
         SqlCommandBuilder Builder;
         SqlDataAdapter adp;
-        Queue<PanelImageContainer> waitqueue = new Queue<PanelImageContainer>();
+        Queue<string> waitqueue = new Queue<string>();
+        Dictionary<string, List<PanelPathContainer>> pathdic;
+        InspectSection addsection;
         ImageFormManager imageFormManager;
         List<string> InfoList;
         enum DelFlag
@@ -107,31 +109,11 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
         private void AddPanelId(string[] panelidarray, InspectSection section)
         {
             // 将 ID array 中的id添加任务；预加载图片及添加至newidlistbox中；
-            var pathdic = SeverConnecter.GetPanelPathByID(panelidarray);
-            for (int i = 0; i < panelidarray.Length; i++)
+            pathdic = SeverConnecter.GetPanelPathByID(panelidarray);
+            addsection = section;
+            foreach (var item in panelidarray)
             {
-                var panelid = panelidarray[i];
-                var pathlist = pathdic[panelid];
-                try
-                {
-                    pathlist = pathlist.Where(x => (x.PcSection == section)).ToList();
-                    foreach (var item in pathlist)
-                    {
-                        // 加入设备中多次出现的图片
-                        if (pathlist.Count > 1)
-                        {
-                            this.waitqueue.Enqueue(new PanelImageContainer(panelid, item, true));
-                        }
-                        else
-                        {
-                            this.waitqueue.Enqueue(new PanelImageContainer(panelid, item));
-                        }
-                    }
-                }
-                catch (ArgumentNullException)
-                {
-                    string errorString = string.Format("panel: {0} cannot find the path", panelid);
-                }
+                this.waitqueue.Enqueue(item);
             }
             ProcessForm newprocessform = new ProcessForm(AddOnePanelSafe);
             newprocessform.ShowDialog();
@@ -150,21 +132,43 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
             {
                 this.Invoke(new ExamManagerWorkMethod(AddOnePanel), new object[] { });
                 int percent = 100 * this.NewIdListBox.Items.Count / Parameter.PreLoadQuantity;
-                return percent;
+                return percent >= 100 ? 100: percent;
             }
         }
         void AddOnePanel()
         {
-            var panel = this.waitqueue.Dequeue();
-            panel.Download();
-            this.NewIdListBox.Items.Add(panel);
+            var panelid = this.waitqueue.Dequeue();
+            try
+            {
+                var pathlist = pathdic[panelid].Where(x => (x.PcSection == addsection)).ToList();
+                foreach (var item in pathlist)
+                {
+                    // 加入设备中多次出现的图片
+                    if (pathlist.Count > 1)
+                    {
+                        var newpanel = new PanelImageContainer(panelid, item, true);
+                        newpanel.Download();
+                        this.NewIdListBox.Items.Add(newpanel);
+                    }
+                    else
+                    {
+                        var newpanel = new PanelImageContainer(panelid, item);
+                        newpanel.Download();
+                        this.NewIdListBox.Items.Add(newpanel);
+                    }
+                }
+            }
+            catch (ArgumentNullException)
+            {
+                string errorString = string.Format("panel: {0} cannot find the path", panelid);
+            }
+            catch (FileContainerException)
+            {
+                string errorString = string.Format("panel: {0} 文件不存在（可能原路径文件已被删除）", panelid);
+            }
         }
         void AddMutiPanel()
         {
-            foreach (var item in this.waitqueue)
-            {
-                item.Download();
-            }
             while (this.waitqueue.Count != 0)
             {
                 this.Invoke(new ExamManagerWorkMethod(AddOnePanel), new object[] { });
@@ -324,9 +328,17 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
             this.ExamInfocomboBox.DataSource = InfoList;
             FilterChanged(sender, e);
         }
-        protected override void OnFormClosed(FormClosedEventArgs e)
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
-            base.OnFormClosed(e);
+            if (keyData == Keys.Tab)
+            {
+                imageFormManager.RefreshForm();
+                return true;
+            }
+            else
+            {
+                return base.ProcessCmdKey(ref msg, keyData);
+            }
         }
         private void ExplorePath(string path)
         {
