@@ -118,7 +118,6 @@ namespace Sauron
       ,[Judge]
       ,[DefectCode]
       ,[DefectName]
-      ,[Section]
       ,[Info]
   FROM [EDIAS_DB].[dbo].[AET_IMAGE_EXAM]");
             List<ExamMission> newPanelList = new List<ExamMission>();
@@ -131,10 +130,9 @@ namespace Sauron
                 {
                     string panelid = newDataReader["PanelId"].ToString();
                     string info = newDataReader["Info"].ToString();
-                    InspectSection section = (InspectSection)Enum.Parse(typeof(InspectSection), newDataReader["Section"].ToString(), false);
-                    Defect newdefect = new Defect(newDataReader["DefectName"].ToString(), newDataReader["DefectCode"].ToString(), section);
+                    Defect newdefect = new Defect(newDataReader["DefectName"].ToString(), newDataReader["DefectCode"].ToString(),InspectSection.EXAM);
                     JudgeGrade newjudge = (JudgeGrade)Enum.Parse(typeof(JudgeGrade), newDataReader["Judge"].ToString(), true);
-                    newPanelList.Add(new ExamMission(panelid, section, newdefect, newjudge, info));
+                    newPanelList.Add(new ExamMission(panelid,InspectSection.EXAM, newdefect, newjudge, info));
                 }
             }
             TheDataBase.Close();

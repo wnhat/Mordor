@@ -27,12 +27,11 @@ namespace Sauron
             this.Thefilecontainer = new FileManager(ip_tr);
             this.Thesqlserver = new SqlServerConnector();
             RefreshExamList();
-            ConsoleLogClass.Logger.Information("服务器启动中------开始刷新设备文件路径");
             Task refreshtask = RefreshFileContainer();
             while (!refreshtask.IsCompleted)
             {
+                Thread.Sleep(10000);
             }
-            ConsoleLogClass.Logger.Information("服务器启动中------文件路径刷新完成");
             ConsoleLogClass.Logger.Information("服务器启动中------开始添加任务（测试版）");
             AddMissionTest();
             ConsoleLogClass.Logger.Information("服务器启动中------任务添加完成");
@@ -46,60 +45,25 @@ namespace Sauron
             ConsoleLogClass.Logger.Information("开始考试文件刷新；");
             Dictionary<string, List<ExamMission>> newExamMissionDic = new Dictionary<string, List<ExamMission>>();
             var missionlist = Thesqlserver.GetExamMission();
-            string[] aviExamFileList = Directory.GetDirectories("\\\\172.16.145.22\\NetworkDrive\\D_Drive\\Mordor\\ExamSimple\\AVI");
-            string[] sviExamFileList = Directory.GetDirectories("\\\\172.16.145.22\\NetworkDrive\\D_Drive\\Mordor\\ExamSimple\\SVI");
-            string[] aviid = new string[aviExamFileList.Length];
-            for (int i = 0; i < aviExamFileList.Length; i++)
-            {
-                aviid[i] = aviExamFileList[i].Substring(aviExamFileList[i].Length - 17);
-            }
-            string[] sviid = new string[sviExamFileList.Length];
-            for (int i = 0; i < sviExamFileList.Length; i++)
-            {
-                sviid[i] = sviExamFileList[i].Substring(sviExamFileList[i].Length - 17);
-            }
             foreach (var item in missionlist)
             {
-                switch (item.PcSection)
+                var avipath = new DirectoryInfo(Path.Combine(Parameter.AviExamFilePath, item.MissionInfo, item.PanelId));
+                var svipath = new DirectoryInfo(Path.Combine(Parameter.SviExamFilePath, item.MissionInfo, item.PanelId));
+                if (avipath.Exists && svipath.Exists)
                 {
-                    case InspectSection.AVI:
-                        if (aviid.Contains(item.PanelId))
-                        {
-                            var filepath = aviExamFileList.Where(x => x.Substring(x.Length - 17) == item.PanelId).First();
-                            ExamMission newmission = new ExamMission(item.PanelId, filepath, item.PcSection, item.Defect, item.Judge,item.MissionInfo);
-                            if (newExamMissionDic.ContainsKey(newmission.MissionInfo))
-                            {
-                                newExamMissionDic[newmission.MissionInfo].Add(newmission);
-                            }
-                            else
-                            {
-                                newExamMissionDic.Add(newmission.MissionInfo, new List<ExamMission>() { newmission });
-                            }
-                        }
-                        else
-                        {
-                            ConsoleLogClass.Logger.Error("Refresh Exam; panel ID: {0} ,do not have result file in {1}", item.PanelId); // TODO:ADD FILE path
-                        }
-                        break;
-                    case InspectSection.SVI:
-                        if (sviid.Contains(item.PanelId))
-                        {
-                            var filepath = sviExamFileList.Where(x => x.Substring(x.Length - 17) == item.PanelId).First();
-                            ExamMission newmission = new ExamMission(item.PanelId, filepath, item.PcSection, item.Defect, item.Judge, item.MissionInfo);
-                            if (newExamMissionDic.ContainsKey(newmission.MissionInfo))
-                            {
-                                newExamMissionDic[newmission.MissionInfo].Add(newmission);
-                            }
-                            else
-                            {
-                                newExamMissionDic.Add(newmission.MissionInfo, new List<ExamMission>() { newmission });
-                            }
-                        }
-                        else
-                        {
-                            ConsoleLogClass.Logger.Error("Refresh Exam; panel ID: {0} ,do not have result file in {1}", item.PanelId); // TODO:ADD FILE path
-                        }
-                        break;
+                    ExamMission newmission = new ExamMission(item.PanelId, avipath.FullName,svipath.FullName, item.PcSection, item.Defect, item.Judge, item.MissionInfo);
+                    if (newExamMissionDic.ContainsKey(newmission.MissionInfo))
+                    {
+                        newExamMissionDic[newmission.MissionInfo].Add(newmission);
+                    }
+                    else
+                    {
+                        newExamMissionDic.Add(newmission.MissionInfo, new List<ExamMission>() { newmission });
+                    }
+                }
+                else
+                {
+                    ConsoleLogClass.Logger.Error("Refresh Exam; panel ID: {0} ,do not have result file in {1}", item.PanelId); // TODO:ADD FILE path
                 }
             }
             ExamMissionDic = newExamMissionDic;
@@ -143,6 +107,7 @@ namespace Sauron
             else
             {
                 ConsoleLogClass.Logger.Error("没有找到相关的任务名， 任务名： {0}",examinfo);
+                // TODO： 返回未找到信息；
             }
         }
         public void GetExamInfo(NetMQSocketEventArgs a)
@@ -168,7 +133,9 @@ namespace Sauron
         }
         public async Task RefreshFileContainer()
         {
+            ConsoleLogClass.Logger.Information("开始刷新设备文件路径");
             await Thefilecontainer.RefreshFileList();
+            ConsoleLogClass.Logger.Information("文件路径刷新完成");
         }
         public Operator CheckUser(Operator op)
         {
@@ -220,8 +187,7 @@ namespace Sauron
                     }
                     catch (Exception e)
                     {
-                        ConsoleLogClass.Logger.Error(e.Message);
-                        ConsoleLogClass.Logger.Error("文件存在问题； panelid：{0}",panelid);
+                        ConsoleLogClass.Logger.Error("文件存在问题{0}； panelid：{1}",e.Message, panelid);
                     }
                 }
                 else

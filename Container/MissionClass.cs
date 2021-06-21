@@ -112,56 +112,55 @@ namespace Container
     public class PanelImageContainer : Panel
     {
         public string MutiString;
+        public string Eqid;
         bool MutiFlag = false;
         //如果有相同ID在不同设备出现时，设置该项为true，tostring将显示设备及投入时间
-        DirContainer dir; // 默认不提前读取;
-        string ResultPath;
-        public InspectSection Section;
-        public PanelPathContainer path;
+        DirContainer avidir;
+        DirContainer svidir;
         public bool HasMajorFile
         {
             get
             {
-                if (Section == InspectSection.AVI)
+                if (avidir.Contains(Parameter.AviImageNameList) && svidir.Contains(Parameter.SviImageNameList))
                 {
-                    return Dir.Contains(Parameter.AviImageNameList);
-                }
-                else if(Section == InspectSection.SVI)
-                {
-                    return Dir.Contains(Parameter.SviImageNameList);
+                    return true;
                 }
                 else
                 {
-                    return dir.Contains(Parameter.AppImageNameList);
+                    return false;
                 }
-                
             }
         }
-        public PanelImageContainer(string panelId, PanelPathContainer path, bool mutiFlag = false) : base(panelId)
+        public PanelImageContainer(string panelId, PanelPathContainer avipath, PanelPathContainer svipath, bool mutiFlag = false) : base(panelId)
         {
-            this.path = path;
             MutiFlag = mutiFlag;
-            ResultPath = path.ResultPath;
-            this.dir = new DirContainer(ResultPath);
-            Section = path.PcSection;
-            MutiString = this.PanelId + " #" + path.EqId + " " + this.Dir.CreationTime.ToString("MM/dd HH:mm");
+            this.avidir = new DirContainer(avipath.ResultPath);
+            this.svidir = new DirContainer(svipath.ResultPath);
+            this.Eqid = avipath.EqId;
+            MutiString = this.PanelId + " #" + avipath.EqId + " " + this.avidir.CreationTime.ToString("MM/dd HH:mm");
         }
-        public PanelImageContainer(string panelId, string path,InspectSection section) : base(panelId)
+        public PanelImageContainer(string panelId, string examinfo) : base(panelId)
         {
-            ResultPath = path;
-            this.dir = new DirContainer(ResultPath);
-            Section = section;
+            MutiFlag = false;
+            this.avidir = new DirContainer(Path.Combine(Parameter.AviExamFilePath, examinfo, panelId));
+            this.svidir = new DirContainer(Path.Combine(Parameter.SviExamFilePath, examinfo, panelId));
         }
         public void Download()
         {
-            if (!dir.ReadComplete)
+            if (!avidir.ReadComplete)
             {
-                Dir.Read();
+                avidir.Read();
+            }
+            if (!svidir.ReadComplete)
+            {
+                svidir.Read();
             }
         }
-        public void Save(string savepath)
+        public void Save(string examinfo)
         {
-            Dir.SaveDirInDisk(savepath);
+            // 保存Exam 文件到指定任务中；
+            avidir.SaveDirInDisk(Path.Combine(Parameter.AviExamFilePath, examinfo));
+            svidir.SaveDirInDisk(Path.Combine(Parameter.SviExamFilePath, examinfo));
         }
         public override string ToString()
         {
@@ -174,25 +173,24 @@ namespace Container
                 return base.ToString();
             }
         }
-        public bool ReadComplete { get { return Dir.ReadComplete; } }
-        public DirContainer Dir { get { return dir; } }
-        public MemoryStream[] GetFile(string[] namelist)
+        public bool ReadComplete { get { return avidir.ReadComplete && svidir.ReadComplete; } }
+        public Bitmap[] GetImage()
         {
-            if (!ReadComplete)
+            List<Bitmap> newlist = new List<Bitmap>();
+            foreach (var imagename in Parameter.AviImageNameList)
             {
-                Download();
+                newlist.Add(new Bitmap(this.avidir.GetFileFromMemory(imagename)));
             }
-            MemoryStream[] returnarray = new MemoryStream[namelist.Length];
-            for (int i = 0; i < namelist.Length; i++)
+            foreach (var imagename in Parameter.SviImageNameList)
             {
-                returnarray[i] = dir.GetFileFromMemory(namelist[i]);
+                newlist.Add(new Bitmap(this.svidir.GetFileFromMemory(imagename)));
             }
-            return returnarray;
+            return newlist.ToArray();
         }
     }
     public class InspectMission : Panel
     {
-        public string[] ImageNameList;// The image name in reuslt file which we need to inspect
+        public string[] ImageNameList;  // The image name in reuslt file which we need to inspect
         public Bitmap[] ImageArray;
         public InspectMission(PanelMission missioninfo) : base(missioninfo.PanelId)
         {
@@ -208,23 +206,18 @@ namespace Container
         }
         public InspectMission(ExamMission missioninfo) : base(missioninfo.PanelId)
         {
-            if (missioninfo.PcSection == InspectSection.AVI)
-            {
-                ImageNameList = Parameter.AviImageNameList;
-            }
-            else if (missioninfo.PcSection == InspectSection.SVI)
-            {
-                ImageNameList = Parameter.SviImageNameList;
-            }
-            else if (missioninfo.PcSection == InspectSection.APP)
-            {
-                ImageNameList = Parameter.AppImageNameList;
-            }
-            ImageArray = InitialImage(missioninfo.ResultPath, ImageNameList);
+            var newimagenamelist = Parameter.AviImageNameList.ToList();
+            newimagenamelist.AddRange(Parameter.SviImageNameList);
+            newimagenamelist.AddRange(Parameter.AppImageNameList);
+            ImageNameList = newimagenamelist.ToArray();
+            List<Bitmap> newimagearray = new List<Bitmap>();
+            newimagearray.AddRange(InitialImage(missioninfo.AviResultPath, Parameter.AviImageNameList));
+            newimagearray.AddRange(InitialImage(missioninfo.SviResultPath, Parameter.SviImageNameList));
+            ImageArray = newimagearray.ToArray();
         }
         public Bitmap[] InitialImage(string filepath, string[] NameList)
         {
-            DirContainer Container = new DirContainer(filepath,true);
+            DirContainer Container = new DirContainer(filepath, true);
             Bitmap[] NewImageArray = new Bitmap[NameList.Length];
             for (int i = 0; i < NameList.Length; i++)
             {
@@ -326,25 +319,24 @@ namespace Container
     public class ExamMission : IComparable
     {
         public string PanelId;
-        public string ResultPath;
+        public string AviResultPath;
+        public string SviResultPath;
         public string MissionInfo;
         public InspectSection PcSection { get; set; }
-        public bool Exsit { get { return new DirectoryInfo(ResultPath).Exists; } }
+        // public bool Exsit { get { return new DirectoryInfo(AviResultPath).Exists; } }
         public Defect Defect;
         public JudgeGrade Judge;
         public Defect DefectU;                          // user JUDGE;
         public JudgeGrade JudgeU;                       // user JUDGE;
         public Operator Op;
         public DateTime FinishTime;
-        public int sortint = 0;                             // 用于任务随机排序；
-        public ExamMission()
-        {
-
-        }
-        public ExamMission(string panelId, string result_path, InspectSection pcSection, Defect defect, JudgeGrade judge, string info)
+        public int sortint = 0;                         // 用于任务随机排序；
+        public ExamMission(){}
+        public ExamMission(string panelId, string avipath, string svipath, InspectSection pcSection, Defect defect, JudgeGrade judge, string info)
         {
             PanelId = panelId;
-            ResultPath = result_path;
+            AviResultPath = avipath;
+            SviResultPath = svipath;
             PcSection = pcSection;
             Defect = defect;
             Judge = judge;
@@ -357,10 +349,6 @@ namespace Container
             Defect = defect;
             Judge = judge;
             MissionInfo = info;
-        }
-        public void SetPath(string path)
-        {
-            ResultPath = path;
         }
         public void FinishExam(PanelMissionResult result)
         {

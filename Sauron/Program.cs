@@ -62,6 +62,10 @@ namespace Sauron
                         case MessageType.CONTROLER_ADD_MISSION:
                             TheMissionManager.AddMissionByServer(a,messageIn);
                             break;
+                        case MessageType.CONTROLER_REFRESH_EXAM:
+                            TheMissionManager.RefreshExamList();
+                            a.Socket.SignalOK();
+                            break;
                         case MessageType.CLINET_CHECK_USER:
                             UserCheckMessage userInfo = new UserCheckMessage(messageIn);
                             var op = TheMissionManager.CheckUser(userInfo.TheOperator);

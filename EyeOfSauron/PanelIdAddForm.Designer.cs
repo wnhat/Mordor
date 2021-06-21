@@ -30,18 +30,17 @@
         {
             this.AviButton = new System.Windows.Forms.Button();
             this.IdTextBox = new System.Windows.Forms.TextBox();
-            this.SviButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // AviButton
             // 
             this.AviButton.Location = new System.Drawing.Point(12, 363);
             this.AviButton.Name = "AviButton";
-            this.AviButton.Size = new System.Drawing.Size(126, 37);
+            this.AviButton.Size = new System.Drawing.Size(260, 37);
             this.AviButton.TabIndex = 0;
-            this.AviButton.Text = "添加AVI";
+            this.AviButton.Text = "添加 Panel ID";
             this.AviButton.UseVisualStyleBackColor = true;
-            this.AviButton.Click += new System.EventHandler(this.AVIbutton_Click);
+            this.AviButton.Click += new System.EventHandler(this.Addbutton_Click);
             // 
             // IdTextBox
             // 
@@ -51,22 +50,11 @@
             this.IdTextBox.Size = new System.Drawing.Size(260, 345);
             this.IdTextBox.TabIndex = 1;
             // 
-            // SviButton
-            // 
-            this.SviButton.Location = new System.Drawing.Point(146, 363);
-            this.SviButton.Name = "SviButton";
-            this.SviButton.Size = new System.Drawing.Size(126, 37);
-            this.SviButton.TabIndex = 2;
-            this.SviButton.Text = "添加SVI";
-            this.SviButton.UseVisualStyleBackColor = true;
-            this.SviButton.Click += new System.EventHandler(this.SviButton_Click);
-            // 
             // PanelIdAddForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(281, 412);
-            this.Controls.Add(this.SviButton);
             this.Controls.Add(this.IdTextBox);
             this.Controls.Add(this.AviButton);
             this.Name = "PanelIdAddForm";
@@ -80,6 +68,5 @@
 
         private System.Windows.Forms.Button AviButton;
         private System.Windows.Forms.TextBox IdTextBox;
-        private System.Windows.Forms.Button SviButton;
     }
 }

@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 namespace EyeOfSauron
 {
-    public delegate void PanelIdAddWork(string[] a,InspectSection b);
+    public delegate void PanelIdAddWork(string[] a);
     public partial class PanelIdAddForm : Form
     {
         PanelIdAddWork TheWorkMethod;
@@ -20,14 +20,9 @@ namespace EyeOfSauron
             InitializeComponent();
             TheWorkMethod = work;
         }
-        private void AVIbutton_Click(object sender, EventArgs e)
+        private void Addbutton_Click(object sender, EventArgs e)
         {
-            TheWorkMethod(this.IdTextBox.Lines, InspectSection.AVI);
-            this.Close();
-        }
-        private void SviButton_Click(object sender, EventArgs e)
-        {
-            TheWorkMethod(this.IdTextBox.Lines, InspectSection.SVI);
+            TheWorkMethod(this.IdTextBox.Lines);
             this.Close();
         }
     }

@@ -17,6 +17,7 @@ using NetMQ.Sockets;
 using Container.Message;
 using NetMQ;
 using Container.SeverConnection;
+using System.Threading;
 
 namespace ExamManager
 {
@@ -29,8 +30,7 @@ namespace ExamManager
         SqlCommandBuilder Builder;
         SqlDataAdapter adp;
         Queue<string> waitqueue = new Queue<string>();
-        Dictionary<string, List<PanelPathContainer>> pathdic;
-        InspectSection addsection;
+        Dictionary<string, List<PanelPathContainer>> NewPathDic;
         ImageFormManager imageFormManager;
         List<string> InfoList;
         enum DelFlag
@@ -55,7 +55,6 @@ namespace ExamManager
       ,[Judge]
       ,[DefectCode]
       ,[DefectName]
-      ,[Section]
       ,[Info]
       ,[DelFlag]
   FROM [EDIAS_DB].[dbo].[AET_IMAGE_EXAM]
@@ -73,9 +72,9 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
             foreach (DataGridViewColumn Col in this.ExamDBGridView.Columns)
             {
                 Col.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-                this.ExamDBGridView.Sort(this.ExamDBGridView.Columns[7], ListSortDirection.Ascending);
+                this.ExamDBGridView.Sort(this.ExamDBGridView.Columns[6], ListSortDirection.Ascending);
             }
-            this.ExamDBGridView.Columns[7].Visible = false;
+            this.ExamDBGridView.Columns[6].Visible = false;
         }
         private void AddDefectCode()
         {
@@ -93,7 +92,7 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
             InfoList.Add("");
             for (int i = 1; i < this.ExamDBGridView.Rows.Count; i++)
             {
-                string info = this.ExamDBGridView.Rows[i].Cells[6].Value.ToString();
+                string info = this.ExamDBGridView.Rows[i].Cells[5].Value.ToString();
                 if (!InfoList.Contains(info))
                 {
                     InfoList.Add(info);
@@ -106,15 +105,14 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
             PanelIdAddForm idform = new PanelIdAddForm(AddPanelId);
             idform.ShowDialog();
         }
-        private void AddPanelId(string[] panelidarray, InspectSection section)
+        private void AddPanelId(string[] panelidarray)
         {
             // 将 ID array 中的id添加任务；预加载图片及添加至newidlistbox中；
-            pathdic = SeverConnecter.GetPanelPathByID(panelidarray);
-            addsection = section;
             foreach (var item in panelidarray)
             {
                 this.waitqueue.Enqueue(item);
             }
+            NewPathDic = SeverConnecter.GetPanelPathByID(panelidarray);
             ProcessForm newprocessform = new ProcessForm(AddOnePanelSafe);
             newprocessform.ShowDialog();
             Task.Run((Action)AddMutiPanel);
@@ -140,29 +138,34 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
             var panelid = this.waitqueue.Dequeue();
             try
             {
-                var pathlist = pathdic[panelid].Where(x => (x.PcSection == addsection)).ToList();
+                var pathlist = NewPathDic[panelid];
+                List<string> eqidlist = new List<string>();
                 foreach (var item in pathlist)
                 {
-                    // 加入设备中多次出现的图片
-                    if (pathlist.Count > 1)
+                    if (!eqidlist.Contains(item.EqId))
                     {
-                        var newpanel = new PanelImageContainer(panelid, item, true);
-                        newpanel.Download();
-                        this.NewIdListBox.Items.Add(newpanel);
-                    }
-                    else
-                    {
-                        var newpanel = new PanelImageContainer(panelid, item);
-                        newpanel.Download();
-                        this.NewIdListBox.Items.Add(newpanel);
+                        eqidlist.Add(item.EqId);
                     }
                 }
+                foreach (var item in eqidlist)
+                {
+                    // 设备中多次出现会重复加入；
+                    PanelPathContainer avipath = pathlist.Where(x => (x.EqId == item && x.PcSection == InspectSection.AVI)).ToArray().First();
+                    PanelPathContainer svipath = pathlist.Where(x => (x.EqId == item && x.PcSection == InspectSection.SVI)).ToArray().First();
+                    var newpanel = new PanelImageContainer(panelid, avipath, svipath, true);
+                    newpanel.Download();
+                    this.NewIdListBox.Items.Add(newpanel);
+                }
             }
-            catch (ArgumentNullException)
+            catch (NullReferenceException)
             {
                 string errorString = string.Format("panel: {0} cannot find the path", panelid);
             }
             catch (FileContainerException)
+            {
+                string errorString = string.Format("panel: {0} 文件不存在（可能原路径文件已被删除）", panelid);
+            }
+            catch (InvalidOperationException)
             {
                 string errorString = string.Format("panel: {0} 文件不存在（可能原路径文件已被删除）", panelid);
             }
@@ -171,6 +174,7 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
         {
             while (this.waitqueue.Count != 0)
             {
+                Thread.Sleep(2000);
                 this.Invoke(new ExamManagerWorkMethod(AddOnePanel), new object[] { });
             }
         }
@@ -200,7 +204,7 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
         {
             for (int i = 0; i < this.ExamDBGridView.Rows.Count; i++)
             {
-                switch (Convert.ToInt16(this.ExamDBGridView.Rows[i].Cells[7].Value))
+                switch (Convert.ToInt16(this.ExamDBGridView.Rows[i].Cells[6].Value))
                 {
                     case 0:
                         this.ExamDBGridView.Rows[i].DefaultCellStyle.BackColor = Color.White;
@@ -214,15 +218,6 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
                     default:
                         break;
                 }
-            }
-        }
-        private void CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (this.ExamDBGridView.SelectedRows.Count != 0)
-            {
-                PanelInfo panel = new PanelInfo(Convert.ToString(this.ExamDBGridView.CurrentRow.Cells[1].Value), (InspectSection)Enum.Parse(typeof(InspectSection), Convert.ToString(this.ExamDBGridView.CurrentRow.Cells[5].Value)));
-                List<PanelInfo> panelIdList = new List<PanelInfo>();
-                panelIdList.Add(panel);
             }
         }
         private void Cleanbutton_Click(object sender, EventArgs e)
@@ -248,25 +243,11 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
                 PanelImageContainer item = (PanelImageContainer)theListBox.SelectedItem;
                 if (item.HasMajorFile)
                 {
-                    if (item.Section == InspectSection.AVI)
-                    {
-                        var filearray = item.GetFile(Parameter.AviImageNameList);
-                        imageFormManager.SetImageArray(filearray);
-                    }
-                    else if (item.Section == InspectSection.SVI)
-                    {
-                        var filearray = item.GetFile(Parameter.SviImageNameList);
-                        imageFormManager.SetImageArray(filearray);
-                    }
-                    else if (item.Section == InspectSection.APP)
-                    {
-                        var filearray = item.GetFile(Parameter.AppImageNameList);
-                        imageFormManager.SetImageArray(filearray);
-                    }
+                    imageFormManager.SetImageArray(item.GetImage());
                 }
                 else
                 {
-                    string message = string.Format("panel id: {0} 的图像文件不存在，请检查原设备情况，",item.MutiString);
+                    string message = string.Format("panel id: {0} 的图像文件不完整或不存在，请检查原设备情况，",item.MutiString);
                     MessageBox.Show(message);
                 }
 
@@ -280,7 +261,7 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
                 this.ExamDBGridView.SelectedRows[0].Cells[2].Value = this.DefectcomboBox.Text == "S" ? "S" : "F";
                 this.ExamDBGridView.SelectedRows[0].Cells[3].Value = defect.DefectCode;
                 this.ExamDBGridView.SelectedRows[0].Cells[4].Value = this.DefectcomboBox.Text == "S" ? "" : defect.DefectName;
-                this.ExamDBGridView.SelectedRows[0].Cells[6].Value = this.ExamInfocomboBox.Text;
+                this.ExamDBGridView.SelectedRows[0].Cells[5].Value = this.ExamInfocomboBox.Text;
             }
             else
             {
@@ -290,16 +271,15 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
                     {
                         if (item.HasMajorFile)
                         {
+                            item.Save(this.ExamInfocomboBox.Text);
                             DataRow newRow = dataset.Tables[0].NewRow();
                             newRow[1] = item.PanelId;
                             newRow[2] = this.DefectcomboBox.Text == "S" ? "S" : "F";
                             newRow[3] = defect.DefectCode;
                             newRow[4] = defect.DefectName;
-                            newRow[5] = item.Section;
-                            newRow[6] = this.ExamInfocomboBox.Text;
-                            newRow[7] = "2";
+                            newRow[5] = this.ExamInfocomboBox.Text;
+                            newRow[6] = "2";
                             dataset.Tables[0].Rows.Add(newRow);
-                            item.Save(Path.Combine(@"\\172.16.145.22\NetworkDrive\D_Drive\Mordor\ExamSimple", item.Section.ToString(), this.ExamInfocomboBox.Text));
                         }
                     }
                     refreshDataSet();
@@ -320,7 +300,6 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
             bdsource.Filter = "info = '" + this.ExamInfocomboBox.Text + "'";
             this.ExamDBGridView.ClearSelection();
             ButtonTextChange(sender, e);
-
         }
         private void InfoFilterAdd(object sender, EventArgs e)
         {
@@ -375,8 +354,7 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
         private void ExploreOrigin(InspectSection section)
         {
             PanelImageContainer panel = (PanelImageContainer)this.NewIdListBox.SelectedItem;
-            var eqid = panel.path.EqId;
-            var pathlist = SeverConnecter.GetPanelPathByID(panel.PanelId)[panel.PanelId].Where(x => x.PcSection == section && x.EqId == eqid);
+            var pathlist = SeverConnecter.GetPanelPathByID(panel.PanelId)[panel.PanelId].Where(x => x.PcSection == section && x.EqId == panel.Eqid);
             if (pathlist.Count() > 0)
             {
                 string path = pathlist.First().OriginImagePath;
@@ -391,8 +369,7 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
         private void ExploreResult(InspectSection section)
         {
             PanelImageContainer panel = (PanelImageContainer)this.NewIdListBox.SelectedItem;
-            var eqid = panel.path.EqId;
-            var pathlist = SeverConnecter.GetPanelPathByID(panel.PanelId)[panel.PanelId].Where(x => x.PcSection == section && x.EqId == eqid);
+            var pathlist = SeverConnecter.GetPanelPathByID(panel.PanelId)[panel.PanelId].Where(x => x.PcSection == section && x.EqId == panel.Eqid);
             if (pathlist.Count() > 0)
             {
                 string path = pathlist.First().ResultPath;
@@ -409,7 +386,7 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
             this.AddButton.Text = "添加";
             if (this.ExamDBGridView.SelectedRows.Count != 0)
             {
-                switch ((DelFlag)Convert.ToInt32(this.ExamDBGridView.CurrentRow.Cells[7].Value))
+                switch ((DelFlag)Convert.ToInt32(this.ExamDBGridView.CurrentRow.Cells[6].Value))
                 {
                     case DelFlag.NORMAL:
                     case DelFlag.ADD:
@@ -428,9 +405,9 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
         {
             for (int i = 0; i < this.ExamDBGridView.Rows.Count; i++)
             {
-                if (Convert.ToInt16(this.ExamDBGridView.Rows[i].Cells[7].Value) == 2)
+                if (Convert.ToInt16(this.ExamDBGridView.Rows[i].Cells[6].Value) == 2)
                 {
-                    this.ExamDBGridView.Rows[i].Cells[7].Value = 0;
+                    this.ExamDBGridView.Rows[i].Cells[6].Value = 0;
                 }
             }
             refreshDataSet();
@@ -465,31 +442,21 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
             if (this.ExamDBGridView.SelectedRows.Count != 0)
             {
                 string panelid = this.ExamDBGridView.SelectedRows[0].Cells[1].Value.ToString();
-                InspectSection section = (InspectSection)Enum.Parse(typeof(InspectSection), this.ExamDBGridView.SelectedRows[0].Cells[5].Value.ToString());
                 try
                 {
-                    if (section == InspectSection.AVI)
-                    {
-                        string newpanelpath = Path.Combine(Parameter.AviExamFilePath, this.ExamInfocomboBox.Text, panelid);
-                        PanelImageContainer newpanel = new PanelImageContainer(panelid, newpanelpath, section);
-                        MemoryStream[] filearray = newpanel.GetFile(Parameter.AviImageNameList);
-                        imageFormManager.SetImageArray(filearray);
-                    }
-                    else if (section == InspectSection.SVI)
-                    {
-                        string newpanelpath = Path.Combine(Parameter.SviExamFilePath, this.ExamInfocomboBox.Text, panelid);
-                        PanelImageContainer newpanel = new PanelImageContainer(panelid, newpanelpath, section);
-                        var filearray = newpanel.GetFile(Parameter.SviImageNameList);
-                        imageFormManager.SetImageArray(filearray);
-                    }
+                    PanelImageContainer newpanel = new PanelImageContainer(panelid, this.ExamInfocomboBox.Text);
+                    imageFormManager.SetImageArray(newpanel.GetImage());
                 }
                 catch (FileContainerException)
                 {
                     string errorstring = string.Format("考试文件不存在，请检查文件夹中的内容，panel id：{0}", panelid);
                     MessageBox.Show(errorstring);
                 }
-
             }
+        }
+        private void ServerRefreshbutton_Click(object sender, EventArgs e)
+        {
+            SeverConnecter.SendBaseMessage(MessageType.CONTROLER_REFRESH_EXAM);
         }
     }
 }

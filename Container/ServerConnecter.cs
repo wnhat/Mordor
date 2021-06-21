@@ -17,6 +17,12 @@ namespace Container.SeverConnection
             request = new RequestSocket();
             request.Connect("tcp://172.16.145.22:5555");
         }
+        public static bool SendBaseMessage(MessageType m)
+        {
+            BaseMessage newMessage = new BaseMessage(m);
+            request.SendMultipartMessage(newMessage);
+            return request.ReceiveSignal();
+        }
         public static Operator CheckPassWord(Operator theuser)
         {
             UserCheckMessage newMessage = new UserCheckMessage(MessageType.CLINET_CHECK_USER, theuser);

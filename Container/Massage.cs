@@ -20,6 +20,7 @@ namespace Container.Message
 
         CONTROLER_CLEAR_MISSION,
         CONTROLER_ADD_MISSION,
+        CONTROLER_REFRESH_EXAM,
 
         SERVER_SEND_MISSION,
         SERVER_SEND_FINISH,

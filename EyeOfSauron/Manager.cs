@@ -211,19 +211,6 @@ namespace EyeOfSauron
                 if (ExamMissionList.Count > 0)
                 {
                     ExamMission newExamMission = ExamMissionList.Dequeue();
-                    string[] imagenamelist = Parameter.AviImageNameList;
-                    switch (newExamMission.PcSection)
-                    {
-                        case InspectSection.AVI:
-                            imagenamelist = Parameter.AviImageNameList;
-                            break;
-                        case InspectSection.SVI:
-                            imagenamelist = Parameter.SviImageNameList;
-                            break;
-                        case InspectSection.APP:
-                            imagenamelist = Parameter.AppImageNameList;
-                            break;
-                    }
                     InspectMission newinspectmission = new InspectMission(newExamMission);
                     ExamBuffer.Enqueue(newExamMission);
                     return newinspectmission;

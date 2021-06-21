@@ -45,6 +45,7 @@ namespace ExamManager
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.CommitButton = new System.Windows.Forms.Button();
+            this.ServerRefreshbutton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -127,7 +128,6 @@ namespace ExamManager
             this.ExamDBGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.ExamDBGridView.Size = new System.Drawing.Size(789, 438);
             this.ExamDBGridView.TabIndex = 11;
-            this.ExamDBGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.CellContentClick);
             this.ExamDBGridView.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.dataGridViewRowPrePaint);
             this.ExamDBGridView.SelectionChanged += new System.EventHandler(this.ExamDBGridView_SelectChange);
             this.ExamDBGridView.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ExamDBGridView_MouseClick);
@@ -245,10 +245,21 @@ namespace ExamManager
             this.CommitButton.UseVisualStyleBackColor = true;
             this.CommitButton.MouseClick += new System.Windows.Forms.MouseEventHandler(this.CommitButtonClick);
             // 
+            // ServerRefreshbutton
+            // 
+            this.ServerRefreshbutton.Location = new System.Drawing.Point(12, 928);
+            this.ServerRefreshbutton.Name = "ServerRefreshbutton";
+            this.ServerRefreshbutton.Size = new System.Drawing.Size(88, 52);
+            this.ServerRefreshbutton.TabIndex = 20;
+            this.ServerRefreshbutton.Text = "刷新服务器";
+            this.ServerRefreshbutton.UseVisualStyleBackColor = true;
+            this.ServerRefreshbutton.Click += new System.EventHandler(this.ServerRefreshbutton_Click);
+            // 
             // examManageForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(1902, 999);
+            this.Controls.Add(this.ServerRefreshbutton);
             this.Controls.Add(this.CommitButton);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -293,6 +304,7 @@ namespace ExamManager
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.DataGridView ExamDBGridView;
         private System.Windows.Forms.Button CommitButton;
+        private System.Windows.Forms.Button ServerRefreshbutton;
     }
 }
 
