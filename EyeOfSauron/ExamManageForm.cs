@@ -55,7 +55,6 @@ namespace ExamManager
       ,[Judge]
       ,[DefectCode]
       ,[DefectName]
-      ,[Section]
       ,[Info]
       ,[DelFlag]
   FROM [EDIAS_DB].[dbo].[AET_IMAGE_EXAM]
@@ -73,9 +72,9 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
             foreach (DataGridViewColumn Col in this.ExamDBGridView.Columns)
             {
                 Col.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-                this.ExamDBGridView.Sort(this.ExamDBGridView.Columns[7], ListSortDirection.Ascending);
+                this.ExamDBGridView.Sort(this.ExamDBGridView.Columns[6], ListSortDirection.Ascending);
             }
-            this.ExamDBGridView.Columns[7].Visible = false;
+            this.ExamDBGridView.Columns[6].Visible = false;
         }
         private void AddDefectCode()
         {
@@ -93,7 +92,7 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
             InfoList.Add("");
             for (int i = 1; i < this.ExamDBGridView.Rows.Count; i++)
             {
-                string info = this.ExamDBGridView.Rows[i].Cells[6].Value.ToString();
+                string info = this.ExamDBGridView.Rows[i].Cells[5].Value.ToString();
                 if (!InfoList.Contains(info))
                 {
                     InfoList.Add(info);
@@ -178,11 +177,11 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
         {
             if (this.ExamDBGridView.SelectedRows.Count != 0)
             {
-                this.ExamDBGridView.SelectedRows[0].Cells[7].Value = Convert.ToInt16(this.ExamDBGridView.SelectedRows[0].Cells[7].Value) == 1 ? 0 : 1;
+                this.ExamDBGridView.SelectedRows[0].Cells[6].Value = Convert.ToInt16(this.ExamDBGridView.SelectedRows[0].Cells[6].Value) == 1 ? 0 : 1;
                 int RowIndex = this.ExamDBGridView.CurrentRow.Index;
                 this.bdsource.EndEdit();
                 refreshDataSet();
-                if (Convert.ToInt16(this.ExamDBGridView.SelectedRows[0].Cells[7].Value) == 1)
+                if (Convert.ToInt16(this.ExamDBGridView.SelectedRows[0].Cells[6].Value) == 1)
                 {
                     this.ExamDBGridView.CurrentCell = this.ExamDBGridView[0, RowIndex];
                 }
@@ -200,7 +199,7 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
         {
             for (int i = 0; i < this.ExamDBGridView.Rows.Count; i++)
             {
-                switch (Convert.ToInt16(this.ExamDBGridView.Rows[i].Cells[7].Value))
+                switch (Convert.ToInt16(this.ExamDBGridView.Rows[i].Cells[6].Value))
                 {
                     case 0:
                         this.ExamDBGridView.Rows[i].DefaultCellStyle.BackColor = Color.White;
@@ -269,7 +268,6 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
                     string message = string.Format("panel id: {0} 的图像文件不存在，请检查原设备情况，",item.MutiString);
                     MessageBox.Show(message);
                 }
-
             }
         }
         private void AddButton_Click(object sender, EventArgs e)
@@ -295,9 +293,8 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
                             newRow[2] = this.DefectcomboBox.Text == "S" ? "S" : "F";
                             newRow[3] = defect.DefectCode;
                             newRow[4] = defect.DefectName;
-                            newRow[5] = item.Section;
-                            newRow[6] = this.ExamInfocomboBox.Text;
-                            newRow[7] = "2";
+                            newRow[5] = this.ExamInfocomboBox.Text;
+                            newRow[6] = "2";
                             dataset.Tables[0].Rows.Add(newRow);
                             item.Save(Path.Combine(@"\\172.16.145.22\NetworkDrive\D_Drive\Mordor\ExamSimple", item.Section.ToString(), this.ExamInfocomboBox.Text));
                         }
@@ -409,7 +406,7 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
             this.AddButton.Text = "添加";
             if (this.ExamDBGridView.SelectedRows.Count != 0)
             {
-                switch ((DelFlag)Convert.ToInt32(this.ExamDBGridView.CurrentRow.Cells[7].Value))
+                switch ((DelFlag)Convert.ToInt32(this.ExamDBGridView.CurrentRow.Cells[6].Value))
                 {
                     case DelFlag.NORMAL:
                     case DelFlag.ADD:
@@ -428,9 +425,9 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
         {
             for (int i = 0; i < this.ExamDBGridView.Rows.Count; i++)
             {
-                if (Convert.ToInt16(this.ExamDBGridView.Rows[i].Cells[7].Value) == 2)
+                if (Convert.ToInt16(this.ExamDBGridView.Rows[i].Cells[6].Value) == 2)
                 {
-                    this.ExamDBGridView.Rows[i].Cells[7].Value = 0;
+                    this.ExamDBGridView.Rows[i].Cells[6].Value = 0;
                 }
             }
             refreshDataSet();
@@ -489,6 +486,17 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
                     MessageBox.Show(errorstring);
                 }
 
+            }
+        }
+        private void IDList_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            if(e.Index >= 0)
+            {
+                e.DrawBackground();
+                e.DrawFocusRectangle();
+                Brush RectBrush = Brushes.White;
+                e.Graphics.FillRectangle(RectBrush, e.Bounds);
+                e.Graphics.DrawString(this.NewIdListBox.Items[e.Index].ToString(), e.Font, Brushes.Black, e.Bounds, null);
             }
         }
     }

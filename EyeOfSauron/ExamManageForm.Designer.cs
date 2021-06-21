@@ -168,17 +168,17 @@ namespace ExamManager
             // 
             // NewIdListBox
             // 
-            this.NewIdListBox.Font = new System.Drawing.Font("Microsoft YaHei", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.NewIdListBox.Font = new System.Drawing.Font("SimSun", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.NewIdListBox.FormattingEnabled = true;
             this.NewIdListBox.HorizontalExtent = 1;
             this.NewIdListBox.HorizontalScrollbar = true;
-            this.NewIdListBox.ItemHeight = 19;
             this.NewIdListBox.Location = new System.Drawing.Point(12, 80);
             this.NewIdListBox.Name = "NewIdListBox";
             this.NewIdListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.NewIdListBox.Size = new System.Drawing.Size(286, 821);
+            this.NewIdListBox.Size = new System.Drawing.Size(286, 810);
             this.NewIdListBox.TabIndex = 13;
             this.NewIdListBox.Click += new System.EventHandler(this.NewIdListBox_Click);
+            this.NewIdListBox.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.IDList_DrawItem);
             this.NewIdListBox.SelectedValueChanged += new System.EventHandler(this.NewIdListBox_SelectedValueChanged);
             this.NewIdListBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NewIdListBox_KeyDown);
             this.NewIdListBox.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.NewIdListBox_MouseDoubleClick);
