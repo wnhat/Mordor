@@ -182,11 +182,11 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
         {
             if (this.ExamDBGridView.SelectedRows.Count != 0)
             {
-                this.ExamDBGridView.SelectedRows[0].Cells[7].Value = Convert.ToInt16(this.ExamDBGridView.SelectedRows[0].Cells[7].Value) == 1 ? 0 : 1;
+                this.ExamDBGridView.SelectedRows[0].Cells[6].Value = Convert.ToInt16(this.ExamDBGridView.SelectedRows[0].Cells[6].Value) == 1 ? 0 : 1;
                 int RowIndex = this.ExamDBGridView.CurrentRow.Index;
                 this.bdsource.EndEdit();
                 refreshDataSet();
-                if (Convert.ToInt16(this.ExamDBGridView.SelectedRows[0].Cells[7].Value) == 1)
+                if (Convert.ToInt16(this.ExamDBGridView.SelectedRows[0].Cells[6].Value) == 1)
                 {
                     this.ExamDBGridView.CurrentCell = this.ExamDBGridView[0, RowIndex];
                 }
@@ -250,7 +250,6 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
                     string message = string.Format("panel id: {0} 的图像文件不完整或不存在，请检查原设备情况，",item.MutiString);
                     MessageBox.Show(message);
                 }
-
             }
         }
         private void AddButton_Click(object sender, EventArgs e)
@@ -457,6 +456,17 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
         private void ServerRefreshbutton_Click(object sender, EventArgs e)
         {
             SeverConnecter.SendBaseMessage(MessageType.CONTROLER_REFRESH_EXAM);
+        }
+        private void IDList_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            if(e.Index >= 0)
+            {
+                e.DrawBackground();
+                e.DrawFocusRectangle();
+                Brush RectBrush = Brushes.White;
+                e.Graphics.FillRectangle(RectBrush, e.Bounds);
+                e.Graphics.DrawString(this.NewIdListBox.Items[e.Index].ToString(), e.Font, Brushes.Black, e.Bounds, null);
+            }
         }
     }
 }
