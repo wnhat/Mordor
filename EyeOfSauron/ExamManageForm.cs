@@ -293,6 +293,7 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
             this.bdsource.EndEdit();
             this.ExamDBGridView.ClearSelection();
             ButtonTextChange(sender, e);
+            this.NewIdListBox.Focus();
         }
         private void FilterChanged(object sender, EventArgs e)
         {
