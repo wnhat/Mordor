@@ -21,13 +21,8 @@ namespace test
         [STAThread]
         static void Main(string[] args)
         {
-            int[] a = new int[2] { 0, 21 };
-            int[] b = new int[2] { 3, 2 };
-            a.CopyTo(b,b.Length);
+            Form1 a = new Form1();
+            a.ShowDialog();
         }
-    }
-    class NewFileContainer
-    {
-
     }
 }
