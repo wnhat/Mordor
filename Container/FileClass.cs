@@ -239,9 +239,12 @@ namespace Container
         {
             DirectoryInfo savetarget = new DirectoryInfo(savePath);
             DirectoryInfo subDir = savetarget.CreateSubdirectory(DirInfo.Name);
-            foreach (var file in FileContainerArray)
+            if (FileContainerArray != null)
             {
-                file.SaveFileInDisk(subDir.FullName);
+                foreach (var file in FileContainerArray)
+                {
+                    file.SaveFileInDisk(subDir.FullName);
+                }
             }
             if (DirContainerArray != null)
             {

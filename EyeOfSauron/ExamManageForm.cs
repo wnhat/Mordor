@@ -174,7 +174,7 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
         {
             while (this.waitqueue.Count != 0)
             {
-                Thread.Sleep(2000);
+                //Thread.Sleep(2000);
                 this.Invoke(new ExamManagerWorkMethod(AddOnePanel), new object[] { });
             }
         }
@@ -198,6 +198,7 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
             Builder.GetUpdateCommand();
             var asd = dataset.GetChanges();
             adp.Update(dataset);
+            dataset.AcceptChanges();
             TheDataBase.Close();
         }
         private void dataGridViewRowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
@@ -293,7 +294,10 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
             this.bdsource.EndEdit();
             this.ExamDBGridView.ClearSelection();
             ButtonTextChange(sender, e);
-            this.NewIdListBox.Focus();
+            if (this.AddButton.Text == "添加")
+            {
+                this.NewIdListBox.Focus();
+            }
         }
         private void FilterChanged(object sender, EventArgs e)
         {
@@ -439,7 +443,7 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
         }
         private void ExamDBGridView_SelectChange(object sender, EventArgs e)
         {
-            if (this.ExamDBGridView.SelectedRows.Count != 0)
+            if (this.ExamDBGridView.SelectedRows.Count != 0 && this.ExamDBGridView.Focused)
             {
                 string panelid = this.ExamDBGridView.SelectedRows[0].Cells[1].Value.ToString();
                 try

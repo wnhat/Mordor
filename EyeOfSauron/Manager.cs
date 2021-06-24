@@ -130,7 +130,7 @@ namespace EyeOfSauron
         Queue<ExamMission> ExamMissionList = new Queue<ExamMission>();
         Queue<ExamMission> ExamBuffer = new Queue<ExamMission>();
         List<ExamMission> ExamResult = new List<ExamMission>();
-        public int MissionLeft { get { return waitMissionQueue.Count; } }
+        public int MissionLeft { get { return waitMissionQueue.Count + ExamMissionList.Count; } }
         public MissionBuffer()
         {
         }
@@ -180,6 +180,7 @@ namespace EyeOfSauron
             {
                 ExamMissionList.Enqueue(item);
             }
+            ExamInfo = examinfo;
         }
         public InspectMission GetMission()
         {
