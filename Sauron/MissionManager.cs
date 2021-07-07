@@ -22,9 +22,7 @@ namespace Sauron
         Queue<Lot> LotWaitQueue = new Queue<Lot>();
         public MissionManager()
         {
-            string ip_path = @"D:\1218180\program2\c#\Mordor\Sauron\IP.json";
-            IP_TR ip_tr = new IP_TR(ip_path);
-            this.Thefilecontainer = new FileManager(ip_tr);
+            this.Thefilecontainer = new FileManager();
             this.Thesqlserver = new SqlServerConnector();
             RefreshExamList();
             Task refreshtask = RefreshFileContainer();

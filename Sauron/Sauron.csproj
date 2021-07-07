@@ -96,7 +96,6 @@
   <ItemGroup>
     <Compile Include="ExamMissionManager.cs" />
     <Compile Include="File_container.cs" />
-    <Compile Include="IP_TR.cs" />
     <Compile Include="LogClass.cs" />
     <Compile Include="MissionManager.cs" />
     <Compile Include="NewFileContainer.cs" />

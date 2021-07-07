@@ -16,7 +16,12 @@ namespace Sauron
     {
         static void Main(string[] args)
         {
-            Server(); //启动服务器；
+            //Server(); //启动服务器；
+            Test();
+        }
+        static void Test()
+        {
+            MissionManager TheMissionManager = new MissionManager();
         }
         static void Server()
         {

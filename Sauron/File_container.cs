@@ -12,19 +12,17 @@ namespace Sauron
     class FileManager
     {
         PanelPathManager PathManager;
-        IP_TR ip_tr;
-        List<INS_pc_manage> InsPCList;
+        List<InspectPC> InsPCList;
 
-        public FileManager(IP_TR ip_tr_)
+        public FileManager()
         {
-            this.InsPCList = new List<INS_pc_manage>();
+            this.InsPCList = new List<InspectPC>();
             this.PathManager = new PanelPathManager();
-            ip_tr = ip_tr_;
 
-            List<PC> refresh_pc_list = ip_tr.name_to_ip(new InspectSection[] { InspectSection.AVI,InspectSection.SVI,InspectSection.APP});
+            List<PC> refresh_pc_list = IpTransform.name_to_ip(new InspectSection[] { InspectSection.AVI,InspectSection.SVI,InspectSection.APP});
             foreach (var pc in refresh_pc_list)
             {
-                InsPCList.Add(new INS_pc_manage(pc));
+                InsPCList.Add(new InspectPC(pc));
             }
         }
         public async Task RefreshFileList()
@@ -78,12 +76,37 @@ namespace Sauron
             }
         }
     }
-    class INS_pc_manage
+    class InspectPC
     {
         PC PcInfo;
-        public INS_pc_manage(PC input_pc)
+        public InspectPC(PC input_pc)
         {
             PcInfo = input_pc;
+        }
+        public void SearchFile()
+        {
+            PanelPathManager panel_list = new PanelPathManager();
+            List<Task> searchTaskList = new List<Task>();
+            foreach (var search_disk in (DiskPart[])Enum.GetValues(typeof(DiskPart)))
+            {
+                Task newdisksearch = new Task()
+                searchTaskList.Add(new Task());
+                panel_list.PanelPathAdd(SearchDisk(search_disk));
+            }
+        }
+        List<PanelPathContainer> SearchDisk(DiskPart search_disk)
+        {
+            List<PanelPathContainer> panelList = new List<PanelPathContainer>();
+            string diskpath1 = Path.Combine("\\\\", PcInfo.PcIp, "NetworkDrive", search_disk.ToString(), "Defect Info", "Origin");
+            string diskpath2 = Path.Combine("\\\\", PcInfo.PcIp, "NetworkDrive", search_disk.ToString(), "Defect Info", "Result");
+            string[] image_directory_list = Directory.GetDirectories(diskpath1);
+            string[] result_directory_list = Directory.GetDirectories(diskpath2);
+            foreach (var item in Enumerable.Intersect(image_directory_list, result_directory_list, new StringPathCompare()))
+            {
+                PanelPathContainer this_panel = new PanelPathContainer(Path.GetFileName(item), PcInfo, search_disk);
+                panelList.Add(this_panel);
+            }
+            return panelList;
         }
         public void Serch_file(PanelPathManager new_panel_list)
         {
@@ -121,6 +144,24 @@ namespace Sauron
             }
             FilePathLogClass.Logger.Information("pc: {0} finishied;", PcInfo.PcIp);
             new_panel_list.AddRange(panel_list);
+        }
+    }
+    class StringPathCompare : IEqualityComparer<string>
+    {
+        public bool Equals(string x, string y)
+        {
+            if (Path.GetFileName(x) == Path.GetFileName(y))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        public int GetHashCode(string obj)
+        {
+            return obj.GetHashCode();
         }
     }
 }

@@ -96,6 +96,7 @@
     <Compile Include="container.cs" />
     <Compile Include="ExceptionClass.cs" />
     <Compile Include="FileClass.cs" />
+    <Compile Include="IpTransform.cs" />
     <Compile Include="Massage.cs" />
     <Compile Include="MissionClass.cs" />
     <Compile Include="Parameter.cs" />

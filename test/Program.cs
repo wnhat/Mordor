@@ -21,8 +21,7 @@ namespace test
         [STAThread]
         static void Main(string[] args)
         {
-            Form1 a = new Form1();
-            a.ShowDialog();
+           
         }
     }
 }

@@ -170,7 +170,7 @@ namespace Sauron
            ,'{1}'
            ,'{2}'
            ,N'{3}'
-           ,'{4}'
+           ,N'{4}'
            ,'{5}'
            ,N'{6}'
            ,'{7}'
@@ -184,7 +184,7 @@ namespace Sauron
                    mission.Judge,
                    mission.Defect.DefectCode,
                    mission.Defect.DefectName,
-                   mission.PcSection,
+                   mission.MissionInfo,
                    mission.Op.Id,
                    mission.Op.Name,
                    mission.JudgeU,
