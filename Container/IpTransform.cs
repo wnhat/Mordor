@@ -18,8 +18,6 @@ namespace Container
             StringReader file_string = new StringReader(file.ReadToEnd());
             JObject jsonobj = JObject.Parse(file_string.ReadToEnd());
             PcListAll = (List<PC>)jsonobj.GetValue("PcListAll").ToObject(typeof(List<PC>));
-            //JsonSerializer file_serial = new JsonSerializer();
-            //PcListAll = ((IP_TR)file_serial.Deserialize(new JsonTextReader(file_string), typeof(IP_TR))).PcListAll;
         }
         public static List<PC> name_to_ip(List<int> eq_id_list, InspectSection[] pc_name_list, Side[] pc_side_list)
         {

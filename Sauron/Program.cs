@@ -16,8 +16,8 @@ namespace Sauron
     {
         static void Main(string[] args)
         {
-            //Server(); //启动服务器；
-            Test();
+            Server(); //启动服务器；
+            //Test();
         }
         static void Test()
         {
@@ -25,8 +25,8 @@ namespace Sauron
         }
         static void Server()
         {
-            var timer = new NetMQTimer(TimeSpan.FromSeconds(3600));
-            ResponseSocket responseSocket = new ResponseSocket("@tcp://172.16.145.22:5555");
+            var timer = new NetMQTimer(TimeSpan.FromSeconds(10));
+            ResponseSocket responseSocket = new ResponseSocket("@tcp://172.16.145.22:6666");
             using (var poller = new NetMQPoller { responseSocket, timer })
             {
                 MissionManager TheMissionManager = new MissionManager();

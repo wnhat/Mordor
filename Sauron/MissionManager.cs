@@ -25,11 +25,8 @@ namespace Sauron
             this.Thefilecontainer = new FileManager();
             this.Thesqlserver = new SqlServerConnector();
             RefreshExamList();
-            Task refreshtask = RefreshFileContainer();
-            while (!refreshtask.IsCompleted)
-            {
-                Thread.Sleep(10000);
-            }
+            RefreshFileContainer();
+            
             ConsoleLogClass.Logger.Information("服务器启动中------开始添加任务（测试版）");
             AddMissionTest();
             ConsoleLogClass.Logger.Information("服务器启动中------任务添加完成");
@@ -129,11 +126,13 @@ namespace Sauron
             }
             return newPanelPathDic;
         }
-        public async Task RefreshFileContainer()
+        public void RefreshFileContainer()
         {
             ConsoleLogClass.Logger.Information("开始刷新设备文件路径");
-            await Thefilecontainer.RefreshFileList();
+            Thefilecontainer.RefreshFileList();
             ConsoleLogClass.Logger.Information("文件路径刷新完成");
+            GC.Collect();
+            ConsoleLogClass.Logger.Information("二次垃圾收集");
         }
         public Operator CheckUser(Operator op)
         {
