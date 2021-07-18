@@ -14,7 +14,6 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Windows.Forms;
 using Newtonsoft.Json.Linq;
-using Sauron;
 using System.Threading;
 
 
@@ -29,7 +28,7 @@ namespace test
             //a.RefreshFileList();
             test02();
         }
-        static void test02()
+        static void test03()
         {
             int runcount = 0;
             List<Task<DiskPathCollection>> TaskList = new List<Task<DiskPathCollection>>();
@@ -40,7 +39,7 @@ namespace test
             }
             foreach (var item in itemclass)
             {
-                var newtask = new Task<DiskPathCollection>(() => { return item.RunTask(); });
+                var newtask = new Task<DiskPathCollection>(item.RunTask);
                 TaskList.Add(newtask);
             }
             TaskList.Sort(SortTaskList);
@@ -63,8 +62,78 @@ namespace test
             }
             Console.ReadLine();
         }
+        static void test02()
+        {
+            List<stringclass> itemclass = new List<stringclass>();
+            Console.WriteLine("测试 Test02；");
+            for (int i = 0; i < 2880; i++)
+            {
+                itemclass.Add(new stringclass());
+            }
+            int runcount = 0;
+            //FilePathLogClass.Logger.Information("start to refresh the file dict, time is {0}", DateTime.Now);
+            
+            List<Task<DiskPathCollection>> TaskList = new List<Task<DiskPathCollection>>();
+            Queue<Task<DiskPathCollection>> TaskWaitQueue = new Queue<Task<DiskPathCollection>>();
+            List<Task<DiskPathCollection>> OnRuningTask = new List<Task<DiskPathCollection>>();
+            foreach (var item in itemclass)
+            {
+                var refresh_task = new Task<DiskPathCollection>(item.RunTask);
+                TaskList.Add(refresh_task);
+            }
+            TaskList.Sort(SortTaskList);
+            foreach (var item in TaskList)
+            {
+                TaskWaitQueue.Enqueue(item);
+            }
+            while (true)
+            {
+                while (runcount < 30)
+                {
+                    var newstarttask = TaskWaitQueue.Dequeue();
+                    newstarttask.Start();
+                    ConsoleLogClass.Logger.Information("预添加任务 num：{0}；", newstarttask.Id);
+                    OnRuningTask.Add(newstarttask);
+                    runcount++;
+                }
+
+                var finishedtask = Task.WhenAny(OnRuningTask);
+                finishedtask.Result.Wait();
+                OnRuningTask.Remove(finishedtask.Result);
+                finishedtask.Dispose();
+                ConsoleLogClass.Logger.Information("任务执行完成 task：{0}; status:{1}", finishedtask.Result.Id, finishedtask.Result.Status);
+
+                ConsoleLogClass.Logger.Information("二次添加任务；");
+                var addtask = TaskWaitQueue.Dequeue();
+                addtask.Start();
+                OnRuningTask.Add(addtask);
+                runcount++;
+
+                if (runcount == TaskList.Count)
+                {
+                    ConsoleLogClass.Logger.Information("任务已全部开始；");
+                    break;
+                }
+            }
+
+            var waittask = Task.WhenAll(TaskList);
+            waittask.Wait();
+            waittask.Dispose();
+
+            foreach (var item in TaskList)
+            {
+                item.Dispose();
+            }
+            TaskList = null;
+            ConsoleLogClass.Logger.Information("开始垃圾收集；");
+            GC.Collect();
+            ConsoleLogClass.Logger.Information("等待垃圾收集；");
+            GC.WaitForPendingFinalizers();
+            ConsoleLogClass.Logger.Information("垃圾收集完成；");
+        }
         static void test01()
         {
+            ConsoleLogClass.Logger.Information("测试 Test01；");
             List<InspectPC> InsPCList = new List<InspectPC>();
             List<PC> refresh_pc_list = IpTransform.name_to_ip(new InspectSection[] { InspectSection.AVI, InspectSection.SVI, InspectSection.APP });
             foreach (var pc in refresh_pc_list)
@@ -75,29 +144,48 @@ namespace test
             FilePathLogClass.Logger.Information("start to refresh the file dict, time is {0}", DateTime.Now);
             PanelPathManager newPanelPathManager = new PanelPathManager();
             List<Task<DiskPathCollection>> TaskList = new List<Task<DiskPathCollection>>();
+
+            Queue<Task<DiskPathCollection>> TaskWaitQueue = new Queue<Task<DiskPathCollection>>();
+            List<Task<DiskPathCollection>> OnRuningTask = new List<Task<DiskPathCollection>>();
             foreach (var pc in InsPCList)
             {
                 foreach (var item in pc.DiskCollectin)
                 {
-                    var refresh_task = new Task<DiskPathCollection>(() => { return item.RunTask(); });
+                    var refresh_task = new Task<DiskPathCollection>(item.RunTask);
                     TaskList.Add(refresh_task);
                 }
             }
             TaskList.Sort(SortTaskList);
+            foreach (var item in TaskList)
+            {
+                TaskWaitQueue.Enqueue(item);
+            }
             while (true)
             {
-                while (runcount < 40)
+                while (runcount < 30)
                 {
-                    TaskList[runcount].Start();
+                    var newstarttask = TaskWaitQueue.Dequeue();
+                    newstarttask.Start();
+                    ConsoleLogClass.Logger.Information("预添加任务 num：{0}；", newstarttask.Id);
+                    OnRuningTask.Add(newstarttask);
                     runcount++;
                 }
-                var finishedtask = Task.WhenAny(TaskList);
-                finishedtask.Wait();
+
+                var finishedtask = Task.WhenAny(OnRuningTask);
+                finishedtask.Result.Wait();
+                OnRuningTask.Remove(finishedtask.Result);
                 finishedtask.Dispose();
-                TaskList[runcount].Start();
+                ConsoleLogClass.Logger.Information("任务执行完成 task：{0}; status:{1}", finishedtask.Result.Id, finishedtask.Result.Status);
+                
+                ConsoleLogClass.Logger.Information("二次添加任务；");
+                var addtask = TaskWaitQueue.Dequeue();
+                addtask.Start();
+                OnRuningTask.Add(addtask);
                 runcount++;
+
                 if (runcount == TaskList.Count)
                 {
+                    ConsoleLogClass.Logger.Information("任务已全部开始；");
                     break;
                 }
             }
@@ -133,16 +221,33 @@ namespace test
         {
             CancellationTokenSource tokensource = new CancellationTokenSource();
             CancellationToken token = tokensource.Token;
-            var newtask = new Task<DiskPathCollection>(() => { return aft(); }, token);
+            var newtask = new Task<DiskPathCollection>(printask, token);
             newtask.Start();
-            newtask.Wait(1000);
-            return newtask.Result;
+            //newtask.RunSynchronously();
+            newtask.Wait(10000);
+            if (newtask.Status == TaskStatus.RanToCompletion)
+            {
+                Console.WriteLine("stringclass 返回结果；");
+                return newtask.Result;
+            }
+            else
+            {
+                return null;
+            }
         }
         public DiskPathCollection aft()
         {
-            ConsoleLogClass.Logger.Information("进入aft");
-            return new DiskPathCollection(new string[] {"这是一条灭有灵魂的string1" }, new string[] { "这是一条灭有灵魂的string2" });
-
+            Directory.GetDirectories(@"D:\program\c#");
+            Console.WriteLine("进入aft");
+            return new DiskPathCollection(new string[] { "这是一条灭有灵魂的string1" }, new string[] { "这是一条灭有灵魂的string2" });
+        }
+        public DiskPathCollection printask()
+        {
+            string originpath = Path.Combine("\\\\", "172.16.160.11", "NetworkDrive", "F_Drive", "Defect Info", "Origin");
+            originpath = @"D:\program\c#";
+            string[] image_directory_list = Directory.GetDirectories(@"D:\program\c#");
+            Console.WriteLine("进入aft");
+            return null;
         }
     }
     class FileManager
@@ -262,41 +367,61 @@ namespace test
             ParentPc = parentPc;
             DiskName = diskName;
         }
+        public void printask()
+        {
+            //ConsoleLogClass.Logger.Information("printask 函数运行中 pc：{0} disk：{1}", ParentPc.PcInfo.PcIp, DiskName);
+            string originpath = Path.Combine("\\\\", ParentPc.PcInfo.PcIp, "NetworkDrive", DiskName.ToString(), "Defect Info", "Origin");
+            string resultpath = Path.Combine("\\\\", ParentPc.PcInfo.PcIp, "NetworkDrive", DiskName.ToString(), "Defect Info", "Result");
+            //Status = DiskStatus.Unchecked;
+            //ConsoleLogClass.Logger.Information("GetDiskPathCollection 函数运行中pc：{0} disk：{1}", ParentPc.PcInfo.PcIp, DiskName);
+            string[] image_directory_list = Directory.GetDirectories(@"D:\program\c#");
+
+            //string[] result_directory_list = Directory.GetDirectories(resultpath);
+            Status = DiskStatus.OK;
+            //return new DiskPathCollection(image_directory_list, result_directory_list);
+            Console.WriteLine("进入aft");
+        }
         public DiskPathCollection RunTask()
         {
-
             CancellationTokenSource tokensource = new CancellationTokenSource();
             CancellationToken token = tokensource.Token;
-            Task newtask = new Task(GetDiskPathCollection, token);
+            //Task newtask = new Task(GetDiskPathCollection, token);
+            Task newtask = new Task(printask, token);
             DateTime starttime = DateTime.Now;
+
             newtask.Start();
-            //newtask.RunSynchronously();
+            
+            ConsoleLogClass.Logger.Information("RunTask 函数运行中 pc：{0} disk：{1}", ParentPc.PcInfo.PcIp, DiskName);
             DateTime endtime = DateTime.Now;
-            newtask.Wait(1000);
+            newtask.Wait(10000);
             DateTime afttime = DateTime.Now;
             if (newtask.IsCompleted)
             {
+                ConsoleLogClass.Logger.Information("RunTask 函数运行成功 pc：{0} disk：{1}", ParentPc.PcInfo.PcIp, DiskName);
                 return null;
                 //return newtask.Result;
             }
             else
             {
+                ConsoleLogClass.Logger.Information("RunTask 函数运行超时 pc：{0} disk：{1}", ParentPc.PcInfo.PcIp, DiskName);
                 tokensource.Cancel();
                 Status = DiskStatus.ConnectOverTime;
                 return null;
             }
         }
-        public void GetDiskPathCollection()
+        public DiskPathCollection GetDiskPathCollection()
         {
             string originpath = Path.Combine("\\\\", ParentPc.PcInfo.PcIp, "NetworkDrive", DiskName.ToString(), "Defect Info", "Origin");
             string resultpath = Path.Combine("\\\\", ParentPc.PcInfo.PcIp, "NetworkDrive", DiskName.ToString(), "Defect Info", "Result");
             Status = DiskStatus.Unchecked;
+            Thread.Sleep(1000);
+            ConsoleLogClass.Logger.Information("GetDiskPathCollection 函数运行中pc：{0} disk：{1}",ParentPc.PcInfo.PcIp, DiskName);
             try
             {
                 string[] image_directory_list = Directory.GetDirectories(originpath);
                 string[] result_directory_list = Directory.GetDirectories(resultpath);
                 Status = DiskStatus.OK;
-                //return new DiskPathCollection(image_directory_list, result_directory_list);
+                return new DiskPathCollection(image_directory_list, result_directory_list);
             }
             catch (UnauthorizedAccessException e)
             {
@@ -304,7 +429,7 @@ namespace test
                 FilePathLogClass.Logger.Error(e.Message);
                 Status = DiskStatus.ConnectError;
                 lastErrorMessage = e.Message;
-                //return null;
+                return null;
             }
             catch (DirectoryNotFoundException e)
             {
@@ -312,7 +437,7 @@ namespace test
                 FilePathLogClass.Logger.Error(e.Message);
                 Status = DiskStatus.NotExist;
                 lastErrorMessage = e.Message;
-                //return null;
+                return null;
             }
             catch (IOException e)
             {
@@ -320,7 +445,7 @@ namespace test
                 FilePathLogClass.Logger.Error(e.Message);
                 Status = DiskStatus.ConnectError;
                 lastErrorMessage = e.Message;
-                //return null;
+                return null;
             }
         }
     }
@@ -514,5 +639,40 @@ namespace test
             }
 
         }
+    }
+    public static class FilePathLogClass
+    {
+        public static ILogger Logger;
+        static FilePathLogClass()
+        {
+            Logger = new LoggerConfiguration()
+                .WriteTo.File(@"D:\Mordor\LOG\File search\log-.txt", rollingInterval: RollingInterval.Hour)
+                .CreateLogger();
+        }
+    }
+    public static class ConsoleLogClass
+    {
+        public static ILogger Logger;
+        static ConsoleLogClass()
+        {
+            Logger = new LoggerConfiguration()
+                .WriteTo.File(@"D:\Mordor\LOG\Console\log-.txt", rollingInterval: RollingInterval.Day)
+                .WriteTo.Console()
+                .CreateLogger();
+        }
+    }
+    public class DiskPathCollection
+    {
+        string[] originalPath;
+        string[] resultPath;
+
+        public DiskPathCollection(string[] originalPath, string[] resultPath)
+        {
+            this.OriginalPath = originalPath;
+            this.ResultPath = resultPath;
+        }
+
+        public string[] OriginalPath { get { return originalPath; } set { originalPath = value; } }
+        public string[] ResultPath { get { return resultPath; } set { resultPath = value; } }
     }
 }
