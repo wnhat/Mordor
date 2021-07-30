@@ -8,7 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
 using System.Data;
-using Container.Message;
+using Container.MQMessage;
 
 namespace Sauron
 {
@@ -48,7 +48,7 @@ namespace Sauron
                             a.Socket.SignalOK();
                             break;
                         case MessageType.CLINET_GET_PANEL_MISSION:
-                            TheMissionManager.GetMission(a);
+                            TheMissionManager.GetMission(a,messageIn);
                             break;
                         case MessageType.CLINET_GET_EXAM_MISSION_LIST:
                             TheMissionManager.GetExamMission(a, messageIn);

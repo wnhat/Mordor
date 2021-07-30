@@ -1,4 +1,4 @@
-﻿using Container.Message;
+﻿using Container.MQMessage;
 using NetMQ;
 using NetMQ.Sockets;
 using System;

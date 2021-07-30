@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using NetMQ;
 using Newtonsoft.Json;
 
-namespace Container.Message
+namespace Container.MQMessage
 {
     public enum MessageType
     {
@@ -44,6 +44,23 @@ namespace Container.Message
         }
         public BaseMessage()
         {
+        }
+    }
+    public class PanelMissionRequestMessage : BaseMessage
+    {
+        public string FGcode;
+        public ProductType productType;
+        public PanelMissionRequestMessage(string fGcode, ProductType productType):base(MessageType.CLINET_GET_PANEL_MISSION)
+        {
+            FGcode = fGcode;
+            this.productType = productType;
+            this.Append(FGcode);
+            this.Append(productType.ToString());
+        }
+        public PanelMissionRequestMessage(NetMQMessage theMessage):base()
+        {
+            FGcode = theMessage[1].ConvertToString();
+            productType = (ProductType)Enum.Parse(typeof(ProductType),theMessage[2].ConvertToString());
         }
     }
     public class PanelMissionMessage : BaseMessage

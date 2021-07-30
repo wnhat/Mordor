@@ -9,6 +9,11 @@ using System.Threading.Tasks;
 
 namespace Container
 {
+    public enum LotGrade
+    {
+        G,
+        N,
+    }
     public enum JudgeGrade
     {
         S,

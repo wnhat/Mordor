@@ -9,14 +9,15 @@ using Serilog;
 using System.Threading;
 using System.IO;
 using NetMQ;
-using Container.Message;
+using Container.MQMessage;
 
 namespace Sauron
 {
     class MissionManager
     {
-        SqlServerConnector Thesqlserver;
-        FileManager Thefilecontainer;                               //管理设备文件路径；
+        MesConnector theMesConnector;       //管理与MES的链接；
+        SqlServerConnector Thesqlserver;    //管理与sqlsqerver 的链接；
+        FileManager Thefilecontainer;       //管理设备文件路径；
         Dictionary<string, List<ExamMission>> ExamMissionDic = new Dictionary<string, List<ExamMission>>();
         Dictionary<string, Lot> OnInspectLotDic = new Dictionary<string, Lot>();                     // MES下发任务；
         Queue<Lot> LotWaitQueue = new Queue<Lot>();
@@ -24,6 +25,12 @@ namespace Sauron
         {
             this.Thefilecontainer = new FileManager();
             this.Thesqlserver = new SqlServerConnector();
+            string service = "BOE.B7.MEM.TST.PEMsvr";
+            string network = "172.16.145.22";
+            string daemon = null;
+            string subject = "a.b.c";
+            this.theMesConnector = new MesConnector(service, network,daemon,subject);
+
             RefreshExamList();
             RefreshFileContainer();
             
@@ -64,8 +71,20 @@ namespace Sauron
             ExamMissionDic = newExamMissionDic;
             ConsoleLogClass.Logger.Information("考试文件刷新结束；");
         }
-        public void GetMission(NetMQSocketEventArgs a)
+        public void GetMission(NetMQSocketEventArgs a, NetMQMessage M)
         {
+            PanelMissionRequestMessage request = new PanelMissionRequestMessage(M);
+            var newmission = theMesConnector.RequestMission(request.FGcode,request.productType);
+            if (newmission != null)
+            {
+
+            }
+            else
+            {
+
+            }
+
+            // old //
             if (LotWaitQueue.Count == 0)
             {
                 a.Socket.SendMultipartMessage(new PanelMissionMessage(MessageType.SERVER_SEND_MISSION, null));
@@ -73,14 +92,14 @@ namespace Sauron
             else
             {
                 Lot newlot = LotWaitQueue.Dequeue();
-                OnInspectLotDic.Add(newlot.LotId, newlot);
+                OnInspectLotDic.Add(newlot.TRAYGROUPNAME, newlot);
                 a.Socket.SendMultipartMessage(new PanelMissionMessage(MessageType.SERVER_SEND_MISSION, newlot));
             }
         }
         public void FinishMission(NetMQSocketEventArgs a, NetMQMessage M)
         {
             PanelMissionMessage finishedMission = new PanelMissionMessage(M);
-            OnInspectLotDic.Remove(finishedMission.ThePanelMissionLot.LotId);
+            OnInspectLotDic.Remove(finishedMission.ThePanelMissionLot.TRAYGROUPNAME);
             a.Socket.SignalOK();
             // TODO: 发送mes；
             Thesqlserver.InsertFinishedMission(finishedMission.ThePanelMissionLot.panelcontainer.ToArray());

@@ -28,4 +28,15 @@ namespace Sauron
                 .CreateLogger();
         }
     }
+    public static class MesLogClass
+    {
+        public static ILogger Logger;
+        static MesLogClass()
+        {
+            Logger = new LoggerConfiguration()
+                .WriteTo.File(@"D:\Mordor\LOG\MesLog\log-.txt", rollingInterval: RollingInterval.Day)
+                .WriteTo.Console()
+                .CreateLogger();
+        }
+    }
 }

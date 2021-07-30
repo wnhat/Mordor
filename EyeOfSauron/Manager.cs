@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Container;
-using Container.Message;
+using Container.MQMessage;
 using Container.SeverConnection;
 
 namespace EyeOfSauron

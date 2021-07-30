@@ -15,6 +15,7 @@ using System.Data.SqlClient;
 using System.Windows.Forms;
 using Newtonsoft.Json.Linq;
 using System.Threading;
+using System.Xml;
 
 
 namespace test
@@ -26,7 +27,26 @@ namespace test
         {
             //FileManager a = new FileManager();
             //a.RefreshFileList();
-            test02();
+            xmltest();
+        }
+        static void xmltest()
+        {
+            string path = @"D:\1218180\program2\c#\Mordor\test\xmltest.xml";
+            string path2 = @"D:\1218180\program2\c#\Mordor\test\xmlwrite.xml";
+            FileInfo file = new FileInfo(path);
+
+            XmlDocument doc = new XmlDocument();
+            doc.Load(file.OpenRead());
+            var aaa = new RemoteTrayGroupInfoDownloadSend(doc);
+            var a = doc.GetElementsByTagName("PANEL");
+            var b = (XmlElement)a[0];
+            var c = b.GetElementsByTagName("PANELID")[0];
+            //foreach (var item in a)
+            //{
+            //    var b = (XmlNode)item;
+            //    Console.WriteLine(b.Value);
+            //}
+            
         }
         static void test03()
         {
@@ -101,7 +121,7 @@ namespace test
                 finishedtask.Result.Wait();
                 OnRuningTask.Remove(finishedtask.Result);
                 finishedtask.Dispose();
-                ConsoleLogClass.Logger.Information("任务执行完成 task：{0}; status:{1}", finishedtask.Result.Id, finishedtask.Result.Status);
+                //ConsoleLogClass.Logger.Information("任务执行完成 task：{0}; status:{1}", finishedtask.Result.Id, finishedtask.Result.Status);
 
                 ConsoleLogClass.Logger.Information("二次添加任务；");
                 var addtask = TaskWaitQueue.Dequeue();
@@ -244,8 +264,8 @@ namespace test
         public DiskPathCollection printask()
         {
             string originpath = Path.Combine("\\\\", "172.16.160.11", "NetworkDrive", "F_Drive", "Defect Info", "Origin");
-            originpath = @"D:\program\c#";
-            string[] image_directory_list = Directory.GetDirectories(@"D:\program\c#");
+            //originpath = @"D:\program\c#";
+            string[] image_directory_list = Directory.GetDirectories(originpath);
             Console.WriteLine("进入aft");
             return null;
         }
@@ -374,12 +394,41 @@ namespace test
             string resultpath = Path.Combine("\\\\", ParentPc.PcInfo.PcIp, "NetworkDrive", DiskName.ToString(), "Defect Info", "Result");
             //Status = DiskStatus.Unchecked;
             //ConsoleLogClass.Logger.Information("GetDiskPathCollection 函数运行中pc：{0} disk：{1}", ParentPc.PcInfo.PcIp, DiskName);
-            string[] image_directory_list = Directory.GetDirectories(@"D:\program\c#");
-
+            try
+            {
+                string[] image_directory_list = Directory.GetDirectories(originpath);
+                string[] result_directory_list = Directory.GetDirectories(resultpath);
+                Status = DiskStatus.OK;
+                //return new DiskPathCollection(image_directory_list, result_directory_list);
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                // 硬盘损坏，该硬盘路径无法通过远程访问的方式打开
+                FilePathLogClass.Logger.Error(e.Message);
+                Status = DiskStatus.ConnectError;
+                lastErrorMessage = e.Message;
+                //return null;
+            }
+            catch (DirectoryNotFoundException e)
+            {
+                // 硬盘损坏，或该路径下硬盘无实物存在，该硬盘路径无法通过远程访问的方式打开
+                FilePathLogClass.Logger.Error(e.Message);
+                Status = DiskStatus.NotExist;
+                lastErrorMessage = e.Message;
+                //return null;
+            }
+            catch (IOException e)
+            {
+                // 网络通信问题，网络无法链接到该计算机，可能是因为该计算连接交换机的网线出现了故障，或网卡断开，需要检查设备的硬件原因；
+                FilePathLogClass.Logger.Error(e.Message);
+                Status = DiskStatus.ConnectError;
+                lastErrorMessage = e.Message;
+                //return null;
+            }
             //string[] result_directory_list = Directory.GetDirectories(resultpath);
             Status = DiskStatus.OK;
             //return new DiskPathCollection(image_directory_list, result_directory_list);
-            Console.WriteLine("进入aft");
+            Console.WriteLine("进入printask");
         }
         public DiskPathCollection RunTask()
         {

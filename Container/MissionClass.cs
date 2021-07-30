@@ -5,53 +5,27 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace Container
 {
-    public class Panel
-    {
-        string panelId;
-        public Panel(string panelId)
-        {
-            this.panelId = panelId;
-        }
-        public string PanelId
-        {
-            // TODO: 校验ID是否符合编码规范；
-            get
-            {
-                return panelId;
-            }
-        }
-        public string GlassId
-        {
-            get
-            {
-                return panelId;
-            }
-        }
-        public string HalfId
-        {
-            get
-            {
-                return panelId;
-            }
-        }
-        public string LotId
-        {
-            get
-            {
-                return panelId;
-            }
-        }
-        public override string ToString()
-        {
-            return PanelId;
-        }
-    }
     public class Lot
     {
+        public string MACHINENAME;
         public List<PanelMission> panelcontainer = new List<PanelMission>();
+        public string TRAYGROUPNAME;
+        public Lot(string lotId, PanelMission[] panelid)
+        {
+            TRAYGROUPNAME = lotId;
+            panelcontainer.AddRange(panelid);
+        }
+        public Lot(string lotId)
+        {
+            TRAYGROUPNAME = lotId;
+        }
+        public Lot()
+        {
+        }
         public int Count
         {
             get
@@ -59,32 +33,21 @@ namespace Container
                 return panelcontainer.Count();
             }
         }
-        public string LotId;
-
-        public Lot(string lotId, PanelMission[] panelid)
-        {
-            LotId = lotId;
-            panelcontainer.AddRange(panelid);
-        }
-        public Lot(string lotId)
-        {
-            LotId = lotId;
-        }
-        public Lot()
-        {
-        }
         public void AddPanel(PanelMission panel)
         {
             panelcontainer.Add(panel);
         }
         public void PanelFinish(PanelMissionResult finishedpanel)
         {
-            foreach (var item in panelcontainer)
+            var panel = panelcontainer.Where(x => x.PanelId == finishedpanel.PanelId);
+            if (panel.Count()==0)
             {
-                if (item.PanelId == finishedpanel.PanelId)
-                {
-                    item.AddResult(finishedpanel);
-                }
+                string errorstring = String.Format("id:{0},在该LOT中没有相同ID 的产品存在；",finishedpanel.PanelId);
+                throw new Exception(errorstring);
+            }
+            else
+            {
+                panel.First().AddResult(finishedpanel);
             }
         }
         public void PanelFinish(PanelMissionResult[] finishedpanel)
@@ -109,8 +72,9 @@ namespace Container
             }
         }
     }
-    public class PanelImageContainer : Panel
+    public class PanelImageContainer
     {
+        string PanelId;
         public string MutiString;
         public string Eqid;
         bool MutiFlag = false;
@@ -131,16 +95,18 @@ namespace Container
                 }
             }
         }
-        public PanelImageContainer(string panelId, PanelPathContainer avipath, PanelPathContainer svipath, bool mutiFlag = false) : base(panelId)
+        public PanelImageContainer(string panelId, PanelPathContainer avipath, PanelPathContainer svipath, bool mutiFlag = false)
         {
+            PanelId = panelId;
             MutiFlag = mutiFlag;
             this.avidir = new DirContainer(avipath.ResultPath);
             this.svidir = new DirContainer(svipath.ResultPath);
             this.Eqid = avipath.EqId;
             MutiString = this.PanelId + " #" + avipath.EqId + " " + this.avidir.CreationTime.ToString("MM/dd HH:mm");
         }
-        public PanelImageContainer(string panelId, string examinfo) : base(panelId)
+        public PanelImageContainer(string panelId, string examinfo)
         {
+            PanelId = panelId;
             MutiFlag = false;
             this.avidir = new DirContainer(Path.Combine(Parameter.AviExamFilePath, examinfo, panelId));
             this.svidir = new DirContainer(Path.Combine(Parameter.SviExamFilePath, examinfo, panelId));
@@ -188,12 +154,14 @@ namespace Container
             return newlist.ToArray();
         }
     }
-    public class InspectMission : Panel
+    public class InspectMission
     {
+        string PanelId;
         public string[] ImageNameList;  // The image name in reuslt file which we need to inspect
         public Bitmap[] ImageArray;
-        public InspectMission(PanelMission missioninfo) : base(missioninfo.PanelId)
+        public InspectMission(PanelMission missioninfo)
         {
+            PanelId = missioninfo.PanelId;
             var newimagenamelist = Parameter.AviImageNameList.ToList();
             newimagenamelist.AddRange(Parameter.SviImageNameList);
             newimagenamelist.AddRange(Parameter.AppImageNameList);
@@ -204,8 +172,9 @@ namespace Container
             //newimagearray.AddRange(InitialImage(missioninfo.AppPanelPath.ResultPath, Parameter.AppImageNameList));
             ImageArray = newimagearray.ToArray();
         }
-        public InspectMission(ExamMission missioninfo) : base(missioninfo.PanelId)
+        public InspectMission(ExamMission missioninfo)
         {
+            PanelId = missioninfo.PanelId;
             var newimagenamelist = Parameter.AviImageNameList.ToList();
             newimagenamelist.AddRange(Parameter.SviImageNameList);
             newimagenamelist.AddRange(Parameter.AppImageNameList);
@@ -248,6 +217,7 @@ namespace Container
         public PanelPathContainer AppPanelPath;
         public Operator Op;
         public JudgeGrade LastJudge = JudgeGrade.U;
+        public PanelMissionFromMES mesPanel;
         // TODO: Add Defect rank later;
         public string DefectCode
         {
@@ -323,7 +293,6 @@ namespace Container
         public string SviResultPath;
         public string MissionInfo;
         public InspectSection PcSection { get; set; }
-        // public bool Exsit { get { return new DirectoryInfo(AviResultPath).Exists; } }
         public Defect Defect;
         public JudgeGrade Judge;
         public Defect DefectU;                          // user JUDGE;
@@ -331,7 +300,7 @@ namespace Container
         public Operator Op;
         public DateTime FinishTime;
         public int sortint = 0;                         // 用于任务随机排序；
-        public ExamMission(){}
+        public ExamMission() { }
         public ExamMission(string panelId, string avipath, string svipath, InspectSection pcSection, Defect defect, JudgeGrade judge, string info)
         {
             PanelId = panelId;
