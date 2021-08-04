@@ -20,7 +20,7 @@ namespace Container
     }
     public class MesMessage
     {
-        MesMessageHeader header;
+        
     }
     public class RemoteTrayGroupInfoDownloadRequest
     {
@@ -29,17 +29,19 @@ namespace Container
         MesMessageReturn rt;
         public RemoteTrayGroupInfoDownloadRequest(string FGcode, ProductType productType)
         {
-            header = new MesMessageHeader(MesMessageType.RemoteTrayGroupInfoDownloadRequest);
-            Body = new RemoteTrayGroupInfoDownloadRequestMessageBody(FGcode, productType);
-            rt = new MesMessageReturn();
+            header   = new MesMessageHeader(MesMessageType.RemoteTrayGroupInfoDownloadRequest);
+            Body     = new RemoteTrayGroupInfoDownloadRequestMessageBody(FGcode, productType);
+            rt       = new MesMessageReturn();
         }
         public XmlDocument GetXmlDocument()
         {
             XmlDocument newDoc = new XmlDocument();
             XmlElement newmessage = newDoc.CreateElement("Message");
+
             newmessage.AppendChild(header.GetElement(newDoc));
             newmessage.AppendChild(Body.GetElement(newDoc));
             newmessage.AppendChild(rt.GetElement(newDoc));
+
             newDoc.AppendChild(newmessage);
             return newDoc;
         }
@@ -99,14 +101,15 @@ namespace Container
     public class RemoteTrayGroupInfoDownloadSend
     {
         XmlDocument OriginalDoc;
-        public LotMissionFromMES Lot;
+        public string lotid;
+        public string eqID;
+        public List<PanelMissionFromMES> missionList;
         public RemoteTrayGroupInfoDownloadSend(XmlDocument replyDoc)
         {
             OriginalDoc = replyDoc;
-            string lotid = InitialField("TRAYGROUPNAME");
-            string eqID = InitialField("MACHINENAME");
-            List<PanelMissionFromMES> missionList = InitialMission();
-            Lot = new LotMissionFromMES(eqID,lotid,missionList);
+            lotid = InitialField("TRAYGROUPNAME");
+            eqID = InitialField("MACHINENAME");
+            missionList = InitialMission();
         }
         private List<PanelMissionFromMES> InitialMission()
         {
@@ -149,17 +152,147 @@ namespace Container
         MesMessageHeader header;
         RemoteTrayGroupProcessEndMessageBody Body;
         MesMessageReturn rt;
-
-        public RemoteTrayGroupProcessEnd()
+        public RemoteTrayGroupProcessEnd(Lot lot)
         {
             header  = new MesMessageHeader(MesMessageType.RemoteTrayGroupProcessEnd);
-            Body    = new RemoteTrayGroupProcessEndMessageBody();
+            Body    = new RemoteTrayGroupProcessEndMessageBody(lot);
             rt      = new MesMessageReturn();
+        }
+        public XmlDocument GetXmlDocument()
+        {
+            XmlDocument newDoc = new XmlDocument();
+            XmlElement newmessage = newDoc.CreateElement("Message");
+
+            newmessage.AppendChild(header.GetElement(newDoc));
+            newmessage.AppendChild(Body.GetElement(newDoc));
+            newmessage.AppendChild(rt.GetElement(newDoc));
+
+            newDoc.AppendChild(newmessage);
+            return newDoc;
+        }
+
+        public Message GetMessage()
+        {
+            Message newmessage = new Message();
+            newmessage.AddField("Message", GetXmlDocument());
+            return newmessage;
+        }
+        public void Save(string path)
+        {
+            var document = GetXmlDocument();
+            document.Save(path);
         }
     }
     public class RemoteTrayGroupProcessEndMessageBody
     {
+        Lot finishedlot;
 
+        public RemoteTrayGroupProcessEndMessageBody(Lot lot)
+        {
+            finishedlot = lot;
+        }
+        public XmlElement GetElement(XmlDocument doc)
+        {
+            XmlElement newele = doc.CreateElement("Body");
+
+            var lotid = doc.CreateNode(XmlNodeType.Element, "TRAYGROUPNAME", "");
+            lotid.InnerText = finishedlot.TRAYGROUPNAME;
+            newele.AppendChild(lotid);
+
+            var eqid = doc.CreateNode(XmlNodeType.Element, "MACHINENAME", "");
+            eqid.InnerText = finishedlot.MACHINENAME;
+            newele.AppendChild(eqid);
+
+            var newPanelList = GetPanelList(doc);
+            newele.AppendChild(newPanelList);
+
+            return newele;
+        }
+        public XmlElement GetPanelList(XmlDocument doc)
+        {
+            XmlElement newele = doc.CreateElement("PANELLIST");
+            foreach (var item in finishedlot.panelcontainer)
+            {
+                var newpanel = doc.CreateNode(XmlNodeType.Element, "PANEL", "");
+                var PANELNAME = doc.CreateNode(XmlNodeType.Element, "PANELNAME", "");
+                var LOTGRADE = doc.CreateNode(XmlNodeType.Element, "LOTGRADE", "");
+                var LOTDETAILGRADE = doc.CreateNode(XmlNodeType.Element, "LOTDETAILGRADE", "");
+                var USERID = doc.CreateNode(XmlNodeType.Element, "USERID", "");
+
+                PANELNAME.InnerText = item.PanelId;
+                newpanel.AppendChild(PANELNAME);
+                LOTGRADE.InnerText = item.LotGrade.ToString();
+                newpanel.AppendChild(LOTGRADE);
+                LOTDETAILGRADE.InnerText = item.PanelJudge.ToString();
+                newpanel.AppendChild(LOTDETAILGRADE);
+                USERID.InnerText = item.Op.Id;
+                newpanel.AppendChild(USERID);
+
+                var DEFECTLIST = doc.CreateNode(XmlNodeType.Element, "DEFECTLIST", "");
+                var DEFECT = doc.CreateNode(XmlNodeType.Element, "DEFECT", "");
+                var DEFECTCODE = doc.CreateNode(XmlNodeType.Element, "DEFECTCODE", "");
+                DEFECTCODE.InnerText = item.DefectCode;
+                DEFECT.AppendChild(DEFECTCODE);
+                DEFECTLIST.AppendChild(DEFECT);
+                newpanel.AppendChild(DEFECTLIST);
+
+                newele.AppendChild(newpanel);
+            }
+
+            return newele;
+        }
+    }
+    public class RemoteTrayGroupProcessEndReply
+    {
+        XmlDocument OriginalDoc;
+        public string TRAYGROUPNAME;
+        public string RESULT;
+        public string DESCRIPTION;
+        public RemoteTrayGroupProcessEndReply(XmlDocument doc)
+        {
+            OriginalDoc = doc;
+            TRAYGROUPNAME = InitialField("TRAYGROUPNAME");
+            RESULT = InitialField("RESULT");
+            DESCRIPTION = InitialField("DESCRIPTION");
+        }
+        string InitialField(string tagName)
+        {
+            var tRAYGROUPNAME = OriginalDoc.GetElementsByTagName(tagName)[0];
+            if (tRAYGROUPNAME != null)
+            {
+                return tRAYGROUPNAME.InnerText;
+            }
+            else
+            {
+                string errorString = String.Format("{0}为空，请检查MES消息的完整性", tagName);
+                throw new MesMessageException(errorString);
+            }
+        }
+    }
+    public class OpCallSend
+    {
+        XmlDocument OriginalDoc;
+        public string MACHINENAME;
+        public string OPCALLDESCRIPTION;
+        public OpCallSend(XmlDocument doc)
+        {
+            OriginalDoc = doc;
+            MACHINENAME = InitialField("MACHINENAME");
+            OPCALLDESCRIPTION = InitialField("OPCALLDESCRIPTION");
+        }
+        string InitialField(string tagName)
+        {
+            var tRAYGROUPNAME = OriginalDoc.GetElementsByTagName(tagName)[0];
+            if (tRAYGROUPNAME != null)
+            {
+                return tRAYGROUPNAME.InnerText;
+            }
+            else
+            {
+                string errorString = String.Format("{0}为空，请检查MES消息的完整性", tagName);
+                throw new MesMessageException(errorString);
+            }
+        }
     }
     public class MesMessageHeader
     {
@@ -210,7 +343,6 @@ namespace Container
             RETURNCODE = "0";
             RETURNMESSAGE = "";
         }
-
         public XmlElement GetElement(XmlDocument doc)
         {
             XmlElement newele = doc.CreateElement("Header");

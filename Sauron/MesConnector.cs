@@ -46,10 +46,11 @@ namespace Sauron
                 System.Environment.Exit(1);
             }
         }
-        public LotMissionFromMES RequestMission(string FGcode, ProductType productType)
+        public RemoteTrayGroupInfoDownloadSend RequestMission(string FGcode, ProductType productType)
         {
             RemoteTrayGroupInfoDownloadRequest newrequest = new RemoteTrayGroupInfoDownloadRequest(FGcode,productType);
             Message newmessage = newrequest.GetMessage();
+            newmessage.SendSubject = subject;
             var reply = transport.SendRequest(newmessage,15);
             // 超时未接到返回信息时，返回值为null；
             if (reply == null)
@@ -61,14 +62,39 @@ namespace Sauron
             {
                 XmlDocument returnxml = reply.GetFieldByIndex(0); //MessageField可隐式转换为xmldocument；
                 MesMessageType messagetype = (MesMessageType)Enum.Parse(typeof(MesMessageType),returnxml.GetElementsByTagName("MESSAGENAME")[0].InnerText);
+                if (messagetype == MesMessageType.OpCallSend)
+                {
+                    string errorstring = returnxml.GetElementsByTagName("OPCALLDESCRIPTION")[0].InnerText;
+                    // TODO：当异常发生时进行的操作；
+                    MesLogClass.Logger.Error("向MES请求任务时发生错误，错误信息为：{0}",errorstring);
+                    return null;
+                }
+                else
+                {
 
-                return returnMessage.Lot;
+                    return new RemoteTrayGroupInfoDownloadSend(returnxml);
+                }
             }
         }
-
         public void FinishMission(Lot lot)
         {
-
+            RemoteTrayGroupProcessEnd newfinished = new RemoteTrayGroupProcessEnd(lot);
+            Message newfinishedMessage = new Message();
+            newfinishedMessage.SendSubject = subject;
+            var reply = transport.SendRequest(newfinishedMessage,15);
+            // 超时未接到返回信息时，返回值为null；
+            if (reply == null)
+            {
+                MesLogClass.Logger.Error("向MES发送已完成任务超时，请检查与MES的连接或网络问题；");
+            }
+            else
+            {
+                XmlDocument returnxml = reply.GetFieldByIndex(0); //MessageField可隐式转换为xmldocument；
+                string errorstring = returnxml.GetElementsByTagName("OPCALLDESCRIPTION")[0].InnerText;
+                
+                // TODO：当异常发生时进行的操作；
+                MesLogClass.Logger.Error("向MES发送已完成任务超时，错误信息为：{0}",errorstring);
+            }
         }
     }
 }

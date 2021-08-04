@@ -9,21 +9,19 @@ using System.Threading.Tasks;
 
 namespace Container
 {
-    public enum LotGrade
-    {
-        G,
-        N,
-    }
     public enum JudgeGrade
     {
         S,
         A,
         T,
         Q,
+        J,
         W,
         D,
         E,
         F,
+        G,  //LotGrade
+        N,  //LotGrade
         U,  //unfinish
     }
     public enum MissionType

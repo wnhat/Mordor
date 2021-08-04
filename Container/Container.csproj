@@ -101,7 +101,6 @@
     <Compile Include="ExceptionClass.cs" />
     <Compile Include="FileClass.cs" />
     <Compile Include="IpTransform.cs" />
-    <Compile Include="LotMissionFromMES.cs" />
     <Compile Include="Massage.cs" />
     <Compile Include="MesMessage.cs" />
     <Compile Include="MissionClass.cs" />

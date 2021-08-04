@@ -26,6 +26,12 @@ namespace Container
         public Lot()
         {
         }
+        public Lot(string mACHINENAME, List<PanelMission> panelcontainer, string tRAYGROUPNAME) : this(mACHINENAME)
+        {
+            this.panelcontainer = panelcontainer;
+            TRAYGROUPNAME = tRAYGROUPNAME;
+        }
+
         public int Count
         {
             get
@@ -219,6 +225,81 @@ namespace Container
         public JudgeGrade LastJudge = JudgeGrade.U;
         public PanelMissionFromMES mesPanel;
         // TODO: Add Defect rank later;
+        public JudgeGrade LotGrade
+        {
+            get
+            {
+                if (PanelJudge == JudgeGrade.S)
+                {
+                    return JudgeGrade.G;
+                }
+                else
+                {
+                    return JudgeGrade.N;
+                }
+            }
+        }
+        public JudgeGrade PanelJudge
+        {
+            // 根据N站点的等级及判定结果确定等级
+            get
+            {
+                if (LastJudge == JudgeGrade.E)
+                {
+                    return JudgeGrade.E;
+                }
+
+                if (mesPanel.LOTDETAILGRADE == JudgeGrade.E)
+                {
+                    if (LastJudge == JudgeGrade.S)
+                    {
+                        return JudgeGrade.E;
+                    }
+                    else
+                    {
+                        return JudgeGrade.F;
+                    }
+                }
+                else if (mesPanel.LOTDETAILGRADE == JudgeGrade.T)
+                {
+                    if (LastJudge == JudgeGrade.S)
+                    {
+                        return JudgeGrade.S;
+                    }
+                    else
+                    {
+                        return JudgeGrade.F;
+                    }
+                }
+                else if(mesPanel.LOTDETAILGRADE == JudgeGrade.J)
+                {
+                    if (LastJudge == JudgeGrade.S)
+                    {
+                        return JudgeGrade.A;
+                    }
+                    else
+                    {
+                        return JudgeGrade.F;
+                    }
+                }
+                else if(mesPanel.LOTDETAILGRADE == JudgeGrade.D)
+                {
+                    if (LastJudge == JudgeGrade.S)
+                    {
+                        return JudgeGrade.W;
+                    }
+                    else
+                    {
+                        return JudgeGrade.F;
+                    }
+                }
+                else
+                {
+                    return LastJudge;
+                }
+            }
+        }
+
         public string DefectCode
         {
             get
@@ -330,6 +411,107 @@ namespace Container
         {
             ExamMission other = (ExamMission)obj;
             return sortint.CompareTo(other.sortint);
+        }
+    }
+    public class PanelMissionFromMES
+    {
+        public string PANELID;
+        public string PANELPOSITION;
+        public JudgeGrade LOTGRADE;
+        public JudgeGrade LOTDETAILGRADE;
+        public string PIAOI1PANELJUDGE;
+        public string PIAOI2PANELJUDGE;
+        public string TFEAOIPANELJUDGE;
+        public string ACTAOIPANELJUDGE;
+
+        public PanelMissionFromMES(string panelId)
+        {
+            this.PANELID = panelId;
+        }
+        public PanelMissionFromMES(XmlElement ele)
+        {
+            var id = ele.GetElementsByTagName("PANELID")[0];
+            var pos = ele.GetElementsByTagName("PANELPOSITION")[0];
+            var grade1 = ele.GetElementsByTagName("LOTGRADE")[0];
+            var grade2 = ele.GetElementsByTagName("LOTDETAILGRADE")[0];
+            var aoi1 = ele.GetElementsByTagName("PIAOI1PANELJUDGE")[0];
+            var aoi2 = ele.GetElementsByTagName("PIAOI2PANELJUDGE")[0];
+            var tfe = ele.GetElementsByTagName("TFEAOIPANELJUDGE")[0];
+            var act = ele.GetElementsByTagName("ACTAOIPANELJUDGE")[0];
+
+            if (id == null)
+            {
+                throw new MesMessageException("panelid 为空，请检查来自MES信息的完整性");
+            }
+            if (pos == null)
+            {
+                throw new MesMessageException("panel 的tray位置信息为空，请检查来自MES信息的完整性");
+            }
+            if (grade1 == null)
+            {
+                throw new MesMessageException("panel Lot Grade为空，请检查来自MES信息的完整性");
+            }
+            if (grade2 == null)
+            {
+                throw new MesMessageException("panel 在N站点的等级判定信息为空，请检查来自MES信息的完整性");
+            }
+            if (aoi1 == null)
+            {
+                throw new MesMessageException("panel judge1 为空，请检查来自MES信息的完整性");
+            }
+            if (aoi2 == null)
+            {
+                throw new MesMessageException("panel judge2 为空，请检查来自MES信息的完整性");
+            }
+            if (tfe == null)
+            {
+                throw new MesMessageException("panel judge3 为空，请检查来自MES信息的完整性");
+            }
+            if (act == null)
+            {
+                throw new MesMessageException("panel judge4 为空，请检查来自MES信息的完整性");
+            }
+            PANELID = id.InnerText;
+            PANELPOSITION = pos.InnerText;
+            LOTGRADE = (JudgeGrade)Enum.Parse(typeof(JudgeGrade), grade1.InnerText);
+            LOTDETAILGRADE = (JudgeGrade)Enum.Parse(typeof(JudgeGrade), grade2.InnerText);
+            PIAOI1PANELJUDGE = aoi1.InnerText;
+            PIAOI2PANELJUDGE = aoi2.InnerText;
+            TFEAOIPANELJUDGE = tfe.InnerText;
+            ACTAOIPANELJUDGE = act.InnerText;
+        }
+        public string PanelId
+        {
+            // TODO: 校验ID是否符合编码规范；
+            get
+            {
+                return PANELID;
+            }
+        }
+        public string GlassId
+        {
+            get
+            {
+                return PANELID.Substring(0,12);
+            }
+        }
+        public string HalfId
+        {
+            get
+            {
+                return PANELID.Substring(0,13);
+            }
+        }
+        public string BPLotId
+        {
+            get
+            {
+                return PANELID.Substring(0,9);
+            }
+        }
+        public override string ToString()
+        {
+            return PanelId;
         }
     }
 }
