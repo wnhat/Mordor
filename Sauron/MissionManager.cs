@@ -19,8 +19,9 @@ namespace Sauron
         SqlServerConnector Thesqlserver;    //管理与sqlsqerver 的链接；
         FileManager Thefilecontainer;       //管理设备文件路径；
         Dictionary<string, List<ExamMission>> ExamMissionDic = new Dictionary<string, List<ExamMission>>();
-        Dictionary<string, Lot> OnInspectLotDic = new Dictionary<string, Lot>();                     // MES下发任务；
+        Dictionary<string, Lot> OnInspectLotDic = new Dictionary<string, Lot>();// MES下发任务；
         Queue<Lot> LotWaitQueue = new Queue<Lot>();
+        Dictionary<LotInfo, Queue<Lot>> LotWait = new Dictionary<LotInfo, Queue<Lot>>();
         public MissionManager()
         {
             this.Thefilecontainer = new FileManager();
@@ -35,7 +36,7 @@ namespace Sauron
             RefreshFileContainer();
             
             ConsoleLogClass.Logger.Information("服务器启动中------开始添加任务（测试版）");
-            AddMissionTest();
+            // TODO: add mission test mod;
             ConsoleLogClass.Logger.Information("服务器启动中------任务添加完成");
         }
         private void AddMission(Lot lot)
@@ -71,6 +72,37 @@ namespace Sauron
             ExamMissionDic = newExamMissionDic;
             ConsoleLogClass.Logger.Information("考试文件刷新结束；");
         }
+        public void WaittingMissionAdd(LotInfo info,Lot newlot)
+        {
+            if (LotWait.ContainsKey(info))
+            {
+                LotWait[info].Enqueue(newlot);
+            }
+            else
+            {
+                LotWait.Add(info, new Queue<Lot>());
+                WaittingMissionAdd(info,newlot);
+            }
+        }
+        public Lot WaitingMissionGet(LotInfo info)
+        {
+            if (LotWait.ContainsKey(info))
+            {
+                var newlotqueue = LotWait[info];
+                if (newlotqueue.Count > 0)
+                {
+                    return newlotqueue.Dequeue();
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            else
+            {
+                return null;
+            }
+        }
         public void GetMission(NetMQSocketEventArgs a, NetMQMessage M)
         {
             PanelMissionRequestMessage request = new PanelMissionRequestMessage(M);
@@ -95,6 +127,10 @@ namespace Sauron
                 OnInspectLotDic.Add(newlot.TRAYGROUPNAME, newlot);
                 a.Socket.SendMultipartMessage(new PanelMissionMessage(MessageType.SERVER_SEND_MISSION, newlot));
             }
+        }
+        public Lot GetMission(string FGcode, ProductType type)
+        {
+
         }
         public void FinishMission(NetMQSocketEventArgs a, NetMQMessage M)
         {
@@ -175,57 +211,35 @@ namespace Sauron
         {
             Thesqlserver.InsertExamResult(missionlist);
         }
-        public void AddMissionTest()
+    }
+    class LotControler
+    {
+
+    }
+    struct LotInfo
+    {
+        string FGcode;
+        ProductType Type;
+
+        public LotInfo(string fGcode, ProductType type)
         {
-            var newlist = Thesqlserver.GetInputPanelMission();
-            string[] idlist = new string[newlist.Count];
-            string[] eqplist = new string[newlist.Count];
-            for (int i = 0; i < newlist.Count; i++)
-            {
-                idlist[i] = newlist[i][0];
-                eqplist[i] = newlist[i][1];
-            }
-            var pathdic = GetPanelPathList(idlist);
-            Queue<PanelMission> newmissionqueue = new Queue<PanelMission>();
-            for (int i = 0; i < newlist.Count; i++)
-            {
-                string panelid = idlist[i];
-                string eqpid = eqplist[i];
-                var pathlist = pathdic[panelid];
-                if (pathlist!=null)
-                {
-                    try
-                    {
-                        var avipath = pathlist.Where(x => x.PcSection == InspectSection.AVI && x.EqName == eqpid).First();
-                        var svipath = pathlist.Where(x => x.PcSection == InspectSection.SVI && x.EqName == eqpid).First();
-                        PanelMission newpanel = new PanelMission(panelid, MissionType.PRODUCITVE, avipath, svipath);
-                        newmissionqueue.Enqueue(newpanel);
-                    }
-                    catch (Exception e)
-                    {
-                        ConsoleLogClass.Logger.Error("文件存在问题{0}； panelid：{1}",e.Message, panelid);
-                    }
-                }
-                else
-                {
-                    ConsoleLogClass.Logger.Error("未查找到文件路径； panelid：{0}", panelid);
-                }
-            }
-            var randomstring = new Random();
-            while (newmissionqueue.Count != 0)
-            {
-                Lot newlot = new Lot(randomstring.Next().ToString() + " " + DateTime.Now.ToString());
-                while (true)
-                {
-                    var newpanel = newmissionqueue.Dequeue();
-                    newlot.AddPanel(newpanel);
-                    if (newmissionqueue.Count == 0 || newlot.Count >= 240)
-                    {
-                        AddMission(newlot);
-                        break;
-                    }
-                }
-            }
+            FGcode = fGcode;
+            Type = type;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is LotInfo info &&
+                   FGcode == info.FGcode &&
+                   Type == info.Type;
+        }
+
+        public override int GetHashCode()
+        {
+            int hashCode = -2086568036;
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(FGcode);
+            hashCode = hashCode * -1521134295 + Type.GetHashCode();
+            return hashCode;
         }
     }
 }

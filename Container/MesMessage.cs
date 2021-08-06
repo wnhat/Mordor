@@ -18,20 +18,14 @@ namespace Container
             System.Runtime.Serialization.SerializationInfo info,
             System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
     }
-    public class MesMessage
-    {
-        
-    }
     public class RemoteTrayGroupInfoDownloadRequest
     {
         MesMessageHeader header;
         RemoteTrayGroupInfoDownloadRequestMessageBody Body;
-        MesMessageReturn rt;
         public RemoteTrayGroupInfoDownloadRequest(string FGcode, ProductType productType)
         {
             header   = new MesMessageHeader(MesMessageType.RemoteTrayGroupInfoDownloadRequest);
             Body     = new RemoteTrayGroupInfoDownloadRequestMessageBody(FGcode, productType);
-            rt       = new MesMessageReturn();
         }
         public XmlDocument GetXmlDocument()
         {
@@ -40,7 +34,6 @@ namespace Container
 
             newmessage.AppendChild(header.GetElement(newDoc));
             newmessage.AppendChild(Body.GetElement(newDoc));
-            newmessage.AppendChild(rt.GetElement(newDoc));
 
             newDoc.AppendChild(newmessage);
             return newDoc;
@@ -151,12 +144,10 @@ namespace Container
     {       
         MesMessageHeader header;
         RemoteTrayGroupProcessEndMessageBody Body;
-        MesMessageReturn rt;
         public RemoteTrayGroupProcessEnd(Lot lot)
         {
             header  = new MesMessageHeader(MesMessageType.RemoteTrayGroupProcessEnd);
             Body    = new RemoteTrayGroupProcessEndMessageBody(lot);
-            rt      = new MesMessageReturn();
         }
         public XmlDocument GetXmlDocument()
         {
@@ -165,7 +156,6 @@ namespace Container
 
             newmessage.AppendChild(header.GetElement(newDoc));
             newmessage.AppendChild(Body.GetElement(newDoc));
-            newmessage.AppendChild(rt.GetElement(newDoc));
 
             newDoc.AppendChild(newmessage);
             return newDoc;
@@ -305,7 +295,8 @@ namespace Container
         public MesMessageHeader(MesMessageType mESSAGENAME)
         {
             MESSAGENAME = mESSAGENAME;
-            TRANSACTIONID = DateTime.Now.ToString("yyyyMMddHHmmssfffff");
+            // 每次发送时应更新
+            TRANSACTIONID = DateTime.Now.ToString("yyyyMMddHHmmssffffff");
         }
         public XmlElement GetElement(XmlDocument doc)
         {
@@ -331,28 +322,6 @@ namespace Container
                 newlist.Add(newNode);
             }
             return newlist;
-        }
-    }
-    public class MesMessageReturn
-    {
-        string RETURNCODE;
-        string RETURNMESSAGE;
-
-        public MesMessageReturn()
-        {
-            RETURNCODE = "0";
-            RETURNMESSAGE = "";
-        }
-        public XmlElement GetElement(XmlDocument doc)
-        {
-            XmlElement newele = doc.CreateElement("Header");
-            XmlElement rcode = doc.CreateElement("RETURNCODE");
-            rcode.InnerText = RETURNCODE;
-            XmlElement rmessage = doc.CreateElement("RETURNCODE");
-            rmessage.InnerText = RETURNMESSAGE;
-            newele.AppendChild(rcode);
-            newele.AppendChild(rmessage);
-            return newele;
         }
     }
     public enum MesMessageType
