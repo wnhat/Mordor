@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="49182724423c459b8110423cad86c953" Name="Diagram1" ZoomLevel="93">
+        <EntityTypeShape EntityType="DICS_DBModel.FinishedLot" Width="1.5" PointX="7.625" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DICS_DBModel.InspectResult" Width="1.5" PointX="8.5" PointY="10.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="DICS_DBModel.OnInspectLot" Width="1.5" PointX="5.5" PointY="5.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="DICS_DBModel.OninspectProduct" Width="1.5" PointX="0.75" PointY="10.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="DICS_DBModel.Panel" Width="1.5" PointX="6.125" PointY="10.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="DICS_DBModel.ProductInfo" Width="1.5" PointX="0.75" PointY="6.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="DICS_DBModel.TrayLot" Width="1.5" PointX="3" PointY="7.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="DICS_DBModel.User" Width="1.5" PointX="10.25" PointY="6.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="DICS_DBModel.WaitLot" Width="1.5" PointX="3" PointY="11" IsExpanded="true" />
+        <AssociationConnector Association="DICS_DBModel.FK_FinishedLot_TrayLot" ManuallyRouted="false" />
+        <AssociationConnector Association="DICS_DBModel.FK_FinishedLot_User" ManuallyRouted="false" />
+        <AssociationConnector Association="DICS_DBModel.FK_InspectResult_Panel" ManuallyRouted="false" />
+        <AssociationConnector Association="DICS_DBModel.FK_InspectResult_User" ManuallyRouted="false" />
+        <AssociationConnector Association="DICS_DBModel.FK_OnInspectLot_TrayLot" ManuallyRouted="false" />
+        <AssociationConnector Association="DICS_DBModel.FK_OnInspectLot_User" ManuallyRouted="false" />
+        <AssociationConnector Association="DICS_DBModel.FK_OninspectProduct_ProductInfo" ManuallyRouted="false" />
+        <AssociationConnector Association="DICS_DBModel.FK_Panel_TrayLot" ManuallyRouted="false" />
+        <AssociationConnector Association="DICS_DBModel.FK_TrayLot_ProductInfo" ManuallyRouted="false" />
+        <AssociationConnector Association="DICS_DBModel.FK_WaitLot_TrayLot" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

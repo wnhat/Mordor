@@ -27,7 +27,6 @@ namespace test
         {
             //FileManager a = new FileManager();
             //a.RefreshFileList();
-            xmltest();
         }
         static void xmltest()
         {

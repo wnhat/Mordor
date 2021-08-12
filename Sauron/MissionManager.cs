@@ -128,10 +128,10 @@ namespace Sauron
                 a.Socket.SendMultipartMessage(new PanelMissionMessage(MessageType.SERVER_SEND_MISSION, newlot));
             }
         }
-        public Lot GetMission(string FGcode, ProductType type)
-        {
+        //public Lot GetMission(string FGcode, ProductType type)
+        //{
 
-        }
+        //}
         public void FinishMission(NetMQSocketEventArgs a, NetMQMessage M)
         {
             PanelMissionMessage finishedMission = new PanelMissionMessage(M);
@@ -227,12 +227,10 @@ namespace Sauron
             Type = type;
         }
 
-        public override bool Equals(object obj)
-        {
-            return obj is LotInfo info &&
-                   FGcode == info.FGcode &&
-                   Type == info.Type;
-        }
+        //public override bool Equals(object obj)
+        //{
+        //    return obj is LotInfo info && FGcode == info.FGcode && Type == info.Type;
+        //}
 
         public override int GetHashCode()
         {

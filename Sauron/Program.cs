@@ -93,7 +93,7 @@ namespace Sauron
                 {
                     ConsoleLogClass.Logger.Error("start refresh the panel list and add mission(test);");
                     TheMissionManager.RefreshFileContainer();
-                    TheMissionManager.AddMissionTest();
+                    //TheMissionManager.AddMissionTest();
                 };
                 poller.Run(); // 启动轮询器
             }
