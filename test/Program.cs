@@ -27,7 +27,20 @@ namespace test
         {
             //FileManager a = new FileManager();
             //a.RefreshFileList();
+            dbtest();
         }
+
+        private static void dbtest()
+        {
+            using (DICS_DBEntities db = new DICS_DBEntities())
+            {
+                var info = db.ProductInfo.First();
+                var lot = db.TrayLot.First();
+                var bbb = lot.OnInspectLot;
+
+            }
+        }
+
         static void xmltest()
         {
             string path = @"D:\1218180\program2\c#\Mordor\test\xmltest.xml";

@@ -124,7 +124,7 @@ namespace EyeOfSauron
         public string ExamInfo;
         public InspectSection section;
 
-        Lot OnInspectLot;
+        MissionLot OnInspectLot;
         
         private Queue<PanelMission> waitMissionQueue = new Queue<PanelMission>();
         Queue<ExamMission> ExamMissionList = new Queue<ExamMission>();

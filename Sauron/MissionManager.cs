@@ -19,9 +19,9 @@ namespace Sauron
         SqlServerConnector Thesqlserver;    //管理与sqlsqerver 的链接；
         FileManager Thefilecontainer;       //管理设备文件路径；
         Dictionary<string, List<ExamMission>> ExamMissionDic = new Dictionary<string, List<ExamMission>>();
-        Dictionary<string, Lot> OnInspectLotDic = new Dictionary<string, Lot>();// MES下发任务；
-        Queue<Lot> LotWaitQueue = new Queue<Lot>();
-        Dictionary<LotInfo, Queue<Lot>> LotWait = new Dictionary<LotInfo, Queue<Lot>>();
+        //Dictionary<string, MissionLot> OnInspectLotDic = new Dictionary<string, MissionLot>();// MES下发任务；
+        //Queue<MissionLot> LotWaitQueue = new Queue<MissionLot>();
+        //Dictionary<LotInfo, Queue<MissionLot>> LotWait = new Dictionary<LotInfo, Queue<MissionLot>>();
         public MissionManager()
         {
             this.Thefilecontainer = new FileManager();
@@ -39,9 +39,9 @@ namespace Sauron
             // TODO: add mission test mod;
             ConsoleLogClass.Logger.Information("服务器启动中------任务添加完成");
         }
-        private void AddMission(Lot lot)
+        private void AddMission(MissionLot lot)
         {
-            LotWaitQueue.Enqueue(lot);
+            
         }
         public void RefreshExamList()
         {
@@ -72,36 +72,15 @@ namespace Sauron
             ExamMissionDic = newExamMissionDic;
             ConsoleLogClass.Logger.Information("考试文件刷新结束；");
         }
-        public void WaittingMissionAdd(LotInfo info,Lot newlot)
+        public void WaittingMissionAdd(ProductInfo info)
         {
-            if (LotWait.ContainsKey(info))
-            {
-                LotWait[info].Enqueue(newlot);
-            }
-            else
-            {
-                LotWait.Add(info, new Queue<Lot>());
-                WaittingMissionAdd(info,newlot);
-            }
+            
         }
-        public Lot WaitingMissionGet(LotInfo info)
+
+        public MissionLot WaitingMissionGet(ProductInfo info)
         {
-            if (LotWait.ContainsKey(info))
-            {
-                var newlotqueue = LotWait[info];
-                if (newlotqueue.Count > 0)
-                {
-                    return newlotqueue.Dequeue();
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            else
-            {
-                return null;
-            }
+            var newmission = DbConnector.GetWaitedMission(info);
+            return null;
         }
         public void GetMission(NetMQSocketEventArgs a, NetMQMessage M)
         {
@@ -115,18 +94,6 @@ namespace Sauron
             {
 
             }
-
-            // old //
-            if (LotWaitQueue.Count == 0)
-            {
-                a.Socket.SendMultipartMessage(new PanelMissionMessage(MessageType.SERVER_SEND_MISSION, null));
-            }
-            else
-            {
-                Lot newlot = LotWaitQueue.Dequeue();
-                OnInspectLotDic.Add(newlot.TRAYGROUPNAME, newlot);
-                a.Socket.SendMultipartMessage(new PanelMissionMessage(MessageType.SERVER_SEND_MISSION, newlot));
-            }
         }
         //public Lot GetMission(string FGcode, ProductType type)
         //{
@@ -135,7 +102,6 @@ namespace Sauron
         public void FinishMission(NetMQSocketEventArgs a, NetMQMessage M)
         {
             PanelMissionMessage finishedMission = new PanelMissionMessage(M);
-            OnInspectLotDic.Remove(finishedMission.ThePanelMissionLot.TRAYGROUPNAME);
             a.Socket.SignalOK();
             // TODO: 发送mes；
             Thesqlserver.InsertFinishedMission(finishedMission.ThePanelMissionLot.panelcontainer.ToArray());

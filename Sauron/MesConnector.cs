@@ -16,6 +16,7 @@ namespace Sauron
         string daemon = null;
         string subject = "a.b.c";
         Transport transport = null;
+        DICS_DBEntities db = new DICS_DBEntities();
         public MesConnector(string service, string network, string daemon, string subject)
         {
             this.service = service;
@@ -75,7 +76,7 @@ namespace Sauron
                 }
             }
         }
-        public void FinishMission(Lot lot)
+        public void FinishMission(MissionLot lot)
         {
             RemoteTrayGroupProcessEnd newfinished = new RemoteTrayGroupProcessEnd(lot);
             Message newfinishedMessage = new Message();

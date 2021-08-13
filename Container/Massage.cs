@@ -65,7 +65,7 @@ namespace Container.MQMessage
     }
     public class PanelMissionMessage : BaseMessage
     {
-        public Lot ThePanelMissionLot;
+        public MissionLot ThePanelMissionLot;
         public PanelMissionMessage(BaseMessage theMessage) : base(theMessage)
         {
             ThePanelMissionLot = TransferToMission(theMessage[1].ConvertToString());
@@ -74,18 +74,18 @@ namespace Container.MQMessage
         {
             ThePanelMissionLot = TransferToMission(theMessage[1].ConvertToString());
         }
-        public PanelMissionMessage(MessageType messageType, Lot panelMission) : base(messageType)
+        public PanelMissionMessage(MessageType messageType, MissionLot panelMission) : base(messageType)
         {
             ThePanelMissionLot = panelMission;
             this.Append(TransferToString(ThePanelMissionLot));
         }
-        string TransferToString(Lot panelMission)
+        string TransferToString(MissionLot panelMission)
         {
             return JsonConvert.SerializeObject(panelMission, new JsonSerializerSettings() { StringEscapeHandling = StringEscapeHandling.EscapeNonAscii });
         }
-        Lot TransferToMission(string missionstring)
+        MissionLot TransferToMission(string missionstring)
         {
-            return JsonConvert.DeserializeObject<Lot>(missionstring, new JsonSerializerSettings() { StringEscapeHandling = StringEscapeHandling.EscapeNonAscii });
+            return JsonConvert.DeserializeObject<MissionLot>(missionstring, new JsonSerializerSettings() { StringEscapeHandling = StringEscapeHandling.EscapeNonAscii });
         }
     }
     public class UserCheckMessage : BaseMessage

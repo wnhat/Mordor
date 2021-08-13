@@ -144,7 +144,7 @@ namespace Container
     {       
         MesMessageHeader header;
         RemoteTrayGroupProcessEndMessageBody Body;
-        public RemoteTrayGroupProcessEnd(Lot lot)
+        public RemoteTrayGroupProcessEnd(MissionLot lot)
         {
             header  = new MesMessageHeader(MesMessageType.RemoteTrayGroupProcessEnd);
             Body    = new RemoteTrayGroupProcessEndMessageBody(lot);
@@ -175,9 +175,9 @@ namespace Container
     }
     public class RemoteTrayGroupProcessEndMessageBody
     {
-        Lot finishedlot;
+        MissionLot finishedlot;
 
-        public RemoteTrayGroupProcessEndMessageBody(Lot lot)
+        public RemoteTrayGroupProcessEndMessageBody(MissionLot lot)
         {
             finishedlot = lot;
         }

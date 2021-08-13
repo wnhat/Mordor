@@ -9,24 +9,24 @@ using System.Xml;
 
 namespace Container
 {
-    public class Lot
+    public class MissionLot
     {
         public string MACHINENAME;
         public List<PanelMission> panelcontainer = new List<PanelMission>();
         public string TRAYGROUPNAME;
-        public Lot(string lotId, PanelMission[] panelid)
+        public MissionLot(string lotId, PanelMission[] panelid)
         {
             TRAYGROUPNAME = lotId;
             panelcontainer.AddRange(panelid);
         }
-        public Lot(string lotId)
+        public MissionLot(string lotId)
         {
             TRAYGROUPNAME = lotId;
         }
-        public Lot()
+        public MissionLot()
         {
         }
-        public Lot(string mACHINENAME, List<PanelMission> panelcontainer, string tRAYGROUPNAME) : this(mACHINENAME)
+        public MissionLot(string mACHINENAME, List<PanelMission> panelcontainer, string tRAYGROUPNAME) : this(mACHINENAME)
         {
             this.panelcontainer = panelcontainer;
             TRAYGROUPNAME = tRAYGROUPNAME;
@@ -80,7 +80,7 @@ namespace Container
     }
     public class PanelImageContainer
     {
-        string PanelId;
+        public string PanelId;
         public string MutiString;
         public string Eqid;
         bool MutiFlag = false;
@@ -162,7 +162,7 @@ namespace Container
     }
     public class InspectMission
     {
-        string PanelId;
+        public string PanelId;
         public string[] ImageNameList;  // The image name in reuslt file which we need to inspect
         public Bitmap[] ImageArray;
         public InspectMission(PanelMission missioninfo)
@@ -413,22 +413,9 @@ namespace Container
             return sortint.CompareTo(other.sortint);
         }
     }
-    public class PanelMissionFromMES
+    public class PanelMissionFromMES: Panel
     {
-        public string PANELID;
-        public string PANELPOSITION;
-        public JudgeGrade LOTGRADE;
-        public JudgeGrade LOTDETAILGRADE;
-        public string PIAOI1PANELJUDGE;
-        public string PIAOI2PANELJUDGE;
-        public string TFEAOIPANELJUDGE;
-        public string ACTAOIPANELJUDGE;
-
-        public PanelMissionFromMES(string panelId)
-        {
-            this.PANELID = panelId;
-        }
-        public PanelMissionFromMES(XmlElement ele)
+        public PanelMissionFromMES(XmlElement ele):base()
         {
             var id = ele.GetElementsByTagName("PANELID")[0];
             var pos = ele.GetElementsByTagName("PANELPOSITION")[0];
@@ -471,42 +458,48 @@ namespace Container
             {
                 throw new MesMessageException("panel judge4 为空，请检查来自MES信息的完整性");
             }
-            PANELID = id.InnerText;
-            PANELPOSITION = pos.InnerText;
-            LOTGRADE = (JudgeGrade)Enum.Parse(typeof(JudgeGrade), grade1.InnerText);
-            LOTDETAILGRADE = (JudgeGrade)Enum.Parse(typeof(JudgeGrade), grade2.InnerText);
-            PIAOI1PANELJUDGE = aoi1.InnerText;
-            PIAOI2PANELJUDGE = aoi2.InnerText;
-            TFEAOIPANELJUDGE = tfe.InnerText;
-            ACTAOIPANELJUDGE = act.InnerText;
+
+            this.PanelId = id.InnerText;
+            this.LastGrade = grade1.InnerText;
+            this.LastDetailGrade = grade2.InnerText;
+            this.PIAOI1PANELJUDGE = aoi1.InnerText == "F" ? 1 : 0;
+            this.PIAOI2PANELJUDGE = aoi2.InnerText == "F" ? 1 : 0;
+            this.TFEAOIPANELJUDGE = tfe.InnerText == "F" ? 1 : 0;
+            this.ACTAOIPANELJUDGE = act.InnerText == "F" ? 1 : 0;
         }
-        public string PanelId
+        public JudgeGrade LOTDETAILGRADE
         {
-            // TODO: 校验ID是否符合编码规范；
             get
             {
-                return PANELID;
+                return (JudgeGrade)Enum.Parse(typeof(JudgeGrade), this.LastDetailGrade);
+            }
+        }
+        public JudgeGrade LOTGRADE
+        {
+            get
+            {
+                return (JudgeGrade)Enum.Parse(typeof(JudgeGrade), this.LastGrade);
             }
         }
         public string GlassId
         {
             get
             {
-                return PANELID.Substring(0,12);
+                return PanelId.Substring(0,12);
             }
         }
         public string HalfId
         {
             get
             {
-                return PANELID.Substring(0,13);
+                return PanelId.Substring(0,13);
             }
         }
         public string BPLotId
         {
             get
             {
-                return PANELID.Substring(0,9);
+                return PanelId.Substring(0,9);
             }
         }
         public override string ToString()
