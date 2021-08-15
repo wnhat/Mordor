@@ -4,11 +4,11 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Container;
 using Serilog;
 using System.Threading;
 using System.IO;
 using NetMQ;
+using Container;
 using Container.MQMessage;
 
 namespace Sauron
@@ -19,9 +19,6 @@ namespace Sauron
         SqlServerConnector Thesqlserver;    //管理与sqlsqerver 的链接；
         FileManager Thefilecontainer;       //管理设备文件路径；
         Dictionary<string, List<ExamMission>> ExamMissionDic = new Dictionary<string, List<ExamMission>>();
-        //Dictionary<string, MissionLot> OnInspectLotDic = new Dictionary<string, MissionLot>();// MES下发任务；
-        //Queue<MissionLot> LotWaitQueue = new Queue<MissionLot>();
-        //Dictionary<LotInfo, Queue<MissionLot>> LotWait = new Dictionary<LotInfo, Queue<MissionLot>>();
         public MissionManager()
         {
             this.Thefilecontainer = new FileManager();
@@ -39,10 +36,6 @@ namespace Sauron
             ConsoleLogClass.Logger.Information("服务器启动中------开始添加任务（测试版）");
             // TODO: add mission test mod;
             ConsoleLogClass.Logger.Information("服务器启动中------任务添加完成");
-        }
-        private void AddMission(MissionLot lot)
-        {
-            
         }
         public void RefreshExamList()
         {
@@ -78,45 +71,47 @@ namespace Sauron
             var newMissionMessage = theMesConnector.RequestMission(info);
             DbConnector.AddNewLotFromMes(newMissionMessage.lot);
         }
-
         public MissionLot WaitingMissionGet(ProductInfo info)
         {
-            var newmission = DbConnector.GetWaitedMission(info);
-            return null;
-        }
-        public void GetMission(NetMQSocketEventArgs a, NetMQMessage M)
-        {
-            // 获取数据库中正在等待检查的任务返回给客户端
-            // 
-            PanelMissionRequestMessage request = new PanelMissionRequestMessage(M);
-            // TODO:Add productinfo here;
-            ProductInfo info = new ProductInfo { };
-            // TODO:Add productinfo here;
             TrayLot newlot = DbConnector.GetWaitedMission(info);
+            IEnumerable<Panel> panelList = from item in newlot.Panel
+                                             select item;
             IEnumerable<string> panelidList = from item in newlot.Panel
                                               select item.PanelId;
             var path = GetPanelPathList(panelidList.ToArray());
-            
+
             List<PanelMission> missionlist = new List<PanelMission>();
-            foreach (var item in path.Keys)
+            foreach (var item in panelList)
             {
-                var pathlist = path[item];
+                var pathlist = path[item.PanelId];
                 var avipath = pathlist.Where(x => x.PcSection == InspectSection.AVI).FirstOrDefault();
                 var svipath = pathlist.Where(x => x.PcSection == InspectSection.SVI).FirstOrDefault();
                 PanelMission newpanel = new PanelMission(item, MissionType.PRODUCITVE, avipath, svipath);
                 missionlist.Add(newpanel);
             }
             MissionLot newMissionLot = new MissionLot(newlot.MachineName, missionlist, newlot.TrayGroupName);
+            return newMissionLot;
+        }
+        public void GetMission(NetMQSocketEventArgs a, NetMQMessage M)
+        {
+            // 获取数据库中正在等待检查的任务返回给客户端
+            PanelMissionRequestMessage request = new PanelMissionRequestMessage(M);
 
-            PanelMissionMessage responseMessage = new PanelMissionMessage(MessageType.SERVER_SEND_MISSION,newMissionLot);
+            // TODO:Add productinfo here;
+            ProductInfo info = new ProductInfo { };
+            // TODO:Add productinfo here;
+            
+            MissionLot newMissionLot = WaitingMissionGet(info);
+            PanelMissionMessage responseMessage = new PanelMissionMessage(MessageType.SERVER_SEND_MISSION, ServerVersion.Version,newMissionLot);
             a.Socket.SendMultipartMessage(responseMessage);
         }
         public void FinishMission(NetMQSocketEventArgs a, NetMQMessage M)
         {
             PanelMissionMessage finishedMission = new PanelMissionMessage(M);
             a.Socket.SignalOK();
-            // TODO: 发送mes；
-            Thesqlserver.InsertFinishedMission(finishedMission.ThePanelMissionLot.panelcontainer.ToArray());
+            // TODO: 发送mes;
+            DbConnector.finishInspect(finishedMission.ThePanelMissionLot);
+            theMesConnector.FinishMission(finishedMission.ThePanelMissionLot);
         }
         public void GetExamMission(NetMQSocketEventArgs a, NetMQMessage M)
         {
@@ -130,7 +125,7 @@ namespace Sauron
                     item.sortint = rnd.Next();
                 }
                 ExamMissionDic[examinfo].Sort();
-                a.Socket.SendMultipartMessage(new ExamMissionMessage(MessageType.SERVER_SEND_MISSION, ExamMissionDic[examinfo], examinfo));
+                a.Socket.SendMultipartMessage(new ExamMissionMessage(MessageType.SERVER_SEND_MISSION, ServerVersion.Version, ExamMissionDic[examinfo], examinfo));
             }
             else
             {
@@ -141,13 +136,11 @@ namespace Sauron
         public void GetExamInfo(NetMQSocketEventArgs a)
         {
             string[] examinfoarray = ExamMissionDic.Keys.ToArray();
-            a.Socket.SendMultipartMessage(new ExamInfoMessage(examinfoarray));
+            a.Socket.SendMultipartMessage(new ExamInfoMessage(examinfoarray, ServerVersion.Version));
         }
         public void AddMissionByControlor(NetMQSocketEventArgs a, NetMQMessage M)
         {
-            PanelMissionMessage Mission = new PanelMissionMessage(M);
-            AddMission(Mission.ThePanelMissionLot);
-            a.Socket.SignalOK();
+            // TODO:控制任务添加；
         }
         public Dictionary<string, List<PanelPathContainer>> GetPanelPathList(string[] SampleInfoList)
         {

@@ -212,19 +212,27 @@ namespace Container
     }
     public class PanelMission
     {
-        public string PanelId;
-        public int Repetition;
-        public List<Defect> DefectList;
+        public Panel mesPanel;
         public MissionType Type;
-        public DateTime AddTime;
+
+        public DateTime AddTime = DateTime.Now;
         public DateTime FinishTime;
+
         public PanelPathContainer AviPanelPath;
         public PanelPathContainer SviPanelPath;
         public PanelPathContainer AppPanelPath;
+
         public Operator Op;
+        public Defect DefectByOp;
         public JudgeGrade LastJudge = JudgeGrade.U;
-        public PanelMissionFromMES mesPanel;
-        // TODO: Add Defect rank later;
+
+        public string PanelId
+        {
+            get
+            {
+                return mesPanel.PanelId;
+            }
+        }
         public JudgeGrade LotGrade
         {
             get
@@ -299,62 +307,21 @@ namespace Container
                 }
             }
         }
-
-        public string DefectCode
+        public PanelMission(Panel panel, MissionType type, PanelPathContainer AvipanelPath, PanelPathContainer SvipanelPath = null, PanelPathContainer ApppanelPath = null)
         {
-            get
-            {
-                if (DefectList.Count == 0)
-                {
-                    return "";
-                }
-                else
-                {
-                    string returnstring = "";
-                    foreach (var item in DefectList)
-                    {
-                        returnstring = returnstring + item.DefectCode;
-                    }
-                    return returnstring;
-                }
-            }
-        }
-        public string DefectName
-        {
-            get
-            {
-                if (DefectList.Count == 0)
-                {
-                    return "";
-                }
-                else
-                {
-                    string returnstring = "";
-                    foreach (var item in DefectList)
-                    {
-                        returnstring = returnstring + item.DefectName;
-                    }
-                    return returnstring;
-                }
-            }
-        }
-        public PanelMission(string panelId, MissionType type, PanelPathContainer AvipanelPath, PanelPathContainer SvipanelPath = null, PanelPathContainer ApppanelPath = null)
-        {
-            PanelId = panelId;
-            Repetition = 1;                         // TODO:设置任务人员检查次数;
+            mesPanel = panel;
             Type = type;
-            AddTime = DateTime.Now;
+
             AviPanelPath = AvipanelPath;
             SviPanelPath = SvipanelPath;
             AppPanelPath = ApppanelPath;
-            DefectList = new List<Defect>();
         }
         public void AddResult(PanelMissionResult newresult)
         {
             FinishTime = DateTime.Now;
             Op = newresult.Op;
             LastJudge = newresult.Judge;
-            DefectList.Add(newresult.defect);
+            DefectByOp = newresult.defect;
         }
         public bool Complete
         {
@@ -364,9 +331,6 @@ namespace Container
             }
         }
     }
-    /// <summary>
-    /// 
-    /// </summary>
     public class ExamMission : IComparable
     {
         public string PanelId;

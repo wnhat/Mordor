@@ -79,21 +79,30 @@ namespace Sauron
         public void FinishMission(MissionLot lot)
         {
             RemoteTrayGroupProcessEnd newfinished = new RemoteTrayGroupProcessEnd(lot);
-            Message newfinishedMessage = new Message();
+            Message newfinishedMessage = newfinished.GetMessage();
             newfinishedMessage.SendSubject = subject;
             var reply = transport.SendRequest(newfinishedMessage,15);
             // 超时未接到返回信息时，返回值为null；
             if (reply == null)
             {
-                MesLogClass.Logger.Error("向MES发送已完成任务超时，请检查与MES的连接或网络问题；");
+                string errorstring = "向MES发送已完成任务超时，请检查与MES的连接或网络问题；";
+                MesLogClass.Logger.Error(errorstring);
+                throw new MesMessageException(errorstring);
             }
             else
             {
                 XmlDocument returnxml = reply.GetFieldByIndex(0); //MessageField可隐式转换为xmldocument；
-                string errorstring = returnxml.GetElementsByTagName("OPCALLDESCRIPTION")[0].InnerText;
-                
-                // TODO：当异常发生时进行的操作；
-                MesLogClass.Logger.Error("向MES发送已完成任务超时，错误信息为：{0}",errorstring);
+                RemoteTrayGroupProcessEndReply returnmessage = new RemoteTrayGroupProcessEndReply(returnxml);
+                if (returnmessage.Result == true)
+                {
+                    MesLogClass.Logger.Information("任务发送MES成功，lotid：{0}",lot.TRAYGROUPNAME);
+                }
+                else
+                {
+                    string errorstring = String.Format("向MES发送已完成任务失败,TrayGroupName:{0},失败原因：{1}", returnmessage.TRAYGROUPNAME,returnmessage.DESCRIPTION);
+                    MesLogClass.Logger.Error(errorstring);
+                    throw new MesMessageException(errorstring);
+                }
             }
         }
     }

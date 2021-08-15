@@ -53,7 +53,7 @@ namespace Container
     }
     public static class ServerVersion
     {
-        static VersionCheckClass Version;
+        public static VersionCheckClass Version;
         static ServerVersion()
         {
             int firstVersionNumber = 1;
@@ -65,7 +65,7 @@ namespace Container
     
     public static class ClientVersion
     {
-        static VersionCheckClass Version;
+        public static VersionCheckClass Version;
         static ClientVersion()
         {
             int firstVersionNumber = 1;

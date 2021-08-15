@@ -44,7 +44,8 @@ namespace Container
             }
             else
             {
-                return returnlotlist.First().TrayLot;
+                var waitlot = returnlotlist.First();
+                return waitlot.TrayLot;
             }
         }
 
@@ -57,7 +58,7 @@ namespace Container
             return lot;
         }
 
-        public static InspectResult finishInspect()
+        public static InspectResult finishInspect(MissionLot lot)
         {
             
         }

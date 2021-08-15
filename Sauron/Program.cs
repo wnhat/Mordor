@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Data.SqlClient;
 using System.Data;
 using Container.MQMessage;
+using Container;
 
 namespace Sauron
 {
@@ -74,7 +75,7 @@ namespace Sauron
                         case MessageType.CLINET_GET_PANEL_PATH:
                             PanelPathMessage panelIdInfo = new PanelPathMessage(messageIn);
                             var newPanelPathDic = TheMissionManager.GetPanelPathList(panelIdInfo.panelPathDic.Keys.ToArray());
-                            PanelPathMessage newpanelinfomassage = new PanelPathMessage(MessageType.CLINET_GET_PANEL_PATH, newPanelPathDic);
+                            PanelPathMessage newpanelinfomassage = new PanelPathMessage(MessageType.CLINET_GET_PANEL_PATH, ServerVersion.Version, newPanelPathDic);
                             a.Socket.SendMultipartMessage(newpanelinfomassage);
                             break;
                         case MessageType.CONTROLER_CLEAR_MISSION:
@@ -91,12 +92,12 @@ namespace Sauron
                             var op = TheMissionManager.CheckUser(userInfo.TheOperator);
                             if (op != null)
                             {
-                                UserCheckMessage newmessage = new UserCheckMessage(MessageType.SERVER_SEND_USER_TRUE, op);
+                                UserCheckMessage newmessage = new UserCheckMessage(MessageType.SERVER_SEND_USER_TRUE, ServerVersion.Version, op);
                                 a.Socket.SendMultipartMessage(newmessage);
                             }
                             else
                             {
-                                UserCheckMessage newmessage = new UserCheckMessage(MessageType.SERVER_SEND_USER_FLASE, null);
+                                UserCheckMessage newmessage = new UserCheckMessage(MessageType.SERVER_SEND_USER_FLASE, ServerVersion.Version, null);
                                 a.Socket.SendMultipartMessage(newmessage);
                             }
                             break;

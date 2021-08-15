@@ -73,17 +73,17 @@ namespace Container.MQMessage
         // TODO: 将任务申请operator 添加为附件；
         public string FGcode;
         public ProductType productType;
-        public PanelMissionRequestMessage(string fGcode, ProductType productType):base(MessageType.CLINET_GET_PANEL_MISSION)
+        public PanelMissionRequestMessage(string fGcode, ProductType productType):base(MessageType.CLINET_GET_PANEL_MISSION,ClientVersion.Version)
         {
             FGcode = fGcode;
             this.productType = productType;
             this.Append(FGcode);
             this.Append(productType.ToString());
         }
-        public PanelMissionRequestMessage(NetMQMessage theMessage):base()
+        public PanelMissionRequestMessage(NetMQMessage theMessage):base(theMessage)
         {
-            FGcode = theMessage[1].ConvertToString();
-            productType = (ProductType)Enum.Parse(typeof(ProductType),theMessage[2].ConvertToString());
+            FGcode = theMessage[(int)MessageFieldName.Field1].ConvertToString();
+            productType = (ProductType)Enum.Parse(typeof(ProductType),theMessage[(int)MessageFieldName.Field2].ConvertToString());
         }
     }
     public class PanelMissionMessage : BaseMessage

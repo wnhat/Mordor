@@ -99,13 +99,13 @@ namespace Container
         {
             OriginalDoc = replyDoc;
             lot = new TrayLot { TrayGroupName = InitialField("TRAYGROUPNAME"), MachineName = InitialField("MACHINENAME") };
-            List<PanelMissionFromMES> missionList = InitialMission();
+            List<Panel> missionList = InitialMission();
             foreach (var item in missionList)
             {
                 lot.Panel.Add(item);
             }
         }
-        private List<PanelMissionFromMES> InitialMission()
+        private List<Panel> InitialMission()
         {
             var nodelist = OriginalDoc.GetElementsByTagName("PANEL");
             if (nodelist.Count == 0)
@@ -114,10 +114,10 @@ namespace Container
             }
             else
             {
-                List<PanelMissionFromMES> newlist = new List<PanelMissionFromMES>();
+                List<Panel> newlist = new List<Panel>();
                 foreach (var item in nodelist)
                 {
-                    PanelMissionFromMES newpanel = new PanelMissionFromMES((XmlElement)item);
+                    Panel newpanel = new PanelMissionFromMES((XmlElement)item);
                     newlist.Add(newpanel);
                 }
                 return newlist;
@@ -239,6 +239,20 @@ namespace Container
         public string TRAYGROUPNAME;
         public string RESULT;
         public string DESCRIPTION;
+        public bool Result
+        {
+            get
+            {
+                if (RESULT == "OK")
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
         public RemoteTrayGroupProcessEndReply(XmlDocument doc)
         {
             OriginalDoc = doc;

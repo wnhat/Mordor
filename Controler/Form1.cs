@@ -26,17 +26,7 @@ namespace Controler
         }
         private void buttonAddmission_Click(object sender, EventArgs e)
         {
-            MissionLot newlot = new MissionLot("test lot:"+DateTime.Now.ToLongTimeString());
-            var path = SeverConnecter.GetPanelPathByID(this.textBox1.Lines);
-            foreach (var item in path.Keys)
-            {
-                var pathlist = path[item];
-                var avipath = pathlist.Where(x => x.PcSection == InspectSection.AVI).First();
-                var svipath = pathlist.Where(x => x.PcSection == InspectSection.SVI).First();
-                PanelMission newpanel = new PanelMission(item,MissionType.PRODUCITVE,avipath,svipath);
-                newlot.AddPanel(newpanel);
-            }
-            SeverConnecter.AddPanelMission(newlot);
+            
         }
     }
 }

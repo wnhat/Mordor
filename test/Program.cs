@@ -9,14 +9,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Serilog;
-using Container;
 using System.Data;
 using System.Data.SqlClient;
 using System.Windows.Forms;
 using Newtonsoft.Json.Linq;
 using System.Threading;
 using System.Xml;
-
+using Container;
 
 namespace test
 {
@@ -276,8 +275,6 @@ namespace test
         }
         public DiskPathCollection printask()
         {
-            //originpath = @"D:\program\c#";
-            string[] image_directory_list = Directory.GetDirectories(originpath);
             Console.WriteLine("进入aft");
             string originpath = Path.Combine("\\\\", "172.16.160.11", "NetworkDrive", "F_Drive", "Defect Info", "Origin");
             //originpath = @"D:\program\c#";
