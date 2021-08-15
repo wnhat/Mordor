@@ -15,10 +15,13 @@ namespace Container
         A,
         T,
         Q,
+        J,
         W,
         D,
         E,
         F,
+        G,  //LotGrade
+        N,  //LotGrade
         U,  //unfinish
     }
     public enum MissionType

@@ -1,0 +1,662 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="DICS_DBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="FinishedLot">
+          <Key>
+            <PropertyRef Name="LotId" />
+          </Key>
+          <Property Name="LotId" Type="int" Nullable="false" />
+          <Property Name="EndTime" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Operater" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="InspectResult">
+          <Key>
+            <PropertyRef Name="Indexid" />
+          </Key>
+          <Property Name="Indexid" Type="int" Nullable="false" />
+          <Property Name="LOTGRADE" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="LOTDETAILGRADE" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="operaterId" Type="int" Nullable="false" />
+          <Property Name="EndTime" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="DefectCode" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="DefectName" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="OnInspectLot">
+          <Key>
+            <PropertyRef Name="Lotid" />
+          </Key>
+          <Property Name="RequestTime" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Lotid" Type="int" Nullable="false" />
+          <Property Name="RequestOp" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="OninspectProduct">
+          <Key>
+            <PropertyRef Name="IndexId" />
+          </Key>
+          <Property Name="IndexId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Panel">
+          <Key>
+            <PropertyRef Name="IndexId" />
+          </Key>
+          <Property Name="IndexId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PanelId" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="LotId" Type="int" Nullable="false" />
+          <Property Name="PIAOI1PANELJUDGE" Type="int" Nullable="false" />
+          <Property Name="PIAOI2PANELJUDGE" Type="int" Nullable="false" />
+          <Property Name="TFEAOIPANELJUDGE" Type="int" Nullable="false" />
+          <Property Name="ACTAOIPANELJUDGE" Type="int" Nullable="false" />
+          <Property Name="LastGrade" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="LastDetailGrade" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ProductInfo">
+          <Key>
+            <PropertyRef Name="IndexId" />
+          </Key>
+          <Property Name="IndexId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ProductType" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="FGcode" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TrayLot">
+          <Key>
+            <PropertyRef Name="Lotid" />
+          </Key>
+          <Property Name="Lotid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TrayGroupName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="MachineName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="AddTime" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ProductInfo" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="IndexId" />
+          </Key>
+          <Property Name="IndexId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="UserId" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="PassWord" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Grade" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="WaitLot">
+          <Key>
+            <PropertyRef Name="LotId" />
+          </Key>
+          <Property Name="LotId" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_FinishedLot_TrayLot">
+          <End Role="TrayLot" Type="Self.TrayLot" Multiplicity="1" />
+          <End Role="FinishedLot" Type="Self.FinishedLot" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="TrayLot">
+              <PropertyRef Name="Lotid" />
+            </Principal>
+            <Dependent Role="FinishedLot">
+              <PropertyRef Name="LotId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FinishedLot_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="FinishedLot" Type="Self.FinishedLot" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="IndexId" />
+            </Principal>
+            <Dependent Role="FinishedLot">
+              <PropertyRef Name="Operater" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_InspectResult_Panel">
+          <End Role="Panel" Type="Self.Panel" Multiplicity="1" />
+          <End Role="InspectResult" Type="Self.InspectResult" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Panel">
+              <PropertyRef Name="IndexId" />
+            </Principal>
+            <Dependent Role="InspectResult">
+              <PropertyRef Name="Indexid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_InspectResult_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="InspectResult" Type="Self.InspectResult" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="IndexId" />
+            </Principal>
+            <Dependent Role="InspectResult">
+              <PropertyRef Name="operaterId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OnInspectLot_TrayLot">
+          <End Role="TrayLot" Type="Self.TrayLot" Multiplicity="1" />
+          <End Role="OnInspectLot" Type="Self.OnInspectLot" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="TrayLot">
+              <PropertyRef Name="Lotid" />
+            </Principal>
+            <Dependent Role="OnInspectLot">
+              <PropertyRef Name="Lotid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OnInspectLot_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="OnInspectLot" Type="Self.OnInspectLot" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="IndexId" />
+            </Principal>
+            <Dependent Role="OnInspectLot">
+              <PropertyRef Name="RequestOp" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OninspectProduct_ProductInfo">
+          <End Role="ProductInfo" Type="Self.ProductInfo" Multiplicity="1" />
+          <End Role="OninspectProduct" Type="Self.OninspectProduct" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="ProductInfo">
+              <PropertyRef Name="IndexId" />
+            </Principal>
+            <Dependent Role="OninspectProduct">
+              <PropertyRef Name="IndexId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Panel_TrayLot">
+          <End Role="TrayLot" Type="Self.TrayLot" Multiplicity="1" />
+          <End Role="Panel" Type="Self.Panel" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TrayLot">
+              <PropertyRef Name="Lotid" />
+            </Principal>
+            <Dependent Role="Panel">
+              <PropertyRef Name="LotId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TrayLot_ProductInfo">
+          <End Role="ProductInfo" Type="Self.ProductInfo" Multiplicity="1" />
+          <End Role="TrayLot" Type="Self.TrayLot" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProductInfo">
+              <PropertyRef Name="IndexId" />
+            </Principal>
+            <Dependent Role="TrayLot">
+              <PropertyRef Name="ProductInfo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WaitLot_TrayLot">
+          <End Role="TrayLot" Type="Self.TrayLot" Multiplicity="1" />
+          <End Role="WaitLot" Type="Self.WaitLot" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="TrayLot">
+              <PropertyRef Name="Lotid" />
+            </Principal>
+            <Dependent Role="WaitLot">
+              <PropertyRef Name="LotId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="DICS_DBModelStoreContainer">
+          <EntitySet Name="FinishedLot" EntityType="Self.FinishedLot" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="InspectResult" EntityType="Self.InspectResult" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OnInspectLot" EntityType="Self.OnInspectLot" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OninspectProduct" EntityType="Self.OninspectProduct" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Panel" EntityType="Self.Panel" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ProductInfo" EntityType="Self.ProductInfo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TrayLot" EntityType="Self.TrayLot" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="WaitLot" EntityType="Self.WaitLot" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_FinishedLot_TrayLot" Association="Self.FK_FinishedLot_TrayLot">
+            <End Role="TrayLot" EntitySet="TrayLot" />
+            <End Role="FinishedLot" EntitySet="FinishedLot" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FinishedLot_User" Association="Self.FK_FinishedLot_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="FinishedLot" EntitySet="FinishedLot" />
+          </AssociationSet>
+          <AssociationSet Name="FK_InspectResult_Panel" Association="Self.FK_InspectResult_Panel">
+            <End Role="Panel" EntitySet="Panel" />
+            <End Role="InspectResult" EntitySet="InspectResult" />
+          </AssociationSet>
+          <AssociationSet Name="FK_InspectResult_User" Association="Self.FK_InspectResult_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="InspectResult" EntitySet="InspectResult" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OnInspectLot_TrayLot" Association="Self.FK_OnInspectLot_TrayLot">
+            <End Role="TrayLot" EntitySet="TrayLot" />
+            <End Role="OnInspectLot" EntitySet="OnInspectLot" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OnInspectLot_User" Association="Self.FK_OnInspectLot_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="OnInspectLot" EntitySet="OnInspectLot" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OninspectProduct_ProductInfo" Association="Self.FK_OninspectProduct_ProductInfo">
+            <End Role="ProductInfo" EntitySet="ProductInfo" />
+            <End Role="OninspectProduct" EntitySet="OninspectProduct" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Panel_TrayLot" Association="Self.FK_Panel_TrayLot">
+            <End Role="TrayLot" EntitySet="TrayLot" />
+            <End Role="Panel" EntitySet="Panel" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TrayLot_ProductInfo" Association="Self.FK_TrayLot_ProductInfo">
+            <End Role="ProductInfo" EntitySet="ProductInfo" />
+            <End Role="TrayLot" EntitySet="TrayLot" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WaitLot_TrayLot" Association="Self.FK_WaitLot_TrayLot">
+            <End Role="TrayLot" EntitySet="TrayLot" />
+            <End Role="WaitLot" EntitySet="WaitLot" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="DICS_DBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="FinishedLot">
+          <Key>
+            <PropertyRef Name="LotId" />
+          </Key>
+          <Property Name="LotId" Type="Int32" Nullable="false" />
+          <Property Name="EndTime" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Operater" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="TrayLot" Relationship="Self.FK_FinishedLot_TrayLot" FromRole="FinishedLot" ToRole="TrayLot" />
+          <NavigationProperty Name="User" Relationship="Self.FK_FinishedLot_User" FromRole="FinishedLot" ToRole="User" />
+        </EntityType>
+        <EntityType Name="InspectResult">
+          <Key>
+            <PropertyRef Name="Indexid" />
+          </Key>
+          <Property Name="Indexid" Type="Int32" Nullable="false" />
+          <Property Name="LOTGRADE" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="LOTDETAILGRADE" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="operaterId" Type="Int32" Nullable="false" />
+          <Property Name="EndTime" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="DefectCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="DefectName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Panel" Relationship="Self.FK_InspectResult_Panel" FromRole="InspectResult" ToRole="Panel" />
+          <NavigationProperty Name="User" Relationship="Self.FK_InspectResult_User" FromRole="InspectResult" ToRole="User" />
+        </EntityType>
+        <EntityType Name="OnInspectLot">
+          <Key>
+            <PropertyRef Name="Lotid" />
+          </Key>
+          <Property Name="RequestTime" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Lotid" Type="Int32" Nullable="false" />
+          <Property Name="RequestOp" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="TrayLot" Relationship="Self.FK_OnInspectLot_TrayLot" FromRole="OnInspectLot" ToRole="TrayLot" />
+          <NavigationProperty Name="User" Relationship="Self.FK_OnInspectLot_User" FromRole="OnInspectLot" ToRole="User" />
+        </EntityType>
+        <EntityType Name="OninspectProduct">
+          <Key>
+            <PropertyRef Name="IndexId" />
+          </Key>
+          <Property Name="IndexId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="ProductInfo" Relationship="Self.FK_OninspectProduct_ProductInfo" FromRole="OninspectProduct" ToRole="ProductInfo" />
+        </EntityType>
+        <EntityType Name="Panel">
+          <Key>
+            <PropertyRef Name="IndexId" />
+          </Key>
+          <Property Name="IndexId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PanelId" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="LotId" Type="Int32" Nullable="false" />
+          <Property Name="PIAOI1PANELJUDGE" Type="Int32" Nullable="false" />
+          <Property Name="PIAOI2PANELJUDGE" Type="Int32" Nullable="false" />
+          <Property Name="TFEAOIPANELJUDGE" Type="Int32" Nullable="false" />
+          <Property Name="ACTAOIPANELJUDGE" Type="Int32" Nullable="false" />
+          <Property Name="LastGrade" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="LastDetailGrade" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="InspectResult" Relationship="Self.FK_InspectResult_Panel" FromRole="Panel" ToRole="InspectResult" />
+          <NavigationProperty Name="TrayLot" Relationship="Self.FK_Panel_TrayLot" FromRole="Panel" ToRole="TrayLot" />
+        </EntityType>
+        <EntityType Name="ProductInfo">
+          <Key>
+            <PropertyRef Name="IndexId" />
+          </Key>
+          <Property Name="IndexId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ProductType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="FGcode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="OninspectProduct" Relationship="Self.FK_OninspectProduct_ProductInfo" FromRole="ProductInfo" ToRole="OninspectProduct" />
+          <NavigationProperty Name="TrayLot" Relationship="Self.FK_TrayLot_ProductInfo" FromRole="ProductInfo" ToRole="TrayLot" />
+        </EntityType>
+        <EntityType Name="TrayLot">
+          <Key>
+            <PropertyRef Name="Lotid" />
+          </Key>
+          <Property Name="Lotid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TrayGroupName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="MachineName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="AddTime" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ProductInfo" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="FinishedLot" Relationship="Self.FK_FinishedLot_TrayLot" FromRole="TrayLot" ToRole="FinishedLot" />
+          <NavigationProperty Name="OnInspectLot" Relationship="Self.FK_OnInspectLot_TrayLot" FromRole="TrayLot" ToRole="OnInspectLot" />
+          <NavigationProperty Name="Panel" Relationship="Self.FK_Panel_TrayLot" FromRole="TrayLot" ToRole="Panel" />
+          <NavigationProperty Name="ProductInfo1" Relationship="Self.FK_TrayLot_ProductInfo" FromRole="TrayLot" ToRole="ProductInfo" />
+          <NavigationProperty Name="WaitLot" Relationship="Self.FK_WaitLot_TrayLot" FromRole="TrayLot" ToRole="WaitLot" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="IndexId" />
+          </Key>
+          <Property Name="IndexId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="UserId" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PassWord" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Grade" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="FinishedLot" Relationship="Self.FK_FinishedLot_User" FromRole="User" ToRole="FinishedLot" />
+          <NavigationProperty Name="InspectResult" Relationship="Self.FK_InspectResult_User" FromRole="User" ToRole="InspectResult" />
+          <NavigationProperty Name="OnInspectLot" Relationship="Self.FK_OnInspectLot_User" FromRole="User" ToRole="OnInspectLot" />
+        </EntityType>
+        <EntityType Name="WaitLot">
+          <Key>
+            <PropertyRef Name="LotId" />
+          </Key>
+          <Property Name="LotId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="TrayLot" Relationship="Self.FK_WaitLot_TrayLot" FromRole="WaitLot" ToRole="TrayLot" />
+        </EntityType>
+        <Association Name="FK_FinishedLot_TrayLot">
+          <End Role="TrayLot" Type="Self.TrayLot" Multiplicity="1" />
+          <End Role="FinishedLot" Type="Self.FinishedLot" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="TrayLot">
+              <PropertyRef Name="Lotid" />
+            </Principal>
+            <Dependent Role="FinishedLot">
+              <PropertyRef Name="LotId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FinishedLot_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="FinishedLot" Type="Self.FinishedLot" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="IndexId" />
+            </Principal>
+            <Dependent Role="FinishedLot">
+              <PropertyRef Name="Operater" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_InspectResult_Panel">
+          <End Role="Panel" Type="Self.Panel" Multiplicity="1" />
+          <End Role="InspectResult" Type="Self.InspectResult" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Panel">
+              <PropertyRef Name="IndexId" />
+            </Principal>
+            <Dependent Role="InspectResult">
+              <PropertyRef Name="Indexid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_InspectResult_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="InspectResult" Type="Self.InspectResult" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="IndexId" />
+            </Principal>
+            <Dependent Role="InspectResult">
+              <PropertyRef Name="operaterId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OnInspectLot_TrayLot">
+          <End Role="TrayLot" Type="Self.TrayLot" Multiplicity="1" />
+          <End Role="OnInspectLot" Type="Self.OnInspectLot" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="TrayLot">
+              <PropertyRef Name="Lotid" />
+            </Principal>
+            <Dependent Role="OnInspectLot">
+              <PropertyRef Name="Lotid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OnInspectLot_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="OnInspectLot" Type="Self.OnInspectLot" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="IndexId" />
+            </Principal>
+            <Dependent Role="OnInspectLot">
+              <PropertyRef Name="RequestOp" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OninspectProduct_ProductInfo">
+          <End Role="ProductInfo" Type="Self.ProductInfo" Multiplicity="1" />
+          <End Role="OninspectProduct" Type="Self.OninspectProduct" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="ProductInfo">
+              <PropertyRef Name="IndexId" />
+            </Principal>
+            <Dependent Role="OninspectProduct">
+              <PropertyRef Name="IndexId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Panel_TrayLot">
+          <End Role="TrayLot" Type="Self.TrayLot" Multiplicity="1" />
+          <End Role="Panel" Type="Self.Panel" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TrayLot">
+              <PropertyRef Name="Lotid" />
+            </Principal>
+            <Dependent Role="Panel">
+              <PropertyRef Name="LotId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TrayLot_ProductInfo">
+          <End Role="ProductInfo" Type="Self.ProductInfo" Multiplicity="1" />
+          <End Role="TrayLot" Type="Self.TrayLot" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProductInfo">
+              <PropertyRef Name="IndexId" />
+            </Principal>
+            <Dependent Role="TrayLot">
+              <PropertyRef Name="ProductInfo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WaitLot_TrayLot">
+          <End Role="TrayLot" Type="Self.TrayLot" Multiplicity="1" />
+          <End Role="WaitLot" Type="Self.WaitLot" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="TrayLot">
+              <PropertyRef Name="Lotid" />
+            </Principal>
+            <Dependent Role="WaitLot">
+              <PropertyRef Name="LotId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="DICS_DBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="FinishedLot" EntityType="Self.FinishedLot" />
+          <EntitySet Name="InspectResult" EntityType="Self.InspectResult" />
+          <EntitySet Name="OnInspectLot" EntityType="Self.OnInspectLot" />
+          <EntitySet Name="OninspectProduct" EntityType="Self.OninspectProduct" />
+          <EntitySet Name="Panel" EntityType="Self.Panel" />
+          <EntitySet Name="ProductInfo" EntityType="Self.ProductInfo" />
+          <EntitySet Name="TrayLot" EntityType="Self.TrayLot" />
+          <EntitySet Name="User" EntityType="Self.User" />
+          <EntitySet Name="WaitLot" EntityType="Self.WaitLot" />
+          <AssociationSet Name="FK_FinishedLot_TrayLot" Association="Self.FK_FinishedLot_TrayLot">
+            <End Role="TrayLot" EntitySet="TrayLot" />
+            <End Role="FinishedLot" EntitySet="FinishedLot" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FinishedLot_User" Association="Self.FK_FinishedLot_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="FinishedLot" EntitySet="FinishedLot" />
+          </AssociationSet>
+          <AssociationSet Name="FK_InspectResult_Panel" Association="Self.FK_InspectResult_Panel">
+            <End Role="Panel" EntitySet="Panel" />
+            <End Role="InspectResult" EntitySet="InspectResult" />
+          </AssociationSet>
+          <AssociationSet Name="FK_InspectResult_User" Association="Self.FK_InspectResult_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="InspectResult" EntitySet="InspectResult" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OnInspectLot_TrayLot" Association="Self.FK_OnInspectLot_TrayLot">
+            <End Role="TrayLot" EntitySet="TrayLot" />
+            <End Role="OnInspectLot" EntitySet="OnInspectLot" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OnInspectLot_User" Association="Self.FK_OnInspectLot_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="OnInspectLot" EntitySet="OnInspectLot" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OninspectProduct_ProductInfo" Association="Self.FK_OninspectProduct_ProductInfo">
+            <End Role="ProductInfo" EntitySet="ProductInfo" />
+            <End Role="OninspectProduct" EntitySet="OninspectProduct" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Panel_TrayLot" Association="Self.FK_Panel_TrayLot">
+            <End Role="TrayLot" EntitySet="TrayLot" />
+            <End Role="Panel" EntitySet="Panel" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TrayLot_ProductInfo" Association="Self.FK_TrayLot_ProductInfo">
+            <End Role="ProductInfo" EntitySet="ProductInfo" />
+            <End Role="TrayLot" EntitySet="TrayLot" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WaitLot_TrayLot" Association="Self.FK_WaitLot_TrayLot">
+            <End Role="TrayLot" EntitySet="TrayLot" />
+            <End Role="WaitLot" EntitySet="WaitLot" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="DICS_DBModelStoreContainer" CdmEntityContainer="DICS_DBEntities">
+          <EntitySetMapping Name="FinishedLot">
+            <EntityTypeMapping TypeName="DICS_DBModel.FinishedLot">
+              <MappingFragment StoreEntitySet="FinishedLot">
+                <ScalarProperty Name="LotId" ColumnName="LotId" />
+                <ScalarProperty Name="EndTime" ColumnName="EndTime" />
+                <ScalarProperty Name="Operater" ColumnName="Operater" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="InspectResult">
+            <EntityTypeMapping TypeName="DICS_DBModel.InspectResult">
+              <MappingFragment StoreEntitySet="InspectResult">
+                <ScalarProperty Name="Indexid" ColumnName="Indexid" />
+                <ScalarProperty Name="LOTGRADE" ColumnName="LOTGRADE" />
+                <ScalarProperty Name="LOTDETAILGRADE" ColumnName="LOTDETAILGRADE" />
+                <ScalarProperty Name="operaterId" ColumnName="operaterId" />
+                <ScalarProperty Name="EndTime" ColumnName="EndTime" />
+                <ScalarProperty Name="DefectCode" ColumnName="DefectCode" />
+                <ScalarProperty Name="DefectName" ColumnName="DefectName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OnInspectLot">
+            <EntityTypeMapping TypeName="DICS_DBModel.OnInspectLot">
+              <MappingFragment StoreEntitySet="OnInspectLot">
+                <ScalarProperty Name="RequestTime" ColumnName="RequestTime" />
+                <ScalarProperty Name="Lotid" ColumnName="Lotid" />
+                <ScalarProperty Name="RequestOp" ColumnName="RequestOp" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OninspectProduct">
+            <EntityTypeMapping TypeName="DICS_DBModel.OninspectProduct">
+              <MappingFragment StoreEntitySet="OninspectProduct">
+                <ScalarProperty Name="IndexId" ColumnName="IndexId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Panel">
+            <EntityTypeMapping TypeName="DICS_DBModel.Panel">
+              <MappingFragment StoreEntitySet="Panel">
+                <ScalarProperty Name="IndexId" ColumnName="IndexId" />
+                <ScalarProperty Name="PanelId" ColumnName="PanelId" />
+                <ScalarProperty Name="LotId" ColumnName="LotId" />
+                <ScalarProperty Name="PIAOI1PANELJUDGE" ColumnName="PIAOI1PANELJUDGE" />
+                <ScalarProperty Name="PIAOI2PANELJUDGE" ColumnName="PIAOI2PANELJUDGE" />
+                <ScalarProperty Name="TFEAOIPANELJUDGE" ColumnName="TFEAOIPANELJUDGE" />
+                <ScalarProperty Name="ACTAOIPANELJUDGE" ColumnName="ACTAOIPANELJUDGE" />
+                <ScalarProperty Name="LastGrade" ColumnName="LastGrade" />
+                <ScalarProperty Name="LastDetailGrade" ColumnName="LastDetailGrade" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ProductInfo">
+            <EntityTypeMapping TypeName="DICS_DBModel.ProductInfo">
+              <MappingFragment StoreEntitySet="ProductInfo">
+                <ScalarProperty Name="IndexId" ColumnName="IndexId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ProductType" ColumnName="ProductType" />
+                <ScalarProperty Name="FGcode" ColumnName="FGcode" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TrayLot">
+            <EntityTypeMapping TypeName="DICS_DBModel.TrayLot">
+              <MappingFragment StoreEntitySet="TrayLot">
+                <ScalarProperty Name="Lotid" ColumnName="Lotid" />
+                <ScalarProperty Name="TrayGroupName" ColumnName="TrayGroupName" />
+                <ScalarProperty Name="MachineName" ColumnName="MachineName" />
+                <ScalarProperty Name="AddTime" ColumnName="AddTime" />
+                <ScalarProperty Name="ProductInfo" ColumnName="ProductInfo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="User">
+            <EntityTypeMapping TypeName="DICS_DBModel.User">
+              <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="IndexId" ColumnName="IndexId" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="PassWord" ColumnName="PassWord" />
+                <ScalarProperty Name="Grade" ColumnName="Grade" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WaitLot">
+            <EntityTypeMapping TypeName="DICS_DBModel.WaitLot">
+              <MappingFragment StoreEntitySet="WaitLot">
+                <ScalarProperty Name="LotId" ColumnName="LotId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="true" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

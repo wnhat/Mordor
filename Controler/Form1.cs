@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Container.Message;
+using Container.MQMessage;
 using Container.SeverConnection;
 using Container;
 
@@ -26,7 +26,7 @@ namespace Controler
         }
         private void buttonAddmission_Click(object sender, EventArgs e)
         {
-            Lot newlot = new Lot("test lot:"+DateTime.Now.ToLongTimeString());
+            MissionLot newlot = new MissionLot("test lot:"+DateTime.Now.ToLongTimeString());
             var path = SeverConnecter.GetPanelPathByID(this.textBox1.Lines);
             foreach (var item in path.Keys)
             {

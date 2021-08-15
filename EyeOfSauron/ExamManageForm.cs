@@ -14,7 +14,7 @@ using System.Text.RegularExpressions;
 using EyeOfSauron;
 using Container;
 using NetMQ.Sockets;
-using Container.Message;
+using Container.MQMessage;
 using NetMQ;
 using Container.SeverConnection;
 using System.Threading;

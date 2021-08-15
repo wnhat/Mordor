@@ -17,6 +17,9 @@ namespace Sauron
         PanelPathManager PathManager;
         List<InspectPC> InsPCList;
         List<Task<DiskPathCollection>> TaskList = new List<Task<DiskPathCollection>>();
+        object OnrunningTaskLock;
+        List<FileSearchTask> OnRunningTaskList = new List<FileSearchTask>();
+        Queue<FileSearchTask> WaitTaskQueue = new Queue<FileSearchTask>();
         int runcount = 0;
         Random rd = new Random();
         public FileManager()
@@ -34,18 +37,19 @@ namespace Sauron
         {
             return rd.Next().CompareTo(rd.Next());
         }
-        public void RefreshFileList()
+        public async Task RefreshFileList()
         {
-            runcount = 0;
             FilePathLogClass.Logger.Information("start to refresh the file dict, time is {0}", DateTime.Now);
             PanelPathManager newPanelPathManager = new PanelPathManager();
-            TaskList = new List<Task<DiskPathCollection>>();
+
+            // 将Disk与新的PanelpathManager绑定；
             foreach (var pc in InsPCList)
             {
-                foreach (var item in pc.DiskCollectin)
+                foreach (var item in pc.DiskCollection)
                 {
-                    var refresh_task = new Task<DiskPathCollection>(item.RunTask);
-                    TaskList.Add(refresh_task);
+
+                    //var refresh_task = new FileSearchTask(item);
+                    //TaskList.Add(refresh_task);
                 }
             }
             TaskList.Sort(SortTaskList);
@@ -129,57 +133,54 @@ namespace Sauron
             this.ResultPath = resultPath;
         }
 
-        public string[] OriginalPath { get { return originalPath; } set{ originalPath = value; } }
+        public string[] OriginalPath { get { return originalPath; } set { originalPath = value; } }
         public string[] ResultPath { get { return resultPath; } set { resultPath = value; } }
+    }
+    class FileSearchTask
+    {
+        DateTime StartTime;
+        HardDisk SearchDisk;
+        CancellationToken TheToken;
+        CancellationTokenSource TokenSource;
+        //public FileSearchTask(Action action, HardDisk searchDisk)
+        //{
+        //    TokenSource = new CancellationTokenSource();
+        //    TheToken = TokenSource.Token;
+        //    SearchDisk = searchDisk;
+
+        //}
+
+        //public FileSearchTask(Action action, CancellationToken cancellationToken) : base(action)
+        //{
+        //    TokenSource = new CancellationTokenSource();
+        //    TheToken = TokenSource.Token;
+        //}
+
+        //new public void Start()
+        //{
+        //    StartTime = DateTime.Now;
+        //    base.Start();
+        //}
+        public void Cancel()
+        {
+            TokenSource.Cancel();
+            SearchDisk.Status = DiskStatus.ConnectOverTime;
+        }
     }
     class HardDisk
     {
         InspectPC ParentPc;
         DiskPart DiskName;
-        DiskStatus Status = DiskStatus.Unchecked;
+        public DiskStatus Status = DiskStatus.Unchecked;
         string lastErrorMessage = null;
+        PanelPathManager Manager;
         public HardDisk(InspectPC parentPc, DiskPart diskName)
         {
             ParentPc = parentPc;
             DiskName = diskName;
         }
-        public DiskPathCollection RunTask()
-        {
-            
-            CancellationTokenSource tokensource = new CancellationTokenSource();
-            CancellationToken token = tokensource.Token;
-            Task newtask = new Task(GetDiskPathCollection,token);
-            DateTime starttime = DateTime.Now;
-            newtask.Start();
-            //newtask.RunSynchronously();
-            DateTime endtime = DateTime.Now;
-            newtask.Wait(1000);
-            DateTime afttime = DateTime.Now;
-            //var a = newtask.Result;
-            //while (true)
-            //{
-            //    DateTime endtime = DateTime.Now;
-            //    if (endtime - starttime > TimeSpan.FromSeconds(60))
-            //    {
-            //        break;
-            //    }
-            //    else
-            //    {
-            //        Thread.Sleep(100);
-            //    }
-            //}
-
-            if (newtask.IsCompleted)
-            {
-                return null;
-                //return newtask.Result;
-            }
-            else
-            {
-                tokensource.Cancel();
-                Status = DiskStatus.ConnectOverTime;
-                return null;
-            }
+        public void BindNewManager(PanelPathManager newmanager){
+            Manager = newmanager;
         }
         public void GetDiskPathCollection()
         {
@@ -191,7 +192,12 @@ namespace Sauron
                 string[] image_directory_list = Directory.GetDirectories(originpath);
                 string[] result_directory_list = Directory.GetDirectories(resultpath);
                 Status = DiskStatus.OK;
-                //return new DiskPathCollection(image_directory_list, result_directory_list);
+                var intersectlist = Enumerable.Intersect(image_directory_list, result_directory_list, new StringPathCompare());
+                foreach (var item in intersectlist)
+                {
+                    PanelPathContainer this_panel = new PanelPathContainer(Path.GetFileName(item), ParentPc.PcInfo, this.DiskName);
+                    Manager.AddPanelPath(this_panel);
+                }
             }
             catch (UnauthorizedAccessException e)
             {
@@ -199,7 +205,6 @@ namespace Sauron
                 FilePathLogClass.Logger.Error(e.Message);
                 Status = DiskStatus.ConnectError;
                 lastErrorMessage = e.Message;
-                //return null;
             }
             catch (DirectoryNotFoundException e)
             {
@@ -207,7 +212,6 @@ namespace Sauron
                 FilePathLogClass.Logger.Error(e.Message);
                 Status = DiskStatus.NotExist;
                 lastErrorMessage = e.Message;
-                //return null;
             }
             catch (IOException e)
             {
@@ -215,7 +219,12 @@ namespace Sauron
                 FilePathLogClass.Logger.Error(e.Message);
                 Status = DiskStatus.ConnectError;
                 lastErrorMessage = e.Message;
-                //return null;
+            }
+            catch (Exception e)
+            {
+                FilePathLogClass.Logger.Error(e.Message);
+                Status = DiskStatus.ConnectError;
+                lastErrorMessage = e.Message;
             }
         }
     }
@@ -231,13 +240,13 @@ namespace Sauron
     class InspectPC
     {
         public PC PcInfo;
-        public List<HardDisk> DiskCollectin = new List<HardDisk>();
+        public List<HardDisk> DiskCollection = new List<HardDisk>();
         public InspectPC(PC input_pc)
         {
             PcInfo = input_pc;
             foreach (var disk in (DiskPart[])Enum.GetValues(typeof(DiskPart)))
             {
-                DiskCollectin.Add(new HardDisk(this, disk));
+                DiskCollection.Add(new HardDisk(this, disk));
             }
         }
         List<PanelPathContainer> SearchDisk(DiskPart search_disk)
@@ -296,7 +305,7 @@ namespace Sauron
                     foreach (var item in image_directory_list.Intersect(result_directory_list))
                     {
                         PanelPathContainer this_panel = new PanelPathContainer(item.Substring(item.Length - 17), PcInfo, search_disk);
-                        panel_list.PanelPathAdd(this_panel);
+                        panel_list.AddPanelPath(this_panel);
                     }
                     foreach (var item in image_directory_list.Except(result_directory_list))
                     {

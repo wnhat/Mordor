@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Container;
-using Container.Message;
+using Container.MQMessage;
 using Container.SeverConnection;
 
 namespace EyeOfSauron
@@ -124,7 +124,7 @@ namespace EyeOfSauron
         public string ExamInfo;
         public InspectSection section;
 
-        Lot OnInspectLot;
+        MissionLot OnInspectLot;
         
         private Queue<PanelMission> waitMissionQueue = new Queue<PanelMission>();
         Queue<ExamMission> ExamMissionList = new Queue<ExamMission>();

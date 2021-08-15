@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using NetMQ;
 using Newtonsoft.Json;
 
-namespace Container.Message
+namespace Container.MQMessage
 {
     public enum MessageType
     {
@@ -68,25 +68,43 @@ namespace Container.Message
             return JsonConvert.DeserializeObject<VersionCheckClass>(versionstring, new JsonSerializerSettings() { StringEscapeHandling = StringEscapeHandling.EscapeNonAscii });
         }
     }
+    public class PanelMissionRequestMessage : BaseMessage
+    {
+        // TODO: 将任务申请operator 添加为附件；
+        public string FGcode;
+        public ProductType productType;
+        public PanelMissionRequestMessage(string fGcode, ProductType productType):base(MessageType.CLINET_GET_PANEL_MISSION)
+        {
+            FGcode = fGcode;
+            this.productType = productType;
+            this.Append(FGcode);
+            this.Append(productType.ToString());
+        }
+        public PanelMissionRequestMessage(NetMQMessage theMessage):base()
+        {
+            FGcode = theMessage[1].ConvertToString();
+            productType = (ProductType)Enum.Parse(typeof(ProductType),theMessage[2].ConvertToString());
+        }
+    }
     public class PanelMissionMessage : BaseMessage
     {
-        public Lot ThePanelMissionLot;
+        public MissionLot ThePanelMissionLot;
         public PanelMissionMessage(NetMQMessage theMessage):base(theMessage)
         {
             ThePanelMissionLot = TransferToMission(theMessage[(int)MessageFieldName.Field1].ConvertToString());
         }
-        public PanelMissionMessage(MessageType messageType, VersionCheckClass version, Lot panelMission) : base(messageType,version)
+        public PanelMissionMessage(MessageType messageType, VersionCheckClass version, MissionLot panelMission) : base(messageType,version)
         {
             ThePanelMissionLot = panelMission;
             this.Append(TransferToString(ThePanelMissionLot));
         }
-        string TransferToString(Lot panelMission)
+        string TransferToString(MissionLot panelMission)
         {
             return JsonConvert.SerializeObject(panelMission, new JsonSerializerSettings() { StringEscapeHandling = StringEscapeHandling.EscapeNonAscii });
         }
-        Lot TransferToMission(string missionstring)
+        MissionLot TransferToMission(string missionstring)
         {
-            return JsonConvert.DeserializeObject<Lot>(missionstring, new JsonSerializerSettings() { StringEscapeHandling = StringEscapeHandling.EscapeNonAscii });
+            return JsonConvert.DeserializeObject<MissionLot>(missionstring, new JsonSerializerSettings() { StringEscapeHandling = StringEscapeHandling.EscapeNonAscii });
         }
     }
     public class UserCheckMessage : BaseMessage

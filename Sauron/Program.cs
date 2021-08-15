@@ -8,7 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
 using System.Data;
-using Container.Message;
+using Container.MQMessage;
 
 namespace Sauron
 {
@@ -63,7 +63,7 @@ namespace Sauron
                             a.Socket.SignalOK();
                             break;
                         case MessageType.CLINET_GET_PANEL_MISSION:
-                            TheMissionManager.GetMission(a);
+                            TheMissionManager.GetMission(a,messageIn);
                             break;
                         case MessageType.CLINET_GET_EXAM_MISSION_LIST:
                             TheMissionManager.GetExamMission(a, messageIn);
@@ -80,7 +80,7 @@ namespace Sauron
                         case MessageType.CONTROLER_CLEAR_MISSION:
                             break;
                         case MessageType.CONTROLER_ADD_MISSION:
-                            TheMissionManager.AddMissionByServer(a,messageIn);
+                            TheMissionManager.AddMissionByControlor(a,messageIn);
                             break;
                         case MessageType.CONTROLER_REFRESH_EXAM:
                             TheMissionManager.RefreshExamList();
@@ -108,7 +108,7 @@ namespace Sauron
                 {
                     ConsoleLogClass.Logger.Error("start refresh the panel list and add mission(test);");
                     TheMissionManager.RefreshFileContainer();
-                    TheMissionManager.AddMissionTest();
+                    //TheMissionManager.AddMissionTest();
                 };
                 poller.Run(); // 启动轮询器
             }

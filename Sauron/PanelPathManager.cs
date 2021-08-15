@@ -12,7 +12,7 @@ namespace Sauron
     {
         Dictionary<string, List<PanelPathContainer>> theContainer = new Dictionary<string, List<PanelPathContainer>>();
         private readonly object ContainerLock = new object();
-        public void PanelPathAdd(PanelPathContainer thispanel)
+        public void AddPanelPath(PanelPathContainer thispanel)
         {
             lock (ContainerLock)
             {
@@ -31,7 +31,7 @@ namespace Sauron
         {
             foreach (var panel in panelList)
             {
-                PanelPathAdd(panel);
+                AddPanelPath(panel);
             }
         }
 

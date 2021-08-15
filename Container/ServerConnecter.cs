@@ -1,4 +1,4 @@
-﻿using Container.Message;
+﻿using Container.MQMessage;
 using NetMQ;
 using NetMQ.Sockets;
 using System;
@@ -49,7 +49,7 @@ namespace Container.SeverConnection
             var returnmessage = new PanelPathMessage(request.ReceiveMultipartMessage());
             return returnmessage.panelPathDic;
         }
-        public static Lot GetPanelMission()
+        public static MissionLot GetPanelMission()
         {
             // get new panel mission from server;
             BaseMessage newMessage = new BaseMessage(MessageType.CLINET_GET_PANEL_MISSION);
@@ -57,7 +57,7 @@ namespace Container.SeverConnection
             PanelMissionMessage returnMessage = new PanelMissionMessage(request.ReceiveMultipartMessage());
             return returnMessage.ThePanelMissionLot;
         }
-        public static void SendPanelMissionResult(Lot lot)
+        public static void SendPanelMissionResult(MissionLot lot)
         {
             PanelMissionMessage ResultMessage = new PanelMissionMessage(MessageType.CLIENT_SEND_MISSION_RESULT, lot);
             request.SendMultipartMessage(ResultMessage);
@@ -83,7 +83,7 @@ namespace Container.SeverConnection
             request.SendMultipartMessage(newmessage);
             request.ReceiveSignal();
         }
-        public static void AddPanelMission(Lot Newlot)
+        public static void AddPanelMission(MissionLot Newlot)
         {
             PanelMissionMessage ResultMessage = new PanelMissionMessage(MessageType.CONTROLER_ADD_MISSION, Newlot);
             request.SendMultipartMessage(ResultMessage);
