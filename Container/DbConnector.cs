@@ -23,7 +23,15 @@ namespace Container
 
         public static void AddNewLotFromMes(TrayLot lot)
         {
+            db.TrayLot.Add(lot);
 
+            foreach (var item in lot.Panel)
+            {
+                db.Panel.Add(item);
+            }
+            db.WaitLot.Add(new WaitLot { TrayLot = lot });
+
+            db.SaveChanges();
         }
 
         public static TrayLot GetWaitedMission(ProductInfo info)
@@ -40,12 +48,18 @@ namespace Container
             }
         }
 
-        public static void WaitToOninspect(WaitLot waitLot,User op)
+        public static TrayLot WaitToOninspect(WaitLot waitLot,User op)
         {
             TrayLot lot = waitLot.TrayLot;
             OnInspectLot newOninspectLot = new OnInspectLot { TrayLot = lot, User = op, RequestTime = TimeNow};
             db.OnInspectLot.Add(newOninspectLot);
             db.WaitLot.Remove(waitLot);
+            return lot;
+        }
+
+        public static InspectResult finishInspect()
+        {
+            
         }
     }
 }

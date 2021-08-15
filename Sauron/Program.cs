@@ -65,7 +65,7 @@ namespace Sauron
                         case MessageType.CONTROLER_CLEAR_MISSION:
                             break;
                         case MessageType.CONTROLER_ADD_MISSION:
-                            TheMissionManager.AddMissionByServer(a,messageIn);
+                            TheMissionManager.AddMissionByControlor(a,messageIn);
                             break;
                         case MessageType.CONTROLER_REFRESH_EXAM:
                             TheMissionManager.RefreshExamList();

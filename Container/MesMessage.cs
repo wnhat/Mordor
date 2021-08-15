@@ -22,7 +22,7 @@ namespace Container
     {
         MesMessageHeader header;
         RemoteTrayGroupInfoDownloadRequestMessageBody Body;
-        public RemoteTrayGroupInfoDownloadRequest(string FGcode, ProductType productType)
+        public RemoteTrayGroupInfoDownloadRequest(string FGcode, string productType)
         {
             header   = new MesMessageHeader(MesMessageType.RemoteTrayGroupInfoDownloadRequest);
             Body     = new RemoteTrayGroupInfoDownloadRequestMessageBody(FGcode, productType);
@@ -53,11 +53,11 @@ namespace Container
     public class RemoteTrayGroupInfoDownloadRequestMessageBody
     {
         public string PRODUCTSPECNAME; //FG CODE;
-        public ProductType PRODUCTIONTYPE;
+        public string PRODUCTIONTYPE;
         public StationType PROCESSOPERATIONNAME;
         public string MACHINENAME;
 
-        public RemoteTrayGroupInfoDownloadRequestMessageBody(string pRODUCTSPECNAME, ProductType pRODUCTIONTYPE)
+        public RemoteTrayGroupInfoDownloadRequestMessageBody(string pRODUCTSPECNAME, string pRODUCTIONTYPE)
         {
             PRODUCTSPECNAME = pRODUCTSPECNAME;
             PRODUCTIONTYPE = pRODUCTIONTYPE;
@@ -94,15 +94,16 @@ namespace Container
     public class RemoteTrayGroupInfoDownloadSend
     {
         XmlDocument OriginalDoc;
-        public string lotid;
-        public string eqID;
-        public List<PanelMissionFromMES> missionList;
+        public TrayLot lot;
         public RemoteTrayGroupInfoDownloadSend(XmlDocument replyDoc)
         {
             OriginalDoc = replyDoc;
-            lotid = InitialField("TRAYGROUPNAME");
-            eqID = InitialField("MACHINENAME");
-            missionList = InitialMission();
+            lot = new TrayLot { TrayGroupName = InitialField("TRAYGROUPNAME"), MachineName = InitialField("MACHINENAME") };
+            List<PanelMissionFromMES> missionList = InitialMission();
+            foreach (var item in missionList)
+            {
+                lot.Panel.Add(item);
+            }
         }
         private List<PanelMissionFromMES> InitialMission()
         {

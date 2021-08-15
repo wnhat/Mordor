@@ -16,7 +16,6 @@ namespace Sauron
         string daemon = null;
         string subject = "a.b.c";
         Transport transport = null;
-        DICS_DBEntities db = new DICS_DBEntities();
         public MesConnector(string service, string network, string daemon, string subject)
         {
             this.service = service;
@@ -47,17 +46,18 @@ namespace Sauron
                 System.Environment.Exit(1);
             }
         }
-        public RemoteTrayGroupInfoDownloadSend RequestMission(string FGcode, ProductType productType)
+        public RemoteTrayGroupInfoDownloadSend RequestMission(ProductInfo info)
         {
-            RemoteTrayGroupInfoDownloadRequest newrequest = new RemoteTrayGroupInfoDownloadRequest(FGcode,productType);
+            RemoteTrayGroupInfoDownloadRequest newrequest = new RemoteTrayGroupInfoDownloadRequest(info.FGcode,info.ProductType);
             Message newmessage = newrequest.GetMessage();
             newmessage.SendSubject = subject;
             var reply = transport.SendRequest(newmessage,Parameter.MesConnectTimeOut);
             // 超时未接到返回信息时，返回值为null；
             if (reply == null)
             {
-                MesLogClass.Logger.Error("向MES请求任务超时，请检查与MES的连接或网络问题；");
-                return null;
+                string errorstring = "向MES请求任务超时，请检查与MES的连接或网络问题；";
+                MesLogClass.Logger.Error(errorstring);
+                throw new MesMessageException(errorstring);
             }
             else
             {
@@ -68,7 +68,7 @@ namespace Sauron
                     string errorstring = returnxml.GetElementsByTagName("OPCALLDESCRIPTION")[0].InnerText;
                     // TODO：当异常发生时进行的操作；
                     MesLogClass.Logger.Error("向MES请求任务时发生错误，错误信息为：{0}",errorstring);
-                    return null;
+                    throw new MesMessageException(errorstring);
                 }
                 else
                 {

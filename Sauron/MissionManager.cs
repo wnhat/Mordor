@@ -26,6 +26,7 @@ namespace Sauron
         {
             this.Thefilecontainer = new FileManager();
             this.Thesqlserver = new SqlServerConnector();
+
             string service = "BOE.B7.MEM.TST.PEMsvr";
             string network = "172.16.145.22";
             string daemon = null;
@@ -74,7 +75,8 @@ namespace Sauron
         }
         public void WaittingMissionAdd(ProductInfo info)
         {
-            
+            var newMissionMessage = theMesConnector.RequestMission(info);
+            DbConnector.AddNewLotFromMes(newMissionMessage.lot);
         }
 
         public MissionLot WaitingMissionGet(ProductInfo info)
@@ -84,21 +86,31 @@ namespace Sauron
         }
         public void GetMission(NetMQSocketEventArgs a, NetMQMessage M)
         {
+            // 获取数据库中正在等待检查的任务返回给客户端
+            // 
             PanelMissionRequestMessage request = new PanelMissionRequestMessage(M);
-            var newmission = theMesConnector.RequestMission(request.FGcode,request.productType);
-            if (newmission != null)
+            // TODO:Add productinfo here;
+            ProductInfo info = new ProductInfo { };
+            // TODO:Add productinfo here;
+            TrayLot newlot = DbConnector.GetWaitedMission(info);
+            IEnumerable<string> panelidList = from item in newlot.Panel
+                                              select item.PanelId;
+            var path = GetPanelPathList(panelidList.ToArray());
+            
+            List<PanelMission> missionlist = new List<PanelMission>();
+            foreach (var item in path.Keys)
             {
-
+                var pathlist = path[item];
+                var avipath = pathlist.Where(x => x.PcSection == InspectSection.AVI).FirstOrDefault();
+                var svipath = pathlist.Where(x => x.PcSection == InspectSection.SVI).FirstOrDefault();
+                PanelMission newpanel = new PanelMission(item, MissionType.PRODUCITVE, avipath, svipath);
+                missionlist.Add(newpanel);
             }
-            else
-            {
+            MissionLot newMissionLot = new MissionLot(newlot.MachineName, missionlist, newlot.TrayGroupName);
 
-            }
+            PanelMissionMessage responseMessage = new PanelMissionMessage(MessageType.SERVER_SEND_MISSION,newMissionLot);
+            a.Socket.SendMultipartMessage(responseMessage);
         }
-        //public Lot GetMission(string FGcode, ProductType type)
-        //{
-
-        //}
         public void FinishMission(NetMQSocketEventArgs a, NetMQMessage M)
         {
             PanelMissionMessage finishedMission = new PanelMissionMessage(M);
@@ -131,7 +143,7 @@ namespace Sauron
             string[] examinfoarray = ExamMissionDic.Keys.ToArray();
             a.Socket.SendMultipartMessage(new ExamInfoMessage(examinfoarray));
         }
-        public void AddMissionByServer(NetMQSocketEventArgs a, NetMQMessage M)
+        public void AddMissionByControlor(NetMQSocketEventArgs a, NetMQMessage M)
         {
             PanelMissionMessage Mission = new PanelMissionMessage(M);
             AddMission(Mission.ThePanelMissionLot);
@@ -176,34 +188,6 @@ namespace Sauron
         public void FinishExam(List<ExamMission> missionlist)
         {
             Thesqlserver.InsertExamResult(missionlist);
-        }
-    }
-    class LotControler
-    {
-
-    }
-    struct LotInfo
-    {
-        string FGcode;
-        ProductType Type;
-
-        public LotInfo(string fGcode, ProductType type)
-        {
-            FGcode = fGcode;
-            Type = type;
-        }
-
-        //public override bool Equals(object obj)
-        //{
-        //    return obj is LotInfo info && FGcode == info.FGcode && Type == info.Type;
-        //}
-
-        public override int GetHashCode()
-        {
-            int hashCode = -2086568036;
-            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(FGcode);
-            hashCode = hashCode * -1521134295 + Type.GetHashCode();
-            return hashCode;
         }
     }
 }

@@ -6,14 +6,14 @@
     <edmx:Diagrams>
       <Diagram DiagramId="70c4b4fe2f0b433c9943b850f553e633" Name="Diagram1">
         <EntityTypeShape EntityType="DICS_DBModel.FinishedLot" Width="1.5" PointX="5.25" PointY="8" IsExpanded="true" />
-        <EntityTypeShape EntityType="DICS_DBModel.InspectResult" Width="1.5" PointX="7.5" PointY="12" IsExpanded="true" />
-        <EntityTypeShape EntityType="DICS_DBModel.OnInspectLot" Width="1.5" PointX="5.25" PointY="5" IsExpanded="true" />
-        <EntityTypeShape EntityType="DICS_DBModel.OninspectProduct" Width="1.5" PointX="3" PointY="4.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="DICS_DBModel.Panel" Width="1.5" PointX="5.25" PointY="11.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DICS_DBModel.InspectResult" Width="1.5" PointX="12" PointY="9" IsExpanded="true" />
+        <EntityTypeShape EntityType="DICS_DBModel.OnInspectLot" Width="1.5" PointX="10" PointY="5.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="DICS_DBModel.OninspectProduct" Width="1.5" PointX="7.25" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DICS_DBModel.Panel" Width="1.5" PointX="9.125" PointY="8.875" IsExpanded="true" />
         <EntityTypeShape EntityType="DICS_DBModel.ProductInfo" Width="1.5" PointX="0.75" PointY="6.875" IsExpanded="true" />
         <EntityTypeShape EntityType="DICS_DBModel.TrayLot" Width="1.5" PointX="3" PointY="7.625" IsExpanded="true" />
-        <EntityTypeShape EntityType="DICS_DBModel.User" Width="1.5" PointX="3" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="DICS_DBModel.WaitLot" Width="1.5" PointX="5.25" PointY="15.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="DICS_DBModel.User" Width="1.5" PointX="14.5" PointY="6.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="DICS_DBModel.WaitLot" Width="1.5" PointX="5.625" PointY="11" IsExpanded="true" />
         <AssociationConnector Association="DICS_DBModel.FK_FinishedLot_TrayLot" ManuallyRouted="false" />
         <AssociationConnector Association="DICS_DBModel.FK_FinishedLot_User" ManuallyRouted="false" />
         <AssociationConnector Association="DICS_DBModel.FK_InspectResult_Panel" ManuallyRouted="false" />

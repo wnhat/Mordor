@@ -48,6 +48,7 @@ namespace Container.MQMessage
     }
     public class PanelMissionRequestMessage : BaseMessage
     {
+        // TODO: 将任务申请operator 添加为附件；
         public string FGcode;
         public ProductType productType;
         public PanelMissionRequestMessage(string fGcode, ProductType productType):base(MessageType.CLINET_GET_PANEL_MISSION)
