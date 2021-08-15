@@ -17,8 +17,17 @@ namespace Container.SeverConnection
             request = new RequestSocket();
             request.Connect("tcp://172.16.145.22:5555");
         }
+        public static bool VersionCheck(VersionCheckClass version)
+        {
+            // 检查子程序与服务器程序的版本号码是否匹配，当重大更新时推进版本号，防止出现异常；
+            BaseMessage newmessage = new BaseMessage(MessageType.VERSION_CHECK,version);
+            request.SendMultipartMessage(newmessage);
+            var returnVersion = new BaseMessage(request.ReceiveMultipartMessage());
+            return returnVersion.Version == version;
+        }
         public static bool SendBaseMessage(MessageType m)
         {
+            // BaseMessage 包含了message的基础信息，在MessageType中详细描述了该信息传输至服务器时对应的行为含义；
             BaseMessage newMessage = new BaseMessage(m);
             request.SendMultipartMessage(newMessage);
             return request.ReceiveSignal();

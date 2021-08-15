@@ -16,12 +16,27 @@ namespace Sauron
     {
         static void Main(string[] args)
         {
-            Server(); //启动服务器；
-            //Test();
+            //Server(); //启动服务器；
+            Test();
         }
         static void Test()
         {
-            MissionManager TheMissionManager = new MissionManager();
+            var timer1 = new NetMQTimer(TimeSpan.FromSeconds(10));
+            var timer2 = new NetMQTimer(TimeSpan.FromSeconds(10));
+            var poller = new NetMQPoller { timer1, timer2 };
+            timer1.Elapsed += (s, a) =>
+            {
+                ConsoleLogClass.Logger.Error("time1 start;");
+                Thread.Sleep(2000);
+                ConsoleLogClass.Logger.Error("time1 end;");
+            };
+            timer2.Elapsed += (s, a) =>
+            {
+                ConsoleLogClass.Logger.Error("time2 start;");
+                Thread.Sleep(1000);
+                ConsoleLogClass.Logger.Error("time2 end;");
+            };
+            poller.Run(); // 启动轮询器
         }
         static void Server()
         {

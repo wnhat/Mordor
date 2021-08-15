@@ -7,16 +7,20 @@ using System.Windows.Forms;
 
 namespace EyeOfSauron
 {
+    
     static class Program
     {
+        const int Version = 100;
+        const string UpDateTime = "20210807";
         /// <summary>
         /// 应用程序的主入口点。
         /// </summary>
         [STAThread]
-
+        
         static void Main()
         {
             // 添加；
+            
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             LoginForm the_main_form = new LoginForm();

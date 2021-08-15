@@ -10,7 +10,10 @@ namespace Container.Message
 {
     public enum MessageType
     {
-        CLIENT_SEND_MISSION_RESULT,
+        VERSION_CHECK,
+        VERSION_ERROR,
+
+        CLIENT_SEND_MISSION_RESULT = 10,
         CLIENT_SEND_EXAM_RESULT,
         CLINET_GET_PANEL_MISSION,
         CLINET_GET_PANEL_PATH,
@@ -18,11 +21,11 @@ namespace Container.Message
         CLINET_GET_EXAMINFO,
         CLINET_CHECK_USER,
 
-        CONTROLER_CLEAR_MISSION,
+        CONTROLER_CLEAR_MISSION = 100,
         CONTROLER_ADD_MISSION,
         CONTROLER_REFRESH_EXAM,
 
-        SERVER_SEND_MISSION,
+        SERVER_SEND_MISSION = 200,
         SERVER_SEND_FINISH,
         SERVER_SEND_EORRO,
         SERVER_SEND_EXAMINFO,
@@ -30,34 +33,49 @@ namespace Container.Message
         SERVER_SEND_USER_FLASE,
         SERVER_SEND_USER_TRUE,
     }
+    public enum MessageFieldName
+    {
+        MessageType,
+        Version,
+        Field1,
+        Field2,
+        Field3,
+    }
     public class BaseMessage : NetMQMessage
     {
         public MessageType TheMessageType;
-        public BaseMessage(MessageType messageType)
-        {
-            TheMessageType = messageType;
-            this.Append((int)TheMessageType);
-        }
+        public VersionCheckClass Version;
+
         public BaseMessage(NetMQMessage message)
         {
-            TheMessageType = (MessageType)message[0].ConvertToInt32();
+            TheMessageType = (MessageType)message[(int)MessageFieldName.MessageType].ConvertToInt32();
+            Version = TransferToVersion(message[(int)MessageFieldName.Version].ConvertToString());
         }
-        public BaseMessage()
+
+        public BaseMessage(MessageType theMessageType, VersionCheckClass version)
         {
+            TheMessageType = theMessageType;
+            Version = version ?? throw new ArgumentNullException(nameof(version));
+            this.Append((int)TheMessageType);
+            this.Append(TransferToString(version));
+        }
+        string TransferToString(VersionCheckClass version)
+        {
+            return JsonConvert.SerializeObject(version, new JsonSerializerSettings() { StringEscapeHandling = StringEscapeHandling.EscapeNonAscii });
+        }
+        VersionCheckClass TransferToVersion(string versionstring)
+        {
+            return JsonConvert.DeserializeObject<VersionCheckClass>(versionstring, new JsonSerializerSettings() { StringEscapeHandling = StringEscapeHandling.EscapeNonAscii });
         }
     }
     public class PanelMissionMessage : BaseMessage
     {
         public Lot ThePanelMissionLot;
-        public PanelMissionMessage(BaseMessage theMessage) : base(theMessage)
+        public PanelMissionMessage(NetMQMessage theMessage):base(theMessage)
         {
-            ThePanelMissionLot = TransferToMission(theMessage[1].ConvertToString());
+            ThePanelMissionLot = TransferToMission(theMessage[(int)MessageFieldName.Field1].ConvertToString());
         }
-        public PanelMissionMessage(NetMQMessage theMessage):base()
-        {
-            ThePanelMissionLot = TransferToMission(theMessage[1].ConvertToString());
-        }
-        public PanelMissionMessage(MessageType messageType, Lot panelMission) : base(messageType)
+        public PanelMissionMessage(MessageType messageType, VersionCheckClass version, Lot panelMission) : base(messageType,version)
         {
             ThePanelMissionLot = panelMission;
             this.Append(TransferToString(ThePanelMissionLot));
@@ -74,15 +92,15 @@ namespace Container.Message
     public class UserCheckMessage : BaseMessage
     {
         public Operator TheOperator;
-        public UserCheckMessage(MessageType type, Operator op) : base(type)
+        public UserCheckMessage(MessageType type, VersionCheckClass version, Operator op) : base(type,version)
         {
             TheOperator = op;
             this.Append(TransferToString(TheOperator));
         }
-        public UserCheckMessage(NetMQMessage theMessage)
+        public UserCheckMessage(NetMQMessage theMessage):base(theMessage)
         {
-            TheMessageType = (MessageType)theMessage[0].ConvertToInt32();
-            TheOperator = TransferToOp(theMessage[1].ConvertToString());
+            TheMessageType = (MessageType)theMessage[(int)MessageFieldName.MessageType].ConvertToInt32();
+            TheOperator = TransferToOp(theMessage[(int)MessageFieldName.Field1].ConvertToString());
         }
         string TransferToString(Operator op)
         {
@@ -96,14 +114,14 @@ namespace Container.Message
     public class PanelResultMessage : BaseMessage
     {
         PanelMissionResult TheResult;
-        public PanelResultMessage(MessageType type, PanelMissionResult result) : base(type)
+        public PanelResultMessage(MessageType type, VersionCheckClass version, PanelMissionResult result) : base(type,version)
         {
             TheResult = result;
             this.Append(TransferToString(result));
         }
-        public PanelResultMessage(NetMQMessage massage):base()
+        public PanelResultMessage(NetMQMessage massage):base(massage)
         {
-            TheResult = TransferToResult(massage[1].ConvertToString());
+            TheResult = TransferToResult(massage[(int)MessageFieldName.Field1].ConvertToString());
         }
         string TransferToString(PanelMissionResult result)
         {
@@ -118,17 +136,17 @@ namespace Container.Message
     {
         public string ExamRequestInfo;
         public List<ExamMission> ExamMissionList;
-        public ExamMissionMessage(MessageType messageType, List<ExamMission> examMissionList,string examRequestInfo) : base(messageType)
+        public ExamMissionMessage(MessageType messageType, VersionCheckClass version, List<ExamMission> examMissionList,string examRequestInfo) : base(messageType,version)
         {
             this.ExamMissionList = examMissionList;
             this.ExamRequestInfo = examRequestInfo;
             this.Append(TransferToString(ExamMissionList));
             this.Append(new NetMQFrame(ExamRequestInfo,Encoding.UTF8));
         }
-        public ExamMissionMessage(NetMQMessage message):base()
+        public ExamMissionMessage(NetMQMessage message):base(message)
         {
-            ExamMissionList = TransferToResult(message[1].ConvertToString());
-            ExamRequestInfo = message[2].ConvertToString(Encoding.UTF8);
+            ExamMissionList = TransferToResult(message[(int)MessageFieldName.Field1].ConvertToString());
+            ExamRequestInfo = message[(int)MessageFieldName.Field2].ConvertToString(Encoding.UTF8);
         }
         string TransferToString(List<ExamMission> result)
         {
@@ -142,14 +160,14 @@ namespace Container.Message
     public class ExamInfoMessage : BaseMessage
     {
         public string[] ExamInfoArray;
-        public ExamInfoMessage(string[] examInfo) : base(MessageType.SERVER_SEND_EXAMINFO)
+        public ExamInfoMessage(string[] examInfo, VersionCheckClass version) : base(MessageType.SERVER_SEND_EXAMINFO,version)
         {
             this.ExamInfoArray = examInfo;
             this.Append(TransferToString(ExamInfoArray));
         }
-        public ExamInfoMessage(NetMQMessage message) : base()
+        public ExamInfoMessage(NetMQMessage message) : base(message)
         {
-            ExamInfoArray = TransferToResult(message[1].ConvertToString());
+            ExamInfoArray = TransferToResult(message[(int)MessageFieldName.Field1].ConvertToString());
         }
         string TransferToString(string[] result)
         {
@@ -164,24 +182,25 @@ namespace Container.Message
     {
         public Dictionary<string, List<PanelPathContainer>> panelPathDic;
         //序列化发送的Massage
-        public PanelPathMessage(MessageType messageType, Dictionary<string, List<PanelPathContainer>> panelpathdic) : base(messageType)
+        public PanelPathMessage(MessageType messageType, VersionCheckClass version, Dictionary<string, List<PanelPathContainer>> panelpathdic) : base(messageType,version)
         {
             panelPathDic = panelpathdic;
             this.Append(TransferToString(panelPathDic));
         }
-        public PanelPathMessage(MessageType messageType, string[] panelidarray) : base(messageType)
+        public PanelPathMessage(MessageType messageType, VersionCheckClass version, string[] panelidarray) : base(messageType,version)
         {
             panelPathDic = new Dictionary<string, List<PanelPathContainer>>();
             foreach (var item in panelidarray)
             {
+                // 为了客户端请求任务时不多写一个传送ID List 的消息，用该字典装载请求的id信息；
                 panelPathDic.Add(item,null);
             }
             this.Append(TransferToString(panelPathDic));
         }
         //对收到的Massage进行反序列化
-        public PanelPathMessage(NetMQMessage message) : base()
+        public PanelPathMessage(NetMQMessage message) : base(message)
         {
-            panelPathDic = TransferToResult(message[1].ConvertToString());
+            panelPathDic = TransferToResult(message[(int)MessageFieldName.Field1].ConvertToString());
         }
         //序列化和反序列化实现
         string TransferToString(Dictionary<string, List<PanelPathContainer>> result)

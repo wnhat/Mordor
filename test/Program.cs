@@ -28,6 +28,7 @@ namespace test
             //a.RefreshFileList();
             test02();
         }
+        
         static void test03()
         {
             int runcount = 0;
@@ -221,7 +222,7 @@ namespace test
         {
             CancellationTokenSource tokensource = new CancellationTokenSource();
             CancellationToken token = tokensource.Token;
-            var newtask = new Task<DiskPathCollection>(printask, token);
+            var newtask = new Task<DiskPathCollection>(trydirectory, token);
             newtask.Start();
             //newtask.RunSynchronously();
             newtask.Wait(10000);
@@ -243,10 +244,33 @@ namespace test
         }
         public DiskPathCollection printask()
         {
-            string originpath = Path.Combine("\\\\", "172.16.160.11", "NetworkDrive", "F_Drive", "Defect Info", "Origin");
-            originpath = @"D:\program\c#";
-            string[] image_directory_list = Directory.GetDirectories(@"D:\program\c#");
             Console.WriteLine("进入aft");
+            string originpath = Path.Combine("\\\\", "172.16.160.11", "NetworkDrive", "F_Drive", "Defect Info", "Origin");
+            //originpath = @"D:\program\c#";
+            string[] image_directory_list = Directory.GetDirectories(originpath);
+            
+            return null;
+        }
+        public DiskPathCollection trydirectory()
+        {
+            try
+            {
+                Console.WriteLine("进入 trydirectory ");
+                string originpath = Path.Combine("\\\\", "172.16.160.11", "NetworkDrive", "F_Drive", "Defect Info", "Origin");
+                DirectoryInfo newdir = new DirectoryInfo(originpath);
+                if (newdir.Exists)
+                {
+                    Console.WriteLine("file exist!");
+                }
+                else
+                {
+                    Console.WriteLine("file not exist!");
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
             return null;
         }
     }
