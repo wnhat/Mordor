@@ -29,7 +29,7 @@ namespace EyeOfSauron
         }
         private void Inspectbutton_Click(object sender, EventArgs e)
         {
-            Operator newoperater = new Operator(this.userid_box.Text, this.userid_box.Text);
+            User newoperater = new User { UserId = this.UserIdBox.Text, PassWord = this.UserIdBox.Text };
             var user = SeverConnecter.CheckPassWord(newoperater);
             if (user != null)
             {
@@ -59,7 +59,7 @@ namespace EyeOfSauron
         private void Evilbutton_Click(object sender, EventArgs e)
         {
             // 考试；
-            Operator newoperater = new Operator(this.userid_box.Text, this.userid_box.Text);
+            User newoperater = new User { UserId = this.UserIdBox.Text, PassWord = this.UserIdBox.Text };
             var user = SeverConnecter.CheckPassWord(newoperater);
             if (user != null)
             {
@@ -75,7 +75,7 @@ namespace EyeOfSauron
         }
         private void ExamManagerButton_Click(object sender, EventArgs e)
         {
-            Operator newoperater = new Operator(this.userid_box.Text, this.userid_box.Text);
+            User newoperater = new User { UserId = this.UserIdBox.Text, PassWord = this.UserIdBox.Text };
             var user = SeverConnecter.CheckPassWord(newoperater);
             if (user != null)
             {

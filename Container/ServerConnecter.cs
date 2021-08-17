@@ -32,7 +32,7 @@ namespace Container.SeverConnection
             request.SendMultipartMessage(newMessage);
             return request.ReceiveSignal();
         }
-        public static Operator CheckPassWord(Operator theuser)
+        public static User CheckPassWord(User theuser)
         {
             UserCheckMessage newMessage = new UserCheckMessage(MessageType.CLINET_CHECK_USER, ClientVersion.Version, theuser);
             request.SendMultipartMessage(newMessage);
@@ -88,6 +88,13 @@ namespace Container.SeverConnection
             PanelMissionMessage ResultMessage = new PanelMissionMessage(MessageType.CONTROLER_ADD_MISSION, ClientVersion.Version, Newlot);
             request.SendMultipartMessage(ResultMessage);
             request.ReceiveSignal();
+        }
+        public static List<ProductInfo> GetProductInfo()
+        {
+            BaseMessage newmessage = new BaseMessage(MessageType.CLINET_GET_PRODUCTINFO, ClientVersion.Version);
+            request.SendMultipartMessage(newmessage);
+            ProductInfoMessage returnMessage = new ProductInfoMessage(request.ReceiveMultipartMessage());
+            return returnMessage.InfoList;
         }
     }
 }

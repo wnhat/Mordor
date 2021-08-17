@@ -20,6 +20,7 @@ namespace Container.MQMessage
         CLINET_GET_EXAM_MISSION_LIST,
         CLINET_GET_EXAMINFO,
         CLINET_CHECK_USER,
+        CLINET_GET_PRODUCTINFO,
 
         CONTROLER_CLEAR_MISSION = 100,
         CONTROLER_ADD_MISSION,
@@ -32,6 +33,7 @@ namespace Container.MQMessage
         SERVER_SEND_PANEL_GREAD,
         SERVER_SEND_USER_FLASE,
         SERVER_SEND_USER_TRUE,
+        SERVER_SEND_PRODUCTINFO,
     }
     public enum MessageFieldName
     {
@@ -55,7 +57,11 @@ namespace Container.MQMessage
         public BaseMessage(MessageType theMessageType, VersionCheckClass version)
         {
             TheMessageType = theMessageType;
-            Version = version ?? throw new ArgumentNullException(nameof(version));
+            if (version == null)
+            {
+                throw new ArgumentNullException(nameof(version));
+            }
+            Version = version;
             this.Append((int)TheMessageType);
             this.Append(TransferToString(version));
         }
@@ -66,6 +72,27 @@ namespace Container.MQMessage
         VersionCheckClass TransferToVersion(string versionstring)
         {
             return JsonConvert.DeserializeObject<VersionCheckClass>(versionstring, new JsonSerializerSettings() { StringEscapeHandling = StringEscapeHandling.EscapeNonAscii });
+        }
+    }
+    public class ProductInfoMessage:BaseMessage
+    {
+        public List<ProductInfo> InfoList;
+        public ProductInfoMessage(List<ProductInfo> list):base(MessageType.SERVER_SEND_PRODUCTINFO,ServerVersion.Version)
+        {
+            InfoList = list;
+            this.Append(TransferToString(InfoList));
+        }
+        public ProductInfoMessage(NetMQMessage theMessage) : base(theMessage)
+        {
+            InfoList = TransferToMission(theMessage[(int)MessageFieldName.Field1].ConvertToString());
+        }
+        string TransferToString(List<ProductInfo> panelMission)
+        {
+            return JsonConvert.SerializeObject(panelMission, new JsonSerializerSettings() { StringEscapeHandling = StringEscapeHandling.EscapeNonAscii });
+        }
+        List<ProductInfo> TransferToMission(string missionstring)
+        {
+            return JsonConvert.DeserializeObject<List<ProductInfo>>(missionstring, new JsonSerializerSettings() { StringEscapeHandling = StringEscapeHandling.EscapeNonAscii });
         }
     }
     public class PanelMissionRequestMessage : BaseMessage
@@ -109,8 +136,8 @@ namespace Container.MQMessage
     }
     public class UserCheckMessage : BaseMessage
     {
-        public Operator TheOperator;
-        public UserCheckMessage(MessageType type, VersionCheckClass version, Operator op) : base(type,version)
+        public User TheOperator;
+        public UserCheckMessage(MessageType type, VersionCheckClass version, User op) : base(type,version)
         {
             TheOperator = op;
             this.Append(TransferToString(TheOperator));
@@ -120,13 +147,13 @@ namespace Container.MQMessage
             TheMessageType = (MessageType)theMessage[(int)MessageFieldName.MessageType].ConvertToInt32();
             TheOperator = TransferToOp(theMessage[(int)MessageFieldName.Field1].ConvertToString());
         }
-        string TransferToString(Operator op)
+        string TransferToString(User op)
         {
             return JsonConvert.SerializeObject(op, new JsonSerializerSettings() { StringEscapeHandling = StringEscapeHandling.EscapeNonAscii });
         }
-        Operator TransferToOp(string opstring)
+        User TransferToOp(string opstring)
         {
-            return JsonConvert.DeserializeObject<Operator>(opstring, new JsonSerializerSettings() { StringEscapeHandling = StringEscapeHandling.EscapeNonAscii });
+            return JsonConvert.DeserializeObject<User>(opstring, new JsonSerializerSettings() { StringEscapeHandling = StringEscapeHandling.EscapeNonAscii });
         }
     }
     public class PanelResultMessage : BaseMessage

@@ -222,7 +222,7 @@ namespace Container
         public PanelPathContainer SviPanelPath;
         public PanelPathContainer AppPanelPath;
 
-        public Operator Op;
+        public User Op;
         public Defect DefectByOp;
         public JudgeGrade LastJudge = JudgeGrade.U;
 
@@ -257,7 +257,7 @@ namespace Container
                     return JudgeGrade.E;
                 }
 
-                if (mesPanel.LOTDETAILGRADE == JudgeGrade.E)
+                if (mesPanel.LastDetailGrade == JudgeGrade.E.ToString())
                 {
                     if (LastJudge == JudgeGrade.S)
                     {
@@ -268,7 +268,7 @@ namespace Container
                         return JudgeGrade.F;
                     }
                 }
-                else if (mesPanel.LOTDETAILGRADE == JudgeGrade.T)
+                else if (mesPanel.LastDetailGrade == JudgeGrade.T.ToString())
                 {
                     if (LastJudge == JudgeGrade.S)
                     {
@@ -279,7 +279,7 @@ namespace Container
                         return JudgeGrade.F;
                     }
                 }
-                else if(mesPanel.LOTDETAILGRADE == JudgeGrade.J)
+                else if(mesPanel.LastDetailGrade == JudgeGrade.J.ToString())
                 {
                     if (LastJudge == JudgeGrade.S)
                     {
@@ -290,7 +290,7 @@ namespace Container
                         return JudgeGrade.F;
                     }
                 }
-                else if(mesPanel.LOTDETAILGRADE == JudgeGrade.D)
+                else if(mesPanel.LastDetailGrade == JudgeGrade.D.ToString())
                 {
                     if (LastJudge == JudgeGrade.S)
                     {
@@ -331,45 +331,36 @@ namespace Container
             }
         }
     }
-    public class ExamMission : IComparable
+    public class ExamMission : AET_IMAGE_EXAM,IComparable
     {
-        public string PanelId;
-        public string AviResultPath;
-        public string SviResultPath;
-        public string MissionInfo;
-        public InspectSection PcSection { get; set; }
-        public Defect Defect;
-        public JudgeGrade Judge;
-        public Defect DefectU;                          // user JUDGE;
-        public JudgeGrade JudgeU;                       // user JUDGE;
-        public Operator Op;
+        public string AviResultPath
+        {
+            get
+            {
+                return Path.Combine(Parameter.AviExamFilePath, Info, PanelId);
+            }
+        }
+        public string SviResultPath
+        {
+            get
+            {
+                return Path.Combine(Parameter.SviExamFilePath, Info, PanelId);
+            }
+        }
+        public AET_IMAGE_EXAM_RESULT Result;
         public DateTime FinishTime;
         public int sortint = 0;                         // 用于任务随机排序；
-        public ExamMission() { }
-        public ExamMission(string panelId, string avipath, string svipath, InspectSection pcSection, Defect defect, JudgeGrade judge, string info)
-        {
-            PanelId = panelId;
-            AviResultPath = avipath;
-            SviResultPath = svipath;
-            PcSection = pcSection;
-            Defect = defect;
-            Judge = judge;
-            MissionInfo = info;
-        }
-        public ExamMission(string panelId, InspectSection pcSection, Defect defect, JudgeGrade judge, string info)
-        {
-            PanelId = panelId;
-            PcSection = pcSection;
-            Defect = defect;
-            Judge = judge;
-            MissionInfo = info;
-        }
+        public ExamMission():base() { }
         public void FinishExam(PanelMissionResult result)
         {
-            this.DefectU = result.defect;
-            this.JudgeU = result.Judge;
-            this.Op = result.Op;
-            this.FinishTime = DateTime.Now;
+            this.Result = new AET_IMAGE_EXAM_RESULT {
+                DefectCodeU = result.defect.DefectCode,
+                DefectNameU = result.defect.DefectName,
+                User = result.Op,
+                InspectDate = DateTime.Now.ToString("yyyyMMddHHmmssffffff"),
+                AET_IMAGE_EXAM = this,
+                JudgeU = result.Judge.ToString(),
+            };
         }
         public int CompareTo(object obj)
         {

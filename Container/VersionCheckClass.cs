@@ -16,7 +16,11 @@ namespace Container
         {
             FirstVersionNumber = firstVersionNumber;
             SecondVersionNumber = secondVersionNumber;
-            UpdateTime = updateTime ?? throw new ArgumentNullException(nameof(updateTime));
+            if (updateTime == null)
+            {
+                throw new ArgumentNullException(nameof(updateTime));
+            }
+            UpdateTime = updateTime;
         }
 
         public override bool Equals(object obj)
@@ -49,6 +53,17 @@ namespace Container
         public static bool operator !=(VersionCheckClass left, VersionCheckClass right)
         {
             return !(left == right);
+        }
+        public bool CheckVersion(VersionCheckClass other)
+        {
+            if (other.FirstVersionNumber == this.FirstVersionNumber)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
     public static class ServerVersion

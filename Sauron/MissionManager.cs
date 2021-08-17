@@ -16,13 +16,11 @@ namespace Sauron
     class MissionManager
     {
         MesConnector theMesConnector;       //管理与MES的链接；
-        SqlServerConnector Thesqlserver;    //管理与sqlsqerver 的链接；
         FileManager Thefilecontainer;       //管理设备文件路径；
         Dictionary<string, List<ExamMission>> ExamMissionDic = new Dictionary<string, List<ExamMission>>();
         public MissionManager()
         {
             this.Thefilecontainer = new FileManager();
-            this.Thesqlserver = new SqlServerConnector();
 
             string service = "BOE.B7.MEM.TST.PEMsvr";
             string network = "172.16.145.22";
@@ -41,28 +39,6 @@ namespace Sauron
         {
             ConsoleLogClass.Logger.Information("开始考试文件刷新；");
             Dictionary<string, List<ExamMission>> newExamMissionDic = new Dictionary<string, List<ExamMission>>();
-            var missionlist = Thesqlserver.GetExamMission();
-            foreach (var item in missionlist)
-            {
-                var avipath = new DirectoryInfo(Path.Combine(Parameter.AviExamFilePath, item.MissionInfo, item.PanelId));
-                var svipath = new DirectoryInfo(Path.Combine(Parameter.SviExamFilePath, item.MissionInfo, item.PanelId));
-                if (avipath.Exists && svipath.Exists)
-                {
-                    ExamMission newmission = new ExamMission(item.PanelId, avipath.FullName,svipath.FullName, item.PcSection, item.Defect, item.Judge, item.MissionInfo);
-                    if (newExamMissionDic.ContainsKey(newmission.MissionInfo))
-                    {
-                        newExamMissionDic[newmission.MissionInfo].Add(newmission);
-                    }
-                    else
-                    {
-                        newExamMissionDic.Add(newmission.MissionInfo, new List<ExamMission>() { newmission });
-                    }
-                }
-                else
-                {
-                    ConsoleLogClass.Logger.Error("Refresh Exam; panel ID: {0} ,do not have result file in {1}", item.PanelId); // TODO:ADD FILE path
-                }
-            }
             ExamMissionDic = newExamMissionDic;
             ConsoleLogClass.Logger.Information("考试文件刷新结束；");
         }
@@ -113,6 +89,13 @@ namespace Sauron
             DbConnector.finishInspect(finishedMission.ThePanelMissionLot);
             theMesConnector.FinishMission(finishedMission.ThePanelMissionLot);
         }
+
+        public void GetProductInfo(NetMQSocketEventArgs a)
+        {
+            ProductInfoMessage info = new ProductInfoMessage(DbConnector.GetProductInfo());
+            a.Socket.SendMultipartMessage(info);
+        }
+
         public void GetExamMission(NetMQSocketEventArgs a, NetMQMessage M)
         {
             ExamMissionMessage newexammission = new ExamMissionMessage(M);
@@ -160,27 +143,13 @@ namespace Sauron
             GC.Collect();
             ConsoleLogClass.Logger.Information("二次垃圾收集");
         }
-        public Operator CheckUser(Operator op)
+        public User CheckUser(User op)
         {
-            var opdict = Thesqlserver.GetOperatorDict();
-            if (opdict.ContainsKey(op.Id))
-            {
-                var newop = opdict[op.Id];
-                if (newop.CheckPassWord(op.PassWord))
-                {
-                    return newop;
-                }
-                else
-                    return null;
-            }
-            else
-            {
-                return null;
-            }
+            return null;
         }
         public void FinishExam(List<ExamMission> missionlist)
         {
-            Thesqlserver.InsertExamResult(missionlist);
+
         }
     }
 }

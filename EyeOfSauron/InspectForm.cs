@@ -28,6 +28,7 @@ namespace EyeOfSauron
         public void ConnectManager(Manager M)
         {
             TheManager = M;
+            login(M.Operater);
         }
         private void SetDefectButton()
         {
@@ -82,9 +83,10 @@ namespace EyeOfSauron
             login_button.BackColor = System.Drawing.Color.SandyBrown;
             this.Close();
         }
-        public void login(Operator newop)
+        public void login(User newop)
         {
-            login_button.Text = newop.Name;
+            // 仅用于设置人员名称
+            login_button.Text = newop.UserName;
             login_button.BackColor = System.Drawing.Color.PaleGreen;
         }
         protected override void OnFormClosed(FormClosedEventArgs e)

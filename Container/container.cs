@@ -170,9 +170,9 @@ namespace Container
         public string PanelId;
         public JudgeGrade Judge;
         public Defect defect;
-        public Operator Op;
+        public User Op;
         public PanelMissionResult(){ }
-        public PanelMissionResult(JudgeGrade judge, Defect defect, Operator op, string panelId)
+        public PanelMissionResult(JudgeGrade judge, Defect defect, User op, string panelId)
         {
             Judge = judge;
             this.defect = defect;
@@ -195,38 +195,6 @@ namespace Container
         public override string ToString()
         {
             return DefectName;
-        }
-    }
-    public class Operator
-    {
-        public string Name { get; set; }
-        public string Id { get; set; }
-        public string PassWord { get; set; }
-        public int MissionFinished { get; set; }
-        public Operator() { }
-        public Operator(string passWord, string name, string id)
-        {
-            PassWord = passWord;
-            MissionFinished = 0;
-            Name = name;
-            Id = id;
-        }
-        public Operator(string passWord, string id)
-        {
-            PassWord = passWord;
-            MissionFinished = 0;
-            Id = id;
-        }
-        public bool CheckPassWord(string pw)
-        {
-            if (pw == PassWord)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
         }
     }
     public class PC

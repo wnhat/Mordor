@@ -11,7 +11,6 @@ using System.Threading.Tasks;
 using Serilog;
 using System.Data;
 using System.Data.SqlClient;
-using System.Windows.Forms;
 using Newtonsoft.Json.Linq;
 using System.Threading;
 using System.Xml;
@@ -35,7 +34,11 @@ namespace test
             {
                 var info = db.ProductInfo.First();
                 var lot = db.TrayLot.First();
-                var bbb = lot.OnInspectLot;
+                for (int i = 0; i < 10; i++)
+                {
+                    lot.Panel.Add(new Panel{ PanelId = "761l", LastGrade = "b", LastDetailGrade = "c", PIAOI1PANELJUDGE = 0, PIAOI2PANELJUDGE = 1, ACTAOIPANELJUDGE = 1, TFEAOIPANELJUDGE = 0});
+                }
+                db.SaveChanges();
 
             }
         }

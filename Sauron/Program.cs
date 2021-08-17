@@ -50,7 +50,7 @@ namespace Sauron
                 {
                     /* 对客户端发送的事件进行分Type响应（按照Message首位）*/
                     NetMQMessage messageIn = a.Socket.ReceiveMultipartMessage();
-                    // 转换为自定义Message类型；
+                    // 转换为自定义Message类型;
                     BaseMessage switchmessage = new BaseMessage(messageIn);
                     switch (switchmessage.TheMessageType)
                     {
@@ -77,6 +77,10 @@ namespace Sauron
                             var newPanelPathDic = TheMissionManager.GetPanelPathList(panelIdInfo.panelPathDic.Keys.ToArray());
                             PanelPathMessage newpanelinfomassage = new PanelPathMessage(MessageType.CLINET_GET_PANEL_PATH, ServerVersion.Version, newPanelPathDic);
                             a.Socket.SendMultipartMessage(newpanelinfomassage);
+                            break;
+                        case MessageType.CLINET_GET_PRODUCTINFO:
+                            // TODO: 
+                            TheMissionManager.GetProductInfo(a);
                             break;
                         case MessageType.CONTROLER_CLEAR_MISSION:
                             break;

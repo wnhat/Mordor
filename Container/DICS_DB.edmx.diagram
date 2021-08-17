@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="70c4b4fe2f0b433c9943b850f553e633" Name="Diagram1">
+      <Diagram DiagramId="70c4b4fe2f0b433c9943b850f553e633" Name="Diagram1" ZoomLevel="95">
         <EntityTypeShape EntityType="DICS_DBModel.FinishedLot" Width="1.5" PointX="5.25" PointY="8" IsExpanded="true" />
         <EntityTypeShape EntityType="DICS_DBModel.InspectResult" Width="1.5" PointX="12" PointY="9" IsExpanded="true" />
         <EntityTypeShape EntityType="DICS_DBModel.OnInspectLot" Width="1.5" PointX="10" PointY="5.375" IsExpanded="true" />
@@ -24,6 +24,10 @@
         <AssociationConnector Association="DICS_DBModel.FK_Panel_TrayLot" ManuallyRouted="false" />
         <AssociationConnector Association="DICS_DBModel.FK_TrayLot_ProductInfo" ManuallyRouted="false" />
         <AssociationConnector Association="DICS_DBModel.FK_WaitLot_TrayLot" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="DICS_DBModel.AET_IMAGE_EXAM" Width="1.5" PointX="14.5" PointY="2.375" />
+        <EntityTypeShape EntityType="DICS_DBModel.AET_IMAGE_EXAM_RESULT" Width="1.5" PointX="16.75" PointY="6.25" />
+        <AssociationConnector Association="DICS_DBModel.FK_AET_IMAGE_EXAM_RESULT_AET_IMAGE_EXAM" />
+        <AssociationConnector Association="DICS_DBModel.FK_AET_IMAGE_EXAM_RESULT_User" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

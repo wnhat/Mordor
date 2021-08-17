@@ -105,6 +105,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AET_IMAGE_EXAM.cs">
+      <DependentUpon>DICS_DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AET_IMAGE_EXAM_RESULT.cs">
+      <DependentUpon>DICS_DB.tt</DependentUpon>
+    </Compile>
     <Compile Include="container.cs" />
     <Compile Include="DbConnector.cs" />
     <Compile Include="DICS_DB.Context.cs">

@@ -110,7 +110,6 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="sqlserver_connecter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

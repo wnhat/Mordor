@@ -15,7 +15,7 @@ namespace EyeOfSauron
     public class Manager
     {
         public MissionBuffer TheMissionBuffer;
-        Operator Operater;
+        public User Operater;
         public InspectSection Section { get; set; }
         public InspectMission OnInspectedMission { get; set; }
         private Queue<InspectMission> PreDownloadedMissionQueue;        //已加载的文件队列
@@ -23,7 +23,7 @@ namespace EyeOfSauron
         private int DownloadQuantity;                                   //预加载图像文件的个数
         public string ImageSavingPath { get; set; }
         public int MissionLeft { get { return PreDownloadedMissionQueue.Count + TheMissionBuffer.MissionLeft; } }
-        public int FinishedMissionCount { get { return Operater.MissionFinished; } }
+        public int FinishedMissionCount { get { return 0; } } // TODO:添加已完成任务数；
         public int PreLoadMissions()
         {
             var mission = TheMissionBuffer.GetMission();
@@ -95,11 +95,11 @@ namespace EyeOfSauron
                 return true;
             }
         }
-        public Operator CheckUser(Operator newUser)
+        public User CheckUser(User newUser)
         {
             return SeverConnecter.CheckPassWord(newUser);
         }
-        public void SetOperater(Operator newUser)
+        public void SetOperater(User newUser)
         {
             Operater = newUser;
         }
@@ -116,7 +116,6 @@ namespace EyeOfSauron
             PanelMissionResult newresult = new PanelMissionResult(judge, defect, this.Operater,OnInspectedMission.PanelId);
             TheMissionBuffer.FinishMission(newresult);
             FillPreDownloadMissionQueue();
-            Operater.MissionFinished++;
         }
     }
     public class MissionBuffer
@@ -157,7 +156,7 @@ namespace EyeOfSauron
                     break;
             }
         }
-        public void GetPanelMission()
+        public void GetPanelMission(ProductInfo info)
         {
             var newlot = SeverConnecter.GetPanelMission();
             if (newlot == null)
@@ -195,9 +194,9 @@ namespace EyeOfSauron
                     }
                     catch (FileNotFoundException)
                     {
-                        Operator autoop = new Operator("000000","auto","0000000");
+                        User autouser = new User { IndexId = 0 };
                         Defect EjudgeDefect = new Defect("FileError","DE00000",InspectSection.NORMAL);
-                        PanelMissionResult missionresult = new PanelMissionResult(JudgeGrade.E,EjudgeDefect,autoop,newmission.PanelId);
+                        PanelMissionResult missionresult = new PanelMissionResult(JudgeGrade.E, EjudgeDefect, autouser, newmission.PanelId);
                         FinishMission(missionresult);
                         return GetMission();
                     }

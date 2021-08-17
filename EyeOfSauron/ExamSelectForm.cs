@@ -14,9 +14,9 @@ namespace EyeOfSauron
 {
     public partial class ExamSelectForm : Form
     {
-        Operator user;
+        User user;
         string[] ExamInfoArray;
-        public ExamSelectForm(Operator op)
+        public ExamSelectForm(User op)
         {
             InitializeComponent();
             InitalComboBox();
@@ -31,12 +31,13 @@ namespace EyeOfSauron
         {
             InspectForm newinspectform = new InspectForm();
             Manager newmanager = new Manager();
+
             newmanager.SetInspectSection(InspectSection.EXAM);
             newmanager.SetOperater(user);
             newinspectform.ConnectManager(newmanager);
             newmanager.TheMissionBuffer.GetExamMissions(this.ExamIfoncomboBox.Text);
+
             this.Hide();
-            newinspectform.login(user);         // 写入用户
             newinspectform.ShowDialog();
             this.Close();
         }

@@ -4,7 +4,31 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="DICS_DBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="DICS_DBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="AET_IMAGE_EXAM">
+          <Key>
+            <PropertyRef Name="Indexid" />
+          </Key>
+          <Property Name="PanelId" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Indexid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Judge" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="DefectCode" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="DefectName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Info" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="DelFlag" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AET_IMAGE_EXAM_RESULT">
+          <Key>
+            <PropertyRef Name="IndexId" />
+          </Key>
+          <Property Name="InspectDate" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="operaterId" Type="int" Nullable="false" />
+          <Property Name="IndexId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PanelIndex" Type="int" Nullable="false" />
+          <Property Name="JudgeU" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="DefectCodeU" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="DefectNameU" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
         <EntityType Name="FinishedLot">
           <Key>
             <PropertyRef Name="LotId" />
@@ -88,6 +112,30 @@
           </Key>
           <Property Name="LotId" Type="int" Nullable="false" />
         </EntityType>
+        <Association Name="FK_AET_IMAGE_EXAM_RESULT_AET_IMAGE_EXAM">
+          <End Role="AET_IMAGE_EXAM" Type="Self.AET_IMAGE_EXAM" Multiplicity="1" />
+          <End Role="AET_IMAGE_EXAM_RESULT" Type="Self.AET_IMAGE_EXAM_RESULT" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AET_IMAGE_EXAM">
+              <PropertyRef Name="Indexid" />
+            </Principal>
+            <Dependent Role="AET_IMAGE_EXAM_RESULT">
+              <PropertyRef Name="PanelIndex" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AET_IMAGE_EXAM_RESULT_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="AET_IMAGE_EXAM_RESULT" Type="Self.AET_IMAGE_EXAM_RESULT" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="IndexId" />
+            </Principal>
+            <Dependent Role="AET_IMAGE_EXAM_RESULT">
+              <PropertyRef Name="operaterId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_FinishedLot_TrayLot">
           <End Role="TrayLot" Type="Self.TrayLot" Multiplicity="1" />
           <End Role="FinishedLot" Type="Self.FinishedLot" Multiplicity="0..1" />
@@ -209,6 +257,8 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="DICS_DBModelStoreContainer">
+          <EntitySet Name="AET_IMAGE_EXAM" EntityType="Self.AET_IMAGE_EXAM" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AET_IMAGE_EXAM_RESULT" EntityType="Self.AET_IMAGE_EXAM_RESULT" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FinishedLot" EntityType="Self.FinishedLot" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="InspectResult" EntityType="Self.InspectResult" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OnInspectLot" EntityType="Self.OnInspectLot" Schema="dbo" store:Type="Tables" />
@@ -218,6 +268,14 @@
           <EntitySet Name="TrayLot" EntityType="Self.TrayLot" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="WaitLot" EntityType="Self.WaitLot" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_AET_IMAGE_EXAM_RESULT_AET_IMAGE_EXAM" Association="Self.FK_AET_IMAGE_EXAM_RESULT_AET_IMAGE_EXAM">
+            <End Role="AET_IMAGE_EXAM" EntitySet="AET_IMAGE_EXAM" />
+            <End Role="AET_IMAGE_EXAM_RESULT" EntitySet="AET_IMAGE_EXAM_RESULT" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AET_IMAGE_EXAM_RESULT_User" Association="Self.FK_AET_IMAGE_EXAM_RESULT_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="AET_IMAGE_EXAM_RESULT" EntitySet="AET_IMAGE_EXAM_RESULT" />
+          </AssociationSet>
           <AssociationSet Name="FK_FinishedLot_TrayLot" Association="Self.FK_FinishedLot_TrayLot">
             <End Role="TrayLot" EntitySet="TrayLot" />
             <End Role="FinishedLot" EntitySet="FinishedLot" />
@@ -259,8 +317,7 @@
             <End Role="WaitLot" EntitySet="WaitLot" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="DICS_DBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -359,6 +416,7 @@
           <NavigationProperty Name="FinishedLot" Relationship="Self.FK_FinishedLot_User" FromRole="User" ToRole="FinishedLot" />
           <NavigationProperty Name="InspectResult" Relationship="Self.FK_InspectResult_User" FromRole="User" ToRole="InspectResult" />
           <NavigationProperty Name="OnInspectLot" Relationship="Self.FK_OnInspectLot_User" FromRole="User" ToRole="OnInspectLot" />
+          <NavigationProperty Name="AET_IMAGE_EXAM_RESULT" Relationship="DICS_DBModel.FK_AET_IMAGE_EXAM_RESULT_User" FromRole="User" ToRole="AET_IMAGE_EXAM_RESULT" />
         </EntityType>
         <EntityType Name="WaitLot">
           <Key>
@@ -537,7 +595,68 @@
             <End Role="TrayLot" EntitySet="TrayLot" />
             <End Role="WaitLot" EntitySet="WaitLot" />
           </AssociationSet>
+          <EntitySet Name="AET_IMAGE_EXAM" EntityType="DICS_DBModel.AET_IMAGE_EXAM" />
+          <EntitySet Name="AET_IMAGE_EXAM_RESULT" EntityType="DICS_DBModel.AET_IMAGE_EXAM_RESULT" />
+          <AssociationSet Name="FK_AET_IMAGE_EXAM_RESULT_AET_IMAGE_EXAM" Association="DICS_DBModel.FK_AET_IMAGE_EXAM_RESULT_AET_IMAGE_EXAM">
+            <End Role="AET_IMAGE_EXAM" EntitySet="AET_IMAGE_EXAM" />
+            <End Role="AET_IMAGE_EXAM_RESULT" EntitySet="AET_IMAGE_EXAM_RESULT" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AET_IMAGE_EXAM_RESULT_User" Association="DICS_DBModel.FK_AET_IMAGE_EXAM_RESULT_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="AET_IMAGE_EXAM_RESULT" EntitySet="AET_IMAGE_EXAM_RESULT" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="AET_IMAGE_EXAM">
+          <Key>
+            <PropertyRef Name="Indexid" />
+          </Key>
+          <Property Name="PanelId" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Indexid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Judge" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DefectCode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DefectName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Info" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DelFlag" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="AET_IMAGE_EXAM_RESULT" Relationship="DICS_DBModel.FK_AET_IMAGE_EXAM_RESULT_AET_IMAGE_EXAM" FromRole="AET_IMAGE_EXAM" ToRole="AET_IMAGE_EXAM_RESULT" />
+        </EntityType>
+        <EntityType Name="AET_IMAGE_EXAM_RESULT">
+          <Key>
+            <PropertyRef Name="IndexId" />
+          </Key>
+          <Property Name="InspectDate" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="operaterId" Type="Int32" Nullable="false" />
+          <Property Name="IndexId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PanelIndex" Type="Int32" Nullable="false" />
+          <Property Name="JudgeU" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DefectCodeU" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DefectNameU" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AET_IMAGE_EXAM" Relationship="DICS_DBModel.FK_AET_IMAGE_EXAM_RESULT_AET_IMAGE_EXAM" FromRole="AET_IMAGE_EXAM_RESULT" ToRole="AET_IMAGE_EXAM" />
+          <NavigationProperty Name="User" Relationship="DICS_DBModel.FK_AET_IMAGE_EXAM_RESULT_User" FromRole="AET_IMAGE_EXAM_RESULT" ToRole="User" />
+        </EntityType>
+        <Association Name="FK_AET_IMAGE_EXAM_RESULT_AET_IMAGE_EXAM">
+          <End Type="DICS_DBModel.AET_IMAGE_EXAM" Role="AET_IMAGE_EXAM" Multiplicity="1" />
+          <End Type="DICS_DBModel.AET_IMAGE_EXAM_RESULT" Role="AET_IMAGE_EXAM_RESULT" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AET_IMAGE_EXAM">
+              <PropertyRef Name="Indexid" />
+            </Principal>
+            <Dependent Role="AET_IMAGE_EXAM_RESULT">
+              <PropertyRef Name="PanelIndex" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AET_IMAGE_EXAM_RESULT_User">
+          <End Type="DICS_DBModel.User" Role="User" Multiplicity="1" />
+          <End Type="DICS_DBModel.AET_IMAGE_EXAM_RESULT" Role="AET_IMAGE_EXAM_RESULT" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="IndexId" />
+            </Principal>
+            <Dependent Role="AET_IMAGE_EXAM_RESULT">
+              <PropertyRef Name="operaterId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -633,6 +752,32 @@
             <EntityTypeMapping TypeName="DICS_DBModel.WaitLot">
               <MappingFragment StoreEntitySet="WaitLot">
                 <ScalarProperty Name="LotId" ColumnName="LotId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AET_IMAGE_EXAM">
+            <EntityTypeMapping TypeName="DICS_DBModel.AET_IMAGE_EXAM">
+              <MappingFragment StoreEntitySet="AET_IMAGE_EXAM">
+                <ScalarProperty Name="DelFlag" ColumnName="DelFlag" />
+                <ScalarProperty Name="Info" ColumnName="Info" />
+                <ScalarProperty Name="DefectName" ColumnName="DefectName" />
+                <ScalarProperty Name="DefectCode" ColumnName="DefectCode" />
+                <ScalarProperty Name="Judge" ColumnName="Judge" />
+                <ScalarProperty Name="Indexid" ColumnName="Indexid" />
+                <ScalarProperty Name="PanelId" ColumnName="PanelId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AET_IMAGE_EXAM_RESULT">
+            <EntityTypeMapping TypeName="DICS_DBModel.AET_IMAGE_EXAM_RESULT">
+              <MappingFragment StoreEntitySet="AET_IMAGE_EXAM_RESULT">
+                <ScalarProperty Name="DefectNameU" ColumnName="DefectNameU" />
+                <ScalarProperty Name="DefectCodeU" ColumnName="DefectCodeU" />
+                <ScalarProperty Name="JudgeU" ColumnName="JudgeU" />
+                <ScalarProperty Name="PanelIndex" ColumnName="PanelIndex" />
+                <ScalarProperty Name="IndexId" ColumnName="IndexId" />
+                <ScalarProperty Name="operaterId" ColumnName="operaterId" />
+                <ScalarProperty Name="InspectDate" ColumnName="InspectDate" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

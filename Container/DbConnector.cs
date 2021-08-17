@@ -24,16 +24,15 @@ namespace Container
         public static void AddNewLotFromMes(TrayLot lot)
         {
             db.TrayLot.Add(lot);
-
-            foreach (var item in lot.Panel)
-            {
-                db.Panel.Add(item);
-            }
             db.WaitLot.Add(new WaitLot { TrayLot = lot });
-
             db.SaveChanges();
         }
-
+        public static List<ProductInfo> GetProductInfo()
+        {
+            var infoList = from info in db.OninspectProduct
+                           select info.ProductInfo;
+            return infoList.ToList();
+        }
         public static TrayLot GetWaitedMission(ProductInfo info)
         {
             // 向服务器请求对应型号的检查任务；
@@ -60,7 +59,17 @@ namespace Container
 
         public static InspectResult finishInspect(MissionLot lot)
         {
-            
+            return null;
+        }
+
+        public static void InsertExamResult(ExamMission mission)
+        {
+            var newresult = new AET_IMAGE_EXAM_RESULT {  };
+        }
+
+        public static List<AET_IMAGE_EXAM> GetExam()
+        {
+            return db.AET_IMAGE_EXAM.ToList();
         }
     }
 }

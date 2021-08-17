@@ -136,6 +136,12 @@
     <Compile Include="ProcessForm.Designer.cs">
       <DependentUpon>ProcessForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ProductInfoSelectForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ProductInfoSelectForm.Designer.cs">
+      <DependentUpon>ProductInfoSelectForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="settings.cs">
@@ -161,6 +167,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ProcessForm.resx">
       <DependentUpon>ProcessForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ProductInfoSelectForm.resx">
+      <DependentUpon>ProductInfoSelectForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

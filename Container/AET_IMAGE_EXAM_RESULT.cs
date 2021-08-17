@@ -12,19 +12,17 @@ namespace Container
     using System;
     using System.Collections.Generic;
     
-    public partial class ProductInfo
+    public partial class AET_IMAGE_EXAM_RESULT
     {
-        public ProductInfo()
-        {
-            this.TrayLot = new HashSet<TrayLot>();
-        }
-    
+        public string InspectDate { get; set; }
+        public int operaterId { get; set; }
         public int IndexId { get; set; }
-        public string Name { get; set; }
-        public string ProductType { get; set; }
-        public string FGcode { get; set; }
+        public int PanelIndex { get; set; }
+        public string JudgeU { get; set; }
+        public string DefectCodeU { get; set; }
+        public string DefectNameU { get; set; }
     
-        public virtual OninspectProduct OninspectProduct { get; set; }
-        public virtual ICollection<TrayLot> TrayLot { get; set; }
+        public virtual AET_IMAGE_EXAM AET_IMAGE_EXAM { get; set; }
+        public virtual User User { get; set; }
     }
 }

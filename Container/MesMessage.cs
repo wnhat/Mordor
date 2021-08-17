@@ -216,13 +216,13 @@ namespace Container
                 newpanel.AppendChild(LOTGRADE);
                 LOTDETAILGRADE.InnerText = item.PanelJudge.ToString();
                 newpanel.AppendChild(LOTDETAILGRADE);
-                USERID.InnerText = item.Op.Id;
+                USERID.InnerText = item.Op.UserId;
                 newpanel.AppendChild(USERID);
 
                 var DEFECTLIST = doc.CreateNode(XmlNodeType.Element, "DEFECTLIST", "");
                 var DEFECT = doc.CreateNode(XmlNodeType.Element, "DEFECT", "");
                 var DEFECTCODE = doc.CreateNode(XmlNodeType.Element, "DEFECTCODE", "");
-                DEFECTCODE.InnerText = item.DefectCode;
+                DEFECTCODE.InnerText = item.DefectByOp.DefectCode;
                 DEFECT.AppendChild(DEFECTCODE);
                 DEFECTLIST.AppendChild(DEFECT);
                 newpanel.AppendChild(DEFECTLIST);
