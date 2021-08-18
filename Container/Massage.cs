@@ -98,19 +98,23 @@ namespace Container.MQMessage
     public class PanelMissionRequestMessage : BaseMessage
     {
         // TODO: 将任务申请operator 添加为附件；
-        public string FGcode;
-        public ProductType productType;
-        public PanelMissionRequestMessage(string fGcode, ProductType productType):base(MessageType.CLINET_GET_PANEL_MISSION,ClientVersion.Version)
+        ProductInfo Info;
+        User Operater;
+        public PanelMissionRequestMessage(ProductInfo info,User op):base(MessageType.CLINET_GET_PANEL_MISSION,ClientVersion.Version)
         {
-            FGcode = fGcode;
-            this.productType = productType;
-            this.Append(FGcode);
-            this.Append(productType.ToString());
+            Info = info;
+            Operater = op;
+            this.Append(TransferToString(Info));
+            this.Append(TransferToString(Operater));
+        }
+        string TransferToString(object field)
+        {
+            return JsonConvert.SerializeObject(field, new JsonSerializerSettings() { StringEscapeHandling = StringEscapeHandling.EscapeNonAscii });
         }
         public PanelMissionRequestMessage(NetMQMessage theMessage):base(theMessage)
         {
-            FGcode = theMessage[(int)MessageFieldName.Field1].ConvertToString();
-            productType = (ProductType)Enum.Parse(typeof(ProductType),theMessage[(int)MessageFieldName.Field2].ConvertToString());
+            Info = JsonConvert.DeserializeObject<ProductInfo>(theMessage[(int)MessageFieldName.Field1].ConvertToString(), new JsonSerializerSettings() { StringEscapeHandling = StringEscapeHandling.EscapeNonAscii });
+            Operater = JsonConvert.DeserializeObject<User>(theMessage[(int)MessageFieldName.Field2].ConvertToString(), new JsonSerializerSettings() { StringEscapeHandling = StringEscapeHandling.EscapeNonAscii });
         }
     }
     public class PanelMissionMessage : BaseMessage

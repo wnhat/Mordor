@@ -49,9 +49,10 @@ namespace Container.SeverConnection
             var returnmessage = new PanelPathMessage(request.ReceiveMultipartMessage());
             return returnmessage.panelPathDic;
         }
-        public static MissionLot GetPanelMission()
+        public static MissionLot GetPanelMission(ProductInfo info,User op)
         {
             // get new panel mission from server;
+            PanelMissionRequestMessage newMessage = new PanelMissionRequestMessage(info,op);
             BaseMessage newMessage = new BaseMessage(MessageType.CLINET_GET_PANEL_MISSION, ClientVersion.Version);
             request.SendMultipartMessage(newMessage);
             PanelMissionMessage returnMessage = new PanelMissionMessage(request.ReceiveMultipartMessage());

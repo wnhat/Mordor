@@ -29,27 +29,14 @@ namespace EyeOfSauron
         }
         private void Inspectbutton_Click(object sender, EventArgs e)
         {
-            User newoperater = new User { UserId = this.UserIdBox.Text, PassWord = this.UserIdBox.Text };
+            User newoperater = new User { UserId = this.UserIdBox.Text, PassWord = this.PasswordBox.Text };
             var user = SeverConnecter.CheckPassWord(newoperater);
             if (user != null)
             {
-                InspectForm newinspectform = new InspectForm();
-                Manager newmanager = new Manager();
-                newmanager.SetInspectSection(InspectSection.NORMAL);
-                newmanager.SetOperater(user);
-                newinspectform.ConnectManager(newmanager);
-                try
-                {
-                    newmanager.TheMissionBuffer.GetPanelMission();
-                    this.Hide();
-                    newinspectform.login(user);   // 写入用户
-                    newinspectform.ShowDialog();
-                    this.Show();
-                }
-                catch (Exception a)
-                {
-                    MessageBox.Show(a.Message);
-                }
+                ProductInfoSelectForm selectform = new ProductInfoSelectForm(user);
+                this.Hide();
+                selectform.ShowDialog();
+                this.Close();
             }
             else
             {
@@ -59,7 +46,7 @@ namespace EyeOfSauron
         private void Evilbutton_Click(object sender, EventArgs e)
         {
             // 考试；
-            User newoperater = new User { UserId = this.UserIdBox.Text, PassWord = this.UserIdBox.Text };
+            User newoperater = new User { UserId = this.UserIdBox.Text, PassWord = this.PasswordBox.Text };
             var user = SeverConnecter.CheckPassWord(newoperater);
             if (user != null)
             {
@@ -73,21 +60,21 @@ namespace EyeOfSauron
                 MessageBox.Show("用户名密码错误");
             }
         }
-        private void ExamManagerButton_Click(object sender, EventArgs e)
-        {
-            User newoperater = new User { UserId = this.UserIdBox.Text, PassWord = this.UserIdBox.Text };
-            var user = SeverConnecter.CheckPassWord(newoperater);
-            if (user != null)
-            {
-                examManageForm newexamform = new examManageForm();
-                this.Hide();
-                newexamform.ShowDialog();
-                this.Show();
-            }
-            else
-            {
-                MessageBox.Show("用户名密码错误");
-            }
-        }
+        //private void ExamManagerButton_Click(object sender, EventArgs e)
+        //{
+        //    User newoperater = new User { UserId = this.UserIdBox.Text, PassWord = this.PasswordBox.Text };
+        //    var user = SeverConnecter.CheckPassWord(newoperater);
+        //    if (user != null)
+        //    {
+        //        examManageForm newexamform = new examManageForm();
+        //        this.Hide();
+        //        newexamform.ShowDialog();
+        //        this.Show();
+        //    }
+        //    else
+        //    {
+        //        MessageBox.Show("用户名密码错误");
+        //    }
+        //}
     }
 }

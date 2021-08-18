@@ -39,7 +39,7 @@ namespace test
                     lot.Panel.Add(new Panel{ PanelId = "761l", LastGrade = "b", LastDetailGrade = "c", PIAOI1PANELJUDGE = 0, PIAOI2PANELJUDGE = 1, ACTAOIPANELJUDGE = 1, TFEAOIPANELJUDGE = 0});
                 }
                 db.SaveChanges();
-
+                var lot2 = new TrayLot {  };
             }
         }
 

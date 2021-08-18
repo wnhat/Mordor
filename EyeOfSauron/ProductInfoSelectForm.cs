@@ -66,7 +66,7 @@ namespace EyeOfSauron
                 newmanager.SetOperater(inputUser);
                 newinspectform.ConnectManager(newmanager);
 
-                newmanager.TheMissionBuffer.GetPanelMission(selectProduct.First());
+                newmanager.TheMissionBuffer.GetPanelMission(selectProduct.First(),inputUser);
                 this.Hide();
                 newinspectform.ShowDialog();
                 this.Close();

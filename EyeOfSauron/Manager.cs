@@ -23,7 +23,7 @@ namespace EyeOfSauron
         private int DownloadQuantity;                                   //预加载图像文件的个数
         public string ImageSavingPath { get; set; }
         public int MissionLeft { get { return PreDownloadedMissionQueue.Count + TheMissionBuffer.MissionLeft; } }
-        public int FinishedMissionCount { get { return 0; } } // TODO:添加已完成任务数；
+        public int FinishedMissionCount { get { return 0; } }           // TODO:添加已完成任务数；
         public int PreLoadMissions()
         {
             var mission = TheMissionBuffer.GetMission();
@@ -156,9 +156,9 @@ namespace EyeOfSauron
                     break;
             }
         }
-        public void GetPanelMission(ProductInfo info)
+        public void GetPanelMission(ProductInfo info,User op)
         {
-            var newlot = SeverConnecter.GetPanelMission();
+            var newlot = SeverConnecter.GetPanelMission(info,op);
             if (newlot == null)
             {
                 throw new ApplicationException("没有剩余任务以供检查，请退出");

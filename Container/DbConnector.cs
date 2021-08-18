@@ -47,7 +47,6 @@ namespace Container
                 return waitlot.TrayLot;
             }
         }
-
         public static TrayLot WaitToOninspect(WaitLot waitLot,User op)
         {
             TrayLot lot = waitLot.TrayLot;
@@ -56,17 +55,14 @@ namespace Container
             db.WaitLot.Remove(waitLot);
             return lot;
         }
-
         public static InspectResult finishInspect(MissionLot lot)
         {
             return null;
         }
-
         public static void InsertExamResult(ExamMission mission)
         {
             var newresult = new AET_IMAGE_EXAM_RESULT {  };
         }
-
         public static List<AET_IMAGE_EXAM> GetExam()
         {
             return db.AET_IMAGE_EXAM.ToList();
