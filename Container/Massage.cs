@@ -98,8 +98,8 @@ namespace Container.MQMessage
     public class PanelMissionRequestMessage : BaseMessage
     {
         // TODO: 将任务申请operator 添加为附件；
-        ProductInfo Info;
-        User Operater;
+        public ProductInfo Info;
+        public User Operater;
         public PanelMissionRequestMessage(ProductInfo info,User op):base(MessageType.CLINET_GET_PANEL_MISSION,ClientVersion.Version)
         {
             Info = info;

@@ -76,7 +76,7 @@ namespace Sauron
                 }
             }
         }
-        public void FinishMission(MissionLot lot)
+        public void FinishInspect(MissionLot lot)
         {
             RemoteTrayGroupProcessEnd newfinished = new RemoteTrayGroupProcessEnd(lot);
             Message newfinishedMessage = newfinished.GetMessage();

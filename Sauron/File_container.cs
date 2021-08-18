@@ -323,6 +323,7 @@ namespace Sauron
     }
     class StringPathCompare : IEqualityComparer<string>
     {
+        //用于图像及result文件夹路径是否位于同一硬盘的对比；
         public bool Equals(string x, string y)
         {
             if (Path.GetFileName(x) == Path.GetFileName(y))

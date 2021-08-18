@@ -70,13 +70,9 @@ namespace Sauron
         }
         public void GetMission(NetMQSocketEventArgs a, NetMQMessage M)
         {
-            // 获取数据库中正在等待检查的任务返回给客户端
+            // 获取数据库中正在等待检查的任务返回给客户端;
             PanelMissionRequestMessage request = new PanelMissionRequestMessage(M);
-
-            // TODO:Add productinfo here;
-            ProductInfo info = new ProductInfo { };
-            // TODO:Add productinfo here;
-            
+            ProductInfo info = request.Info;
             MissionLot newMissionLot = WaitingMissionGet(info);
             PanelMissionMessage responseMessage = new PanelMissionMessage(MessageType.SERVER_SEND_MISSION, ServerVersion.Version,newMissionLot);
             a.Socket.SendMultipartMessage(responseMessage);
@@ -85,13 +81,12 @@ namespace Sauron
         {
             PanelMissionMessage finishedMission = new PanelMissionMessage(M);
             a.Socket.SignalOK();
-            // TODO: 发送mes;
             DbConnector.finishInspect(finishedMission.ThePanelMissionLot);
-            theMesConnector.FinishMission(finishedMission.ThePanelMissionLot);
+            theMesConnector.FinishInspect(finishedMission.ThePanelMissionLot);
         }
-
         public void GetProductInfo(NetMQSocketEventArgs a)
         {
+            // 用于selectform 获取供检查的 productinfo；
             ProductInfoMessage info = new ProductInfoMessage(DbConnector.GetProductInfo());
             a.Socket.SendMultipartMessage(info);
         }
@@ -145,6 +140,7 @@ namespace Sauron
         }
         public User CheckUser(User op)
         {
+            // TODO:检查
             return null;
         }
         public void FinishExam(List<ExamMission> missionlist)

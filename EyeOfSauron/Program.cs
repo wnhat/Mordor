@@ -10,8 +10,6 @@ namespace EyeOfSauron
     
     static class Program
     {
-        const int Version = 100;
-        const string UpDateTime = "20210807";
         /// <summary>
         /// 应用程序的主入口点。
         /// </summary>

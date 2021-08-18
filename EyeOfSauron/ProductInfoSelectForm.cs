@@ -37,6 +37,7 @@ namespace EyeOfSauron
                              where item.Name == this.comboBox1.Text
                              select item.FGcode;
             this.comboBox2.DataSource = FGcodeList;
+            this.comboBox3.DataSource = null;
         }
 
         private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
