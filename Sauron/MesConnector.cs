@@ -51,7 +51,7 @@ namespace Sauron
             RemoteTrayGroupInfoDownloadRequest newrequest = new RemoteTrayGroupInfoDownloadRequest(info.FGcode,info.ProductType);
             Message newmessage = newrequest.GetMessage();
             newmessage.SendSubject = subject;
-            var reply = transport.SendRequest(newmessage,Parameter.MesConnectTimeOut);
+            var reply = transport.SendRequest(newmessage, Parameter.MesConnectTimeOut);
             // 超时未接到返回信息时，返回值为null；
             if (reply == null)
             {

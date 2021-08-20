@@ -22,10 +22,10 @@ namespace Sauron
         {
             this.Thefilecontainer = new FileManager();
 
-            string service = "BOE.B7.MEM.TST.PEMsvr";
-            string network = "172.16.145.22";
+            string service = null;
+            string network = null;
             string daemon = null;
-            string subject = "a.b.c";
+            string subject = "DICS.TEST";
             this.theMesConnector = new MesConnector(service, network,daemon,subject);
 
             RefreshExamList();
@@ -38,6 +38,7 @@ namespace Sauron
         public void RefreshExamList()
         {
             ConsoleLogClass.Logger.Information("开始考试文件刷新；");
+            // TODO:
             Dictionary<string, List<ExamMission>> newExamMissionDic = new Dictionary<string, List<ExamMission>>();
             ExamMissionDic = newExamMissionDic;
             ConsoleLogClass.Logger.Information("考试文件刷新结束；");
@@ -65,7 +66,7 @@ namespace Sauron
                 PanelMission newpanel = new PanelMission(item, MissionType.PRODUCITVE, avipath, svipath);
                 missionlist.Add(newpanel);
             }
-            MissionLot newMissionLot = new MissionLot(newlot.MachineName, missionlist, newlot.TrayGroupName);
+            MissionLot newMissionLot = new MissionLot(newlot, missionlist);
             return newMissionLot;
         }
         public void GetMission(NetMQSocketEventArgs a, NetMQMessage M)
@@ -119,6 +120,18 @@ namespace Sauron
         public void AddMissionByControlor(NetMQSocketEventArgs a, NetMQMessage M)
         {
             // TODO:控制任务添加；
+            PanelMissionRequestMessage message = new PanelMissionRequestMessage(M);
+            MesLogClass.Logger.Information("收到来自 Controler的添加任务请求，请求型号为：{0} {1} {2}",message.Info.Name, message.Info.ProductType, message.Info.FGcode);
+            try
+            {
+                RemoteTrayGroupInfoDownloadSend returnmessage = theMesConnector.RequestMission(message.Info);
+                DbConnector.AddNewLotFromMes(returnmessage.lot);
+            }
+            catch (MesMessageException e)
+            {
+                MesLogClass.Logger.Error(e.Message);
+            }
+           
         }
         public Dictionary<string, List<PanelPathContainer>> GetPanelPathList(string[] SampleInfoList)
         {

@@ -15,6 +15,7 @@ using Newtonsoft.Json.Linq;
 using System.Threading;
 using System.Xml;
 using Container;
+using TIBCO.Rendezvous;
 
 namespace test
 {
@@ -25,21 +26,153 @@ namespace test
         {
             //FileManager a = new FileManager();
             //a.RefreshFileList();
-            dbtest();
+            TIBlisener();
+            //dbtest();
+        }
+        private static void TIBlisener()
+        {
+            string service = null;
+            string network = null;
+            string daemon = null;
+            try
+            {
+                /* Create internal TIB/Rendezvous machinery */
+                TIBCO.Rendezvous.Environment.Open();
+            }
+            catch (RendezvousException exception)
+            {
+                Console.Error.WriteLine("Failed to open Rendezvous Environment: {0}", exception.Message);
+                Console.Error.WriteLine(exception.StackTrace);
+                System.Environment.Exit(1);
+            }
+
+            // Create Network transport
+            Transport transport = null;
+            try
+            {
+                transport = new NetTransport(service, network, daemon);
+            }
+            catch (RendezvousException exception)
+            {
+                Console.Error.WriteLine("Failed to create NetTransport");
+                Console.Error.WriteLine(exception.StackTrace);
+                System.Environment.Exit(1);
+            }
+            // create listener using default queue
+            Listener listeners;
+            try
+            {
+                listeners = new Listener(Queue.Default, transport, "DICS.TEST", null);
+                listeners.MessageReceived += new MessageReceivedEventHandler(OnMessageReceived);
+                Console.Error.WriteLine("Listening is Ready");
+            }
+            catch (RendezvousException exception)
+            {
+                Console.Error.WriteLine("Failed to create listener:");
+                Console.Error.WriteLine(exception.StackTrace);
+                System.Environment.Exit(1);
+            }
+
+            // dispatch Rendezvous events
+            while (true)
+            {
+                try
+                {
+                    Queue.Default.Dispatch();
+                }
+                catch (RendezvousException exception)
+                {
+                    Console.Error.WriteLine("Exception dispatching default queue:");
+                    Console.Error.WriteLine(exception.StackTrace);
+                    break;
+                }
+            }
+            TIBCO.Rendezvous.Environment.Close();
+        }
+        static void OnMessageReceived(object listener, MessageReceivedEventArgs messageReceivedEventArgs)
+        {
+            int requestReturned = 0;
+            int FinishReturned = 0;
+
+            Listener li = (Listener)listener;
+            Message message = messageReceivedEventArgs.Message;
+            Console.Out.WriteLine("测试MES服务收到来自DICS的消息；");
+            Console.Out.WriteLine("{0}: subject={1}, reply={2}, message={3}",
+                DateTime.Now.ToString(),
+                message.SendSubject,
+                message.ReplySubject,
+                message.GetXmlAsStringByIndex(0));
+            Console.Out.Flush();
+            XmlDocument xmldoc = message.GetFieldByIndex(0);
+            string mestype = xmldoc.GetElementsByTagName("MESSAGENAME").Item(0).InnerText;
+
+            string path1 = @"D:\1218180\program2\c#\Mordor\test\RemoteTrayGroupInfoDownloadSend.xml";
+            string path2 = @"D:\1218180\program2\c#\Mordor\test\OpCallSend.xml";
+            string path3 = @"D:\1218180\program2\c#\Mordor\test\RemoteTrayGroupProcessEndReply.xml";
+
+            if (mestype == "RemoteTrayGroupInfoDownloadRequest")
+            {
+                if (requestReturned == 0)
+                {
+                    // 测试正常情况；
+                    FileInfo file = new FileInfo(path1);
+                    XmlDocument doc = new XmlDocument();
+                    doc.Load(file.OpenRead());
+
+                    Message replymessage = new Message();
+                    //replymessage.SendSubject = message.ReplySubject;
+                    replymessage.AddField("XmlData", doc);
+
+                    li.Transport.SendReply(replymessage, message);
+                    requestReturned++;
+                }
+                else if(requestReturned == 1)
+                {
+                    // 测试请求超时；
+                    requestReturned++;
+                }
+                else if(requestReturned == 2)
+                {
+                    // 测试Opcall ；
+                    FileInfo file = new FileInfo(path2);
+                    XmlDocument doc = new XmlDocument();
+                    doc.Load(file.OpenRead());
+
+                    Message replymessage = new Message();
+                    //replymessage.SendSubject = message.ReplySubject;
+                    replymessage.AddField("XmlData", doc);
+
+                    li.Transport.SendReply(replymessage, message);
+                    requestReturned++;
+                }
+            }
+            else if (mestype == "RemoteTrayGroupProcessEnd")
+            {
+
+            }
+            else if (true)
+            {
+
+            }
+            else if (true)
+            {
+
+            }
+            else if (true)
+            {
+
+            }
+
         }
 
         private static void dbtest()
         {
             using (DICS_DBEntities db = new DICS_DBEntities())
             {
-                var info = db.ProductInfo.First();
-                var lot = db.TrayLot.First();
-                for (int i = 0; i < 10; i++)
-                {
-                    lot.Panel.Add(new Panel{ PanelId = "761l", LastGrade = "b", LastDetailGrade = "c", PIAOI1PANELJUDGE = 0, PIAOI2PANELJUDGE = 1, ACTAOIPANELJUDGE = 1, TFEAOIPANELJUDGE = 0});
-                }
+                var b = db.ProductInfo.First();
+                var a = new OninspectProduct { ProductInfo = b };
+                db.OninspectProduct.Add(a);
                 db.SaveChanges();
-                var lot2 = new TrayLot {  };
             }
         }
 

@@ -75,6 +75,10 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="TIBCO.Rendezvous, Version=1.0.4423.31382, Culture=neutral, PublicKeyToken=1a696d1f90f6158a, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\tibco\tibrv\8.4\bin\TIBCO.Rendezvous.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Form1.cs">

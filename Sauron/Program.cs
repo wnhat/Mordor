@@ -17,8 +17,8 @@ namespace Sauron
     {
         static void Main(string[] args)
         {
-            //Server(); //启动服务器；
-            Test();
+            Server(); //启动服务器；
+            //Test();
         }
         static void Test()
         {
@@ -41,8 +41,8 @@ namespace Sauron
         }
         static void Server()
         {
-            var timer = new NetMQTimer(TimeSpan.FromSeconds(10));
-            ResponseSocket responseSocket = new ResponseSocket("@tcp://172.16.145.22:6666");
+            var timer = new NetMQTimer(TimeSpan.FromSeconds(3600));
+            ResponseSocket responseSocket = new ResponseSocket("@tcp://172.16.145.22:5555");
             using (var poller = new NetMQPoller { responseSocket, timer })
             {
                 MissionManager TheMissionManager = new MissionManager();
@@ -73,13 +73,13 @@ namespace Sauron
                             TheMissionManager.GetExamInfo(a);
                             break;
                         case MessageType.CLINET_GET_PANEL_PATH:
+                            // 获取设备中存在的原图路径；
                             PanelPathMessage panelIdInfo = new PanelPathMessage(messageIn);
                             var newPanelPathDic = TheMissionManager.GetPanelPathList(panelIdInfo.panelPathDic.Keys.ToArray());
                             PanelPathMessage newpanelinfomassage = new PanelPathMessage(MessageType.CLINET_GET_PANEL_PATH, ServerVersion.Version, newPanelPathDic);
                             a.Socket.SendMultipartMessage(newpanelinfomassage);
                             break;
                         case MessageType.CLINET_GET_PRODUCTINFO:
-                            // TODO: 
                             TheMissionManager.GetProductInfo(a);
                             break;
                         case MessageType.CONTROLER_CLEAR_MISSION:

@@ -10,16 +10,16 @@ using System.Windows.Forms;
 using Container;
 using Container.SeverConnection;
 
-namespace EyeOfSauron
+namespace Controler
 {
     public partial class ProductInfoSelectForm : Form
     {
         List<ProductInfo> InfoList;
         User inputUser;
-        public ProductInfoSelectForm(User op)
+        public ProductInfoSelectForm()
         {
             InitializeComponent();
-            inputUser = op;
+            //inputUser = op;
             InfoList = SeverConnecter.GetProductInfo();
             InitialCombox();
         }
@@ -53,24 +53,13 @@ namespace EyeOfSauron
             var selectProduct = from item in InfoList
                                 where item.Name == this.comboBox1.Text && item.FGcode == this.comboBox2.Text && item.ProductType == this.comboBox3.Text
                                 select item;
-            if (selectProduct.Count()==0)
+            if (selectProduct.Count() == 0)
             {
                 MessageBox.Show("请选择正确的Product；");
             }
             else
             {
-                InspectForm newinspectform = new InspectForm();
-                Manager newmanager = new Manager();
-                // 初始化设置；
-
-                newmanager.SetInspectSection(InspectSection.NORMAL);
-                newmanager.SetOperater(inputUser);
-                newinspectform.ConnectManager(newmanager);
-
-                newmanager.TheMissionBuffer.GetPanelMission(selectProduct.First(),inputUser);
-                this.Hide();
-                newinspectform.ShowDialog();
-                this.Close();
+                SeverConnecter.AddPanelMission(selectProduct.First());
             }
         }
     }
