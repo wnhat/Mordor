@@ -41,7 +41,7 @@ namespace Container
         public Message GetMessage()
         {
             Message newmessage = new Message();
-            newmessage.AddField("Message", GetXmlDocument());
+            newmessage.AddField("XmlData", GetXmlDocument());
             return newmessage;
         }
         public void SaveDoc(string path)
@@ -165,7 +165,7 @@ namespace Container
         public Message GetMessage()
         {
             Message newmessage = new Message();
-            newmessage.AddField("Message", GetXmlDocument());
+            newmessage.AddField("XmlData", GetXmlDocument());
             return newmessage;
         }
         public void Save(string path)

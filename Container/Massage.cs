@@ -88,7 +88,7 @@ namespace Container.MQMessage
         }
         string TransferToString(List<ProductInfo> panelMission)
         {
-            return JsonConvert.SerializeObject(panelMission, new JsonSerializerSettings() { StringEscapeHandling = StringEscapeHandling.EscapeNonAscii });
+            return JsonConvert.SerializeObject(panelMission, new JsonSerializerSettings() { StringEscapeHandling = StringEscapeHandling.EscapeNonAscii ,ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
         }
         List<ProductInfo> TransferToMission(string missionstring)
         {
@@ -104,6 +104,13 @@ namespace Container.MQMessage
         {
             Info = info;
             Operater = op;
+            this.Append(TransferToString(Info));
+            this.Append(TransferToString(Operater));
+        }
+        public PanelMissionRequestMessage(ProductInfo info) : base(MessageType.CONTROLER_ADD_MISSION, ClientVersion.Version)
+        {
+            Info = info;
+            Operater = null;
             this.Append(TransferToString(Info));
             this.Append(TransferToString(Operater));
         }

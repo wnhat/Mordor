@@ -83,10 +83,10 @@ namespace Container.SeverConnection
             request.SendMultipartMessage(newmessage);
             request.ReceiveSignal();
         }
-        public static void AddPanelMission(MissionLot Newlot)
+        public static void AddPanelMission(ProductInfo newInfo)
         {
-            PanelMissionMessage ResultMessage = new PanelMissionMessage(MessageType.CONTROLER_ADD_MISSION, ClientVersion.Version, Newlot);
-            request.SendMultipartMessage(ResultMessage);
+            PanelMissionRequestMessage RequestMessage = new PanelMissionRequestMessage(newInfo);
+            request.SendMultipartMessage(RequestMessage);
             request.ReceiveSignal();
         }
         public static List<ProductInfo> GetProductInfo()

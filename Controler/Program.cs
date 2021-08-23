@@ -16,7 +16,8 @@ namespace Controler
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            ProductInfoSelectForm newform = new ProductInfoSelectForm();
+            Application.Run(newform);
         }
     }
 }

@@ -11,6 +11,7 @@ namespace Container
 {
     public class MissionLot
     {
+        public TrayLot lot;
         public string MACHINENAME;
         public List<PanelMission> panelcontainer = new List<PanelMission>();
         public string TRAYGROUPNAME;
@@ -19,19 +20,16 @@ namespace Container
             TRAYGROUPNAME = lotId;
             panelcontainer.AddRange(panelid);
         }
-        public MissionLot(string lotId)
-        {
-            TRAYGROUPNAME = lotId;
-        }
         public MissionLot()
         {
         }
-        public MissionLot(string mACHINENAME, List<PanelMission> panelcontainer, string tRAYGROUPNAME) : this(mACHINENAME)
+        public MissionLot(TrayLot newlot, List<PanelMission> panelcontainer)
         {
+            lot = newlot;
+            TRAYGROUPNAME = lot.TrayGroupName;
+            MACHINENAME = lot.MachineName;
             this.panelcontainer = panelcontainer;
-            TRAYGROUPNAME = tRAYGROUPNAME;
         }
-
         public int Count
         {
             get

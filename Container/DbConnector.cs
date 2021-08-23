@@ -20,7 +20,6 @@ namespace Container
                 return DateTime.Now.ToString("yyyyMMddHHmmssffffff");
             }
         }
-
         public static void AddNewLotFromMes(TrayLot lot)
         {
             db.TrayLot.Add(lot);
@@ -55,9 +54,23 @@ namespace Container
             db.WaitLot.Remove(waitLot);
             return lot;
         }
-        public static InspectResult finishInspect(MissionLot lot)
+        public static void finishInspect(MissionLot lot)
         {
-            return null;
+            db.OnInspectLot.Remove(lot.lot.OnInspectLot);
+            foreach (var item in lot.panelcontainer)
+            {
+                var newresult = new InspectResult {
+                    Panel = item.mesPanel,
+                    User = item.Op,
+                    LOTGRADE = item.LotGrade.ToString(),
+                    LOTDETAILGRADE = item.PanelJudge.ToString(),
+                    DefectCode = item.DefectByOp.DefectCode,
+                    DefectName = item.DefectByOp.DefectName,
+                    EndTime = TimeNow,
+                };
+                db.InspectResult.Add(newresult);
+            }
+            db.SaveChanges();
         }
         public static void InsertExamResult(ExamMission mission)
         {

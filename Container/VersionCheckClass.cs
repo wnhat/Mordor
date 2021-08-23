@@ -8,9 +8,9 @@ namespace Container
 {
     public class VersionCheckClass : IEquatable<VersionCheckClass>
     {
-        int FirstVersionNumber;     // 大版本迭代号，当message存在变动时请及时更新该数字，服务器将会校验该版本；
-        int SecondVersionNumber;    // 小版本迭代号
-        string UpdateTime;          // 程序上次更新的时间 example: 202100807
+        public int FirstVersionNumber;     // 大版本迭代号，当message存在变动时请及时更新该数字，服务器将会校验该版本；
+        public int SecondVersionNumber;    // 小版本迭代号
+        public string UpdateTime;          // 程序上次更新的时间 example: 202100807
 
         public VersionCheckClass(int firstVersionNumber, int secondVersionNumber, string updateTime)
         {
@@ -22,6 +22,7 @@ namespace Container
             }
             UpdateTime = updateTime;
         }
+        public VersionCheckClass() { }
 
         public override bool Equals(object obj)
         {
