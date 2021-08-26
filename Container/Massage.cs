@@ -43,6 +43,15 @@ namespace Container.MQMessage
         Field2,
         Field3,
     }
+    public static class JsonSerializerSetting
+    {
+        public static JsonSerializerSettings Setting;
+        static JsonSerializerSetting()
+        {
+            Setting = new JsonSerializerSettings() { StringEscapeHandling = StringEscapeHandling.EscapeNonAscii, ReferenceLoopHandling = ReferenceLoopHandling.Ignore };
+        }
+    }
+
     public class BaseMessage : NetMQMessage
     {
         public MessageType TheMessageType;
@@ -67,11 +76,11 @@ namespace Container.MQMessage
         }
         string TransferToString(VersionCheckClass version)
         {
-            return JsonConvert.SerializeObject(version, new JsonSerializerSettings() { StringEscapeHandling = StringEscapeHandling.EscapeNonAscii });
+            return JsonConvert.SerializeObject(version, JsonSerializerSetting.Setting);
         }
         VersionCheckClass TransferToVersion(string versionstring)
         {
-            return JsonConvert.DeserializeObject<VersionCheckClass>(versionstring, new JsonSerializerSettings() { StringEscapeHandling = StringEscapeHandling.EscapeNonAscii });
+            return JsonConvert.DeserializeObject<VersionCheckClass>(versionstring, JsonSerializerSetting.Setting);
         }
     }
     public class ProductInfoMessage:BaseMessage
@@ -88,11 +97,11 @@ namespace Container.MQMessage
         }
         string TransferToString(List<ProductInfo> panelMission)
         {
-            return JsonConvert.SerializeObject(panelMission, new JsonSerializerSettings() { StringEscapeHandling = StringEscapeHandling.EscapeNonAscii ,ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
+            return JsonConvert.SerializeObject(panelMission, JsonSerializerSetting.Setting);
         }
         List<ProductInfo> TransferToMission(string missionstring)
         {
-            return JsonConvert.DeserializeObject<List<ProductInfo>>(missionstring, new JsonSerializerSettings() { StringEscapeHandling = StringEscapeHandling.EscapeNonAscii });
+            return JsonConvert.DeserializeObject<List<ProductInfo>>(missionstring, JsonSerializerSetting.Setting);
         }
     }
     public class PanelMissionRequestMessage : BaseMessage
@@ -116,12 +125,12 @@ namespace Container.MQMessage
         }
         string TransferToString(object field)
         {
-            return JsonConvert.SerializeObject(field, new JsonSerializerSettings() { StringEscapeHandling = StringEscapeHandling.EscapeNonAscii });
+            return JsonConvert.SerializeObject(field, JsonSerializerSetting.Setting);
         }
         public PanelMissionRequestMessage(NetMQMessage theMessage):base(theMessage)
         {
-            Info = JsonConvert.DeserializeObject<ProductInfo>(theMessage[(int)MessageFieldName.Field1].ConvertToString(), new JsonSerializerSettings() { StringEscapeHandling = StringEscapeHandling.EscapeNonAscii });
-            Operater = JsonConvert.DeserializeObject<User>(theMessage[(int)MessageFieldName.Field2].ConvertToString(), new JsonSerializerSettings() { StringEscapeHandling = StringEscapeHandling.EscapeNonAscii });
+            Info = JsonConvert.DeserializeObject<ProductInfo>(theMessage[(int)MessageFieldName.Field1].ConvertToString(), JsonSerializerSetting.Setting);
+            Operater = JsonConvert.DeserializeObject<User>(theMessage[(int)MessageFieldName.Field2].ConvertToString(), JsonSerializerSetting.Setting);
         }
     }
     public class PanelMissionMessage : BaseMessage
@@ -138,11 +147,11 @@ namespace Container.MQMessage
         }
         string TransferToString(MissionLot panelMission)
         {
-            return JsonConvert.SerializeObject(panelMission, new JsonSerializerSettings() { StringEscapeHandling = StringEscapeHandling.EscapeNonAscii });
+            return JsonConvert.SerializeObject(panelMission, JsonSerializerSetting.Setting);
         }
         MissionLot TransferToMission(string missionstring)
         {
-            return JsonConvert.DeserializeObject<MissionLot>(missionstring, new JsonSerializerSettings() { StringEscapeHandling = StringEscapeHandling.EscapeNonAscii });
+            return JsonConvert.DeserializeObject<MissionLot>(missionstring, JsonSerializerSetting.Setting);
         }
     }
     public class UserCheckMessage : BaseMessage
@@ -160,11 +169,11 @@ namespace Container.MQMessage
         }
         string TransferToString(User op)
         {
-            return JsonConvert.SerializeObject(op, new JsonSerializerSettings() { StringEscapeHandling = StringEscapeHandling.EscapeNonAscii });
+            return JsonConvert.SerializeObject(op, JsonSerializerSetting.Setting);
         }
         User TransferToOp(string opstring)
         {
-            return JsonConvert.DeserializeObject<User>(opstring, new JsonSerializerSettings() { StringEscapeHandling = StringEscapeHandling.EscapeNonAscii });
+            return JsonConvert.DeserializeObject<User>(opstring, JsonSerializerSetting.Setting);
         }
     }
     public class PanelResultMessage : BaseMessage
@@ -181,11 +190,11 @@ namespace Container.MQMessage
         }
         string TransferToString(PanelMissionResult result)
         {
-            return JsonConvert.SerializeObject(result, new JsonSerializerSettings() { StringEscapeHandling = StringEscapeHandling.EscapeNonAscii });
+            return JsonConvert.SerializeObject(result, JsonSerializerSetting.Setting);
         }
         PanelMissionResult TransferToResult(string resultstring)
         {
-            return JsonConvert.DeserializeObject<PanelMissionResult>(resultstring, new JsonSerializerSettings() { StringEscapeHandling = StringEscapeHandling.EscapeNonAscii });
+            return JsonConvert.DeserializeObject<PanelMissionResult>(resultstring, JsonSerializerSetting.Setting);
         }
     }
     public class ExamMissionMessage : BaseMessage
@@ -206,7 +215,7 @@ namespace Container.MQMessage
         }
         string TransferToString(List<ExamMission> result)
         {
-            return JsonConvert.SerializeObject(result, new JsonSerializerSettings() { StringEscapeHandling = StringEscapeHandling.EscapeNonAscii });
+            return JsonConvert.SerializeObject(result, JsonSerializerSetting.Setting);
         }
         List<ExamMission> TransferToResult(string resultstring)
         {
@@ -227,11 +236,11 @@ namespace Container.MQMessage
         }
         string TransferToString(string[] result)
         {
-            return JsonConvert.SerializeObject(result, new JsonSerializerSettings() { StringEscapeHandling = StringEscapeHandling.EscapeNonAscii });
+            return JsonConvert.SerializeObject(result, JsonSerializerSetting.Setting);
         }
         string[] TransferToResult(string resultstring)
         {
-            return JsonConvert.DeserializeObject<string[]>(resultstring, new JsonSerializerSettings() { StringEscapeHandling = StringEscapeHandling.EscapeNonAscii });
+            return JsonConvert.DeserializeObject<string[]>(resultstring, JsonSerializerSetting.Setting);
         }
     }
     public class PanelPathMessage : BaseMessage
@@ -261,11 +270,11 @@ namespace Container.MQMessage
         //序列化和反序列化实现
         string TransferToString(Dictionary<string, List<PanelPathContainer>> result)
         {
-            return JsonConvert.SerializeObject(result, new JsonSerializerSettings() { StringEscapeHandling = StringEscapeHandling.EscapeNonAscii });
+            return JsonConvert.SerializeObject(result, JsonSerializerSetting.Setting);
         }
         Dictionary<string, List<PanelPathContainer>> TransferToResult(string resultstring)
         {
-            return JsonConvert.DeserializeObject<Dictionary<string, List<PanelPathContainer>>>(resultstring, new JsonSerializerSettings() { StringEscapeHandling = StringEscapeHandling.EscapeNonAscii });
+            return JsonConvert.DeserializeObject<Dictionary<string, List<PanelPathContainer>>>(resultstring, JsonSerializerSetting.Setting);
         }
     }
 }

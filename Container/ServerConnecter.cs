@@ -15,7 +15,7 @@ namespace Container.SeverConnection
         static SeverConnecter()
         {
             request = new RequestSocket();
-            request.Connect("tcp://172.16.145.22:5555");
+            request.Connect("tcp://172.16.145.22:6666");
         }
         public static bool VersionCheck(VersionCheckClass version)
         {
@@ -83,11 +83,11 @@ namespace Container.SeverConnection
             request.SendMultipartMessage(newmessage);
             request.ReceiveSignal();
         }
-        public static void AddPanelMission(ProductInfo newInfo)
+        public static bool AddPanelMission(ProductInfo newInfo)
         {
             PanelMissionRequestMessage RequestMessage = new PanelMissionRequestMessage(newInfo);
             request.SendMultipartMessage(RequestMessage);
-            request.ReceiveSignal();
+            return request.ReceiveSignal();
         }
         public static List<ProductInfo> GetProductInfo()
         {

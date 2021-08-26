@@ -51,6 +51,8 @@ namespace Sauron
             RemoteTrayGroupInfoDownloadRequest newrequest = new RemoteTrayGroupInfoDownloadRequest(info.FGcode,info.ProductType);
             Message newmessage = newrequest.GetMessage();
             newmessage.SendSubject = subject;
+
+            MesLogClass.Logger.Information("向MES请求产品 {0} {1}" , info.Name, info.FGcode);
             var reply = transport.SendRequest(newmessage, Parameter.MesConnectTimeOut);
             // 超时未接到返回信息时，返回值为null；
             if (reply == null)
@@ -61,7 +63,10 @@ namespace Sauron
             }
             else
             {
-                XmlDocument returnxml = reply.GetFieldByIndex(0); //MessageField可隐式转换为xmldocument；
+
+                XmlDocument returnxml = new XmlDocument();
+                string xml = reply.GetField("xmlData").Value.ToString();
+                returnxml.LoadXml(reply.GetField("xmlData").Value.ToString()); //MessageField可隐式转换为xmldocument；
                 MesMessageType messagetype = (MesMessageType)Enum.Parse(typeof(MesMessageType),returnxml.GetElementsByTagName("MESSAGENAME")[0].InnerText);
                 if (messagetype == MesMessageType.OpCallSend)
                 {
@@ -72,7 +77,9 @@ namespace Sauron
                 }
                 else
                 {
-                    return new RemoteTrayGroupInfoDownloadSend(returnxml);
+                    var returnmessage = new RemoteTrayGroupInfoDownloadSend(returnxml);
+                    returnmessage.lot.ProductInfo = info.IndexId;
+                    return returnmessage;
                 }
             }
         }
@@ -86,12 +93,14 @@ namespace Sauron
             if (reply == null)
             {
                 string errorstring = "向MES发送已完成任务超时，请检查与MES的连接或网络问题；";
-                MesLogClass.Logger.Error(errorstring);
+                //MesLogClass.Logger.Error(errorstring);
                 throw new MesMessageException(errorstring);
             }
             else
             {
-                XmlDocument returnxml = reply.GetFieldByIndex(0); //MessageField可隐式转换为xmldocument；
+                XmlDocument returnxml = new XmlDocument();
+                string xml = reply.GetField("xmlData").Value.ToString();
+                returnxml.LoadXml(reply.GetField("xmlData").Value.ToString()); //MessageField可隐式转换为xmldocument；
                 RemoteTrayGroupProcessEndReply returnmessage = new RemoteTrayGroupProcessEndReply(returnxml);
                 if (returnmessage.Result == true)
                 {
@@ -100,7 +109,7 @@ namespace Sauron
                 else
                 {
                     string errorstring = String.Format("向MES发送已完成任务失败,TrayGroupName:{0},失败原因：{1}", returnmessage.TRAYGROUPNAME,returnmessage.DESCRIPTION);
-                    MesLogClass.Logger.Error(errorstring);
+                    //MesLogClass.Logger.Error(errorstring);
                     throw new MesMessageException(errorstring);
                 }
             }

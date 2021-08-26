@@ -22,18 +22,23 @@ namespace Container
     {
         MesMessageHeader header;
         RemoteTrayGroupInfoDownloadRequestMessageBody Body;
+        MesMessageReturn rt;
         public RemoteTrayGroupInfoDownloadRequest(string FGcode, string productType)
         {
             header   = new MesMessageHeader(MesMessageType.RemoteTrayGroupInfoDownloadRequest);
             Body     = new RemoteTrayGroupInfoDownloadRequestMessageBody(FGcode, productType);
+            rt = new MesMessageReturn();
         }
         public XmlDocument GetXmlDocument()
         {
             XmlDocument newDoc = new XmlDocument();
+            XmlElement root = newDoc.DocumentElement;
+            newDoc.InsertBefore(newDoc.CreateXmlDeclaration("1.0", "utf-16", null), root);
             XmlElement newmessage = newDoc.CreateElement("Message");
 
             newmessage.AppendChild(header.GetElement(newDoc));
             newmessage.AppendChild(Body.GetElement(newDoc));
+            newmessage.AppendChild(rt.GetElement(newDoc));
 
             newDoc.AppendChild(newmessage);
             return newDoc;
@@ -41,7 +46,7 @@ namespace Container
         public Message GetMessage()
         {
             Message newmessage = new Message();
-            newmessage.AddField("XmlData", GetXmlDocument());
+            newmessage.AddField("xmlData", GetXmlDocument().InnerXml);
             return newmessage;
         }
         public void SaveDoc(string path)
@@ -98,7 +103,7 @@ namespace Container
         public RemoteTrayGroupInfoDownloadSend(XmlDocument replyDoc)
         {
             OriginalDoc = replyDoc;
-            lot = new TrayLot { TrayGroupName = InitialField("TRAYGROUPNAME"), MachineName = InitialField("MACHINENAME") };
+            lot = new TrayLot { TrayGroupName = InitialField("TRAYGROUPNAME"), MachineName = InitialField("MACHINENAME"), AddTime = DateTime.Now.ToString("yyyyMMddHHmmssffffff") };
             List<Panel> missionList = InitialMission();
             foreach (var item in missionList)
             {
@@ -145,18 +150,23 @@ namespace Container
     {       
         MesMessageHeader header;
         RemoteTrayGroupProcessEndMessageBody Body;
+        MesMessageReturn rt;
         public RemoteTrayGroupProcessEnd(MissionLot lot)
         {
             header  = new MesMessageHeader(MesMessageType.RemoteTrayGroupProcessEnd);
             Body    = new RemoteTrayGroupProcessEndMessageBody(lot);
+            rt = new MesMessageReturn();
         }
         public XmlDocument GetXmlDocument()
         {
             XmlDocument newDoc = new XmlDocument();
+            XmlElement root = newDoc.DocumentElement;
+            newDoc.InsertBefore(newDoc.CreateXmlDeclaration("1.0", "utf-16", null), root);
             XmlElement newmessage = newDoc.CreateElement("Message");
 
             newmessage.AppendChild(header.GetElement(newDoc));
             newmessage.AppendChild(Body.GetElement(newDoc));
+            newmessage.AppendChild(rt.GetElement(newDoc));
 
             newDoc.AppendChild(newmessage);
             return newDoc;
@@ -165,7 +175,7 @@ namespace Container
         public Message GetMessage()
         {
             Message newmessage = new Message();
-            newmessage.AddField("XmlData", GetXmlDocument());
+            newmessage.AddField("xmlData", GetXmlDocument().InnerXml);
             return newmessage;
         }
         public void Save(string path)
@@ -303,9 +313,11 @@ namespace Container
     {
         public MesMessageType MESSAGENAME;  // 声明消息的用途（请求任务或完成任务）PanelProcessEnd等；
         public string TRANSACTIONID;  //要求唯一，作为MES分辨消息的查询依据（可能是数据库主键）2021072017235803711；
-        public string ORIGINALSOURCESUBJECTNAME = "BOE.B7.MEM.PRD.7CTCT33";
+        public string ORIGINALSOURCESUBJECTNAME = "";
         public string SOURCESUBJECTNAME = "BOE.B7.MEM.PRD.7CTCT33";
         public string TARGETSUBJECTNAME = "BOE.B7.MEM.PRD.PEMsvr";
+        public string SHOPNAME = "EAC2";
+        public string MACHINENAME = "7CTCT33";
 
         public MesMessageHeader(MesMessageType mESSAGENAME)
         {
@@ -337,6 +349,28 @@ namespace Container
                 newlist.Add(newNode);
             }
             return newlist;
+        }
+    }
+    public class MesMessageReturn
+    {
+        string RETURNCODE;
+        string RETURNMESSAGE;
+
+        public MesMessageReturn()
+        {
+            RETURNCODE = "0";
+            RETURNMESSAGE = "";
+        }
+        public XmlElement GetElement(XmlDocument doc)
+        {
+            XmlElement newele = doc.CreateElement("Return");
+            XmlElement rcode = doc.CreateElement("RETURNCODE");
+            rcode.InnerText = RETURNCODE;
+            XmlElement rmessage = doc.CreateElement("RETURNMESSAGE");
+            rmessage.InnerText = RETURNMESSAGE;
+            newele.AppendChild(rcode);
+            newele.AppendChild(rmessage);
+            return newele;
         }
     }
     public enum MesMessageType

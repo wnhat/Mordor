@@ -42,7 +42,7 @@ namespace Sauron
         static void Server()
         {
             var timer = new NetMQTimer(TimeSpan.FromSeconds(3600));
-            ResponseSocket responseSocket = new ResponseSocket("@tcp://172.16.145.22:5555");
+            ResponseSocket responseSocket = new ResponseSocket("@tcp://172.16.145.22:6666");
             using (var poller = new NetMQPoller { responseSocket, timer })
             {
                 MissionManager TheMissionManager = new MissionManager();
@@ -55,13 +55,10 @@ namespace Sauron
                     switch (switchmessage.TheMessageType)
                     {
                         case MessageType.CLIENT_SEND_MISSION_RESULT:
-                            ConsoleLogClass.Logger.Information("收到完成的任务");
                             TheMissionManager.FinishMission(a,messageIn);
                             break;
                         case MessageType.CLIENT_SEND_EXAM_RESULT:
-                            ExamMissionMessage finishedExam = new ExamMissionMessage(messageIn);
-                            TheMissionManager.FinishExam(finishedExam.ExamMissionList);
-                            a.Socket.SignalOK();
+                            TheMissionManager.FinishExam(a,messageIn);
                             break;
                         case MessageType.CLINET_GET_PANEL_MISSION:
                             TheMissionManager.GetMission(a,messageIn);
@@ -88,8 +85,8 @@ namespace Sauron
                             TheMissionManager.AddMissionByControlor(a,messageIn);
                             break;
                         case MessageType.CONTROLER_REFRESH_EXAM:
-                            TheMissionManager.RefreshExamList();
-                            a.Socket.SignalOK();
+                            TheMissionManager.RefreshExamList(a);
+
                             break;
                         case MessageType.CLINET_CHECK_USER:
                             UserCheckMessage userInfo = new UserCheckMessage(messageIn);

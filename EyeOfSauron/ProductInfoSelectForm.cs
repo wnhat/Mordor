@@ -37,7 +37,6 @@ namespace EyeOfSauron
                              where item.Name == this.comboBox1.Text
                              select item.FGcode;
             this.comboBox2.DataSource = FGcodeList.ToArray();
-            this.comboBox3.DataSource = null;
         }
 
         private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
@@ -66,11 +65,18 @@ namespace EyeOfSauron
                 newmanager.SetInspectSection(InspectSection.NORMAL);
                 newmanager.SetOperater(inputUser);
                 newinspectform.ConnectManager(newmanager);
-
-                newmanager.TheMissionBuffer.GetPanelMission(selectProduct.First(),inputUser);
-                this.Hide();
-                newinspectform.ShowDialog();
-                this.Close();
+                try
+                {
+                    newmanager.TheMissionBuffer.GetPanelMission(selectProduct.First(), inputUser);
+                    this.Hide();
+                    newinspectform.ShowDialog();
+                    this.Close();
+                }
+                catch (ApplicationException err)
+                {
+                    MessageBox.Show(err.Message);
+                }
+                
             }
         }
     }

@@ -25,6 +25,8 @@ namespace Container
             throw new UnintentionalCodeFirstException();
         }
     
+        public DbSet<AET_IMAGE_EXAM> AET_IMAGE_EXAM { get; set; }
+        public DbSet<AET_IMAGE_EXAM_RESULT> AET_IMAGE_EXAM_RESULT { get; set; }
         public DbSet<FinishedLot> FinishedLot { get; set; }
         public DbSet<InspectResult> InspectResult { get; set; }
         public DbSet<OnInspectLot> OnInspectLot { get; set; }
@@ -34,7 +36,5 @@ namespace Container
         public DbSet<TrayLot> TrayLot { get; set; }
         public DbSet<User> User { get; set; }
         public DbSet<WaitLot> WaitLot { get; set; }
-        public DbSet<AET_IMAGE_EXAM> AET_IMAGE_EXAM { get; set; }
-        public DbSet<AET_IMAGE_EXAM_RESULT> AET_IMAGE_EXAM_RESULT { get; set; }
     }
 }

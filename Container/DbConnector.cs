@@ -22,8 +22,20 @@ namespace Container
         }
         public static void AddNewLotFromMes(TrayLot lot)
         {
-            db.TrayLot.Add(lot);
-            db.WaitLot.Add(new WaitLot { TrayLot = lot });
+            
+            TrayLot newlot = new TrayLot { TrayGroupName = lot.TrayGroupName, AddTime = lot.AddTime, MachineName = lot.MachineName, ProductInfo = lot.ProductInfo };
+            db.TrayLot.Add(newlot);
+            db.SaveChanges();
+            db.WaitLot.Add(new WaitLot { LotId = newlot.Lotid });
+            db.SaveChanges();
+            foreach (var item in lot.Panel)
+            {
+                var buffer = (PanelMissionFromMES)item;
+                Panel newpanel = buffer.OriginPanel;
+                newpanel.LotId = newlot.Lotid;
+                newpanel.TrayLot = newlot;
+                db.Panel.Add(newpanel);
+            }
             db.SaveChanges();
         }
         public static List<ProductInfo> GetProductInfo()
@@ -32,10 +44,12 @@ namespace Container
                            select info.ProductInfo;
             return infoList.ToList();
         }
-        public static TrayLot GetWaitedMission(ProductInfo info)
+        public static TrayLot GetWaitedMission(ProductInfo info, User op)
         {
             // 向服务器请求对应型号的检查任务；
-            var returnlotlist = db.WaitLot.Where(x => x.TrayLot.ProductInfo1 == info);
+            var returnlotlist = from lot in db.WaitLot
+                                where lot.TrayLot.ProductInfo == info.IndexId
+                                select lot;
             if (returnlotlist.Count()==0)
             {
                 return null;
@@ -43,34 +57,51 @@ namespace Container
             else
             {
                 var waitlot = returnlotlist.First();
-                return waitlot.TrayLot;
+                var returnlot = waitlot.TrayLot;
+
+                db.WaitLot.Remove(waitlot);
+                db.SaveChanges();
+                AddOninspectLot(returnlot, op);
+
+                return returnlot;
             }
         }
-        public static TrayLot WaitToOninspect(WaitLot waitLot,User op)
+        static void AddOninspectLot(TrayLot lot, User op)
         {
-            TrayLot lot = waitLot.TrayLot;
-            OnInspectLot newOninspectLot = new OnInspectLot { TrayLot = lot, User = op, RequestTime = TimeNow};
+            OnInspectLot newOninspectLot = new OnInspectLot { Lotid = lot.Lotid, RequestOp = op.IndexId, RequestTime = TimeNow};
             db.OnInspectLot.Add(newOninspectLot);
-            db.WaitLot.Remove(waitLot);
-            return lot;
+            db.SaveChanges();
         }
+
         public static void finishInspect(MissionLot lot)
         {
-            db.OnInspectLot.Remove(lot.lot.OnInspectLot);
-            foreach (var item in lot.panelcontainer)
+            var removelot = from item in db.OnInspectLot
+                            where item.Lotid == lot.lot.Lotid
+                            select item;
+            if (removelot.Count() == 0)
             {
-                var newresult = new InspectResult {
-                    Panel = item.mesPanel,
-                    User = item.Op,
-                    LOTGRADE = item.LotGrade.ToString(),
-                    LOTDETAILGRADE = item.PanelJudge.ToString(),
-                    DefectCode = item.DefectByOp.DefectCode,
-                    DefectName = item.DefectByOp.DefectName,
-                    EndTime = TimeNow,
-                };
-                db.InspectResult.Add(newresult);
+                string errorstring = String.Format("完成任务时出现问题，TrayGroupName {0}",lot.lot.TrayGroupName);
+                throw new ArgumentNullException(errorstring);
             }
-            db.SaveChanges();
+            else
+            {
+                db.OnInspectLot.Remove(removelot.First());
+                foreach (var item in lot.panelcontainer)
+                {
+                    var newresult = new InspectResult
+                    {
+                        operaterId = item.Op.IndexId,
+                        Indexid = item.mesPanel.IndexId,
+                        LOTGRADE = item.LotGrade.ToString(),
+                        LOTDETAILGRADE = item.PanelJudge.ToString(),
+                        DefectCode = item.DefectByOp.DefectCode,
+                        DefectName = item.DefectByOp.DefectName,
+                        EndTime = TimeNow,
+                    };
+                    db.InspectResult.Add(newresult);
+                }
+                db.SaveChanges();
+            }
         }
         public static void InsertExamResult(ExamMission mission)
         {
@@ -79,6 +110,21 @@ namespace Container
         public static List<AET_IMAGE_EXAM> GetExam()
         {
             return db.AET_IMAGE_EXAM.ToList();
+        }
+        public static User GetOp(User op)
+        {
+            var newop = from operater in db.User
+                        where operater.UserId == op.UserId && operater.PassWord == op.PassWord
+                        select operater;
+            if (newop.Count() == 0)
+            {
+                return null;
+            }
+            else
+            {
+                return newop.First();
+            }
+            
         }
     }
 }

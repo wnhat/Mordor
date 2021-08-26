@@ -16,10 +16,9 @@ namespace Sauron
     {
         PanelPathManager PathManager;
         List<InspectPC> InsPCList;
-        List<Task<DiskPathCollection>> TaskList = new List<Task<DiskPathCollection>>();
-        object OnrunningTaskLock;
-        List<FileSearchTask> OnRunningTaskList = new List<FileSearchTask>();
-        Queue<FileSearchTask> WaitTaskQueue = new Queue<FileSearchTask>();
+        List<Task> TaskList = new List<Task>();
+        Queue<Task> WaitTask = new Queue<Task>();
+        List<Task> OnGoingTask = new List<Task>();
         int runcount = 0;
         Random rd = new Random();
         public FileManager()
@@ -35,51 +34,77 @@ namespace Sauron
         }
         int SortTaskList(Task a, Task b)
         {
-            return rd.Next().CompareTo(rd.Next());
+            return a.GetHashCode().CompareTo(b.GetHashCode());
         }
-        public async Task RefreshFileList()
+        public void RefreshFileList()
         {
-            FilePathLogClass.Logger.Information("start to refresh the file dict, time is {0}", DateTime.Now);
+            FilePathLogClass.Logger.Information("start to refresh the file dict, time ： {0}", DateTime.Now);
             PanelPathManager newPanelPathManager = new PanelPathManager();
 
+            TaskList = new List<Task>();
+            var disklist = new List<HardDisk>();
             // 将Disk与新的PanelpathManager绑定；
             foreach (var pc in InsPCList)
             {
                 foreach (var item in pc.DiskCollection)
                 {
-
-                    //var refresh_task = new FileSearchTask(item);
-                    //TaskList.Add(refresh_task);
+                    item.BindNewManager(newPanelPathManager);
+                    disklist.Add(item);
                 }
             }
-            TaskList.Sort(SortTaskList);
-            while (true)
+            CancellationTokenSource cancel = new CancellationTokenSource();
+            Task looptask = Task.Run(() => { Parallel.For(0, disklist.Count, i => { disklist[i].GetDiskPathCollection(); }); }, cancel.Token);
+            looptask.Wait(180000);
+            if (!looptask.IsCompleted)
             {
-                while (runcount < 40)
-                {
-                    TaskList[runcount].Start();
-                    runcount++;
-                }
-                var finishedtask = Task.WhenAny(TaskList);
-                finishedtask.Wait();
-                finishedtask.Dispose();
-                TaskList[runcount].Start();
-                runcount++;
-                if (runcount == TaskList.Count)
-                {
-                    break;
-                }
+                cancel.Cancel();
             }
-            var waittask = Task.WhenAll(TaskList);
-            waittask.Wait();
-            waittask.Dispose();
+            if (looptask.IsCanceled)
+            {
+                ConsoleLogClass.Logger.Information("路径搜寻超过设定时间已被取消，请调查问题原因；");
+            }
+            //foreach (var pc in InsPCList)
+            //{
+            //    foreach (var item in pc.DiskCollection)
+            //    {
+            //        item.BindNewManager(newPanelPathManager);
+            //        var refresh_task = new Task(item.GetDiskPathCollection);
+            //        TaskList.Add(refresh_task);
+            //    }
+            //}
+            //TaskList.Sort(SortTaskList);
+            //foreach (var item in TaskList)
+            //{
+            //    WaitTask.Enqueue(item);
+            //}
+            //while (true)
+            //{
+            //    while (runcount < 40)
+            //    {
+            //        var newtask = WaitTask.Dequeue();
+            //        newtask.Start();
+            //        OnGoingTask.Add(newtask);
+            //        runcount++;
+            //    }
+            //    var task = Task.WhenAny(OnGoingTask);
+            //    task.Wait();
+            //    var finishedTask = task.Result;
+            //    OnGoingTask.Remove(finishedTask);
+
+            //    var othertask = WaitTask.Dequeue();
+            //    othertask.Start();
+            //    OnGoingTask.Add(othertask);
+
+            //    runcount++;
+            //    if (runcount == TaskList.Count)
+            //    {
+            //        break;
+            //    }
+            //}
+            //var waittask = Task.WhenAll(TaskList);
+            //waittask.Wait(6000);
             FilePathLogClass.Logger.Information("finished Refresh, time is {0}", DateTime.Now);
             PathManager = newPanelPathManager;
-            foreach (var item in TaskList)
-            {
-                item.Dispose();
-            }
-            TaskList = null;
             ConsoleLogClass.Logger.Information("开始垃圾收集；");
             GC.Collect();
             ConsoleLogClass.Logger.Information("等待垃圾收集；");
@@ -122,51 +147,20 @@ namespace Sauron
             }
         }
     }
-    public class DiskPathCollection
-    {
-        string[] originalPath;
-        string[] resultPath;
+    //public class DiskPathCollection
+    //{
+    //    string[] originalPath;
+    //    string[] resultPath;
 
-        public DiskPathCollection(string[] originalPath, string[] resultPath)
-        {
-            this.OriginalPath = originalPath;
-            this.ResultPath = resultPath;
-        }
+    //    public DiskPathCollection(string[] originalPath, string[] resultPath)
+    //    {
+    //        this.OriginalPath = originalPath;
+    //        this.ResultPath = resultPath;
+    //    }
 
-        public string[] OriginalPath { get { return originalPath; } set { originalPath = value; } }
-        public string[] ResultPath { get { return resultPath; } set { resultPath = value; } }
-    }
-    class FileSearchTask
-    {
-        DateTime StartTime;
-        HardDisk SearchDisk;
-        CancellationToken TheToken;
-        CancellationTokenSource TokenSource;
-        //public FileSearchTask(Action action, HardDisk searchDisk)
-        //{
-        //    TokenSource = new CancellationTokenSource();
-        //    TheToken = TokenSource.Token;
-        //    SearchDisk = searchDisk;
-
-        //}
-
-        //public FileSearchTask(Action action, CancellationToken cancellationToken) : base(action)
-        //{
-        //    TokenSource = new CancellationTokenSource();
-        //    TheToken = TokenSource.Token;
-        //}
-
-        //new public void Start()
-        //{
-        //    StartTime = DateTime.Now;
-        //    base.Start();
-        //}
-        public void Cancel()
-        {
-            TokenSource.Cancel();
-            SearchDisk.Status = DiskStatus.ConnectOverTime;
-        }
-    }
+    //    public string[] OriginalPath { get { return originalPath; } set { originalPath = value; } }
+    //    public string[] ResultPath { get { return resultPath; } set { resultPath = value; } }
+    //}
     class HardDisk
     {
         InspectPC ParentPc;

@@ -37,7 +37,7 @@ namespace Controler
                              where item.Name == this.comboBox1.Text
                              select item.FGcode;
             this.comboBox2.DataSource = FGcodeList.ToArray();
-            this.comboBox3.DataSource = null;
+            //this.comboBox3.DataSource = null;
         }
 
         private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
@@ -59,7 +59,15 @@ namespace Controler
             }
             else
             {
-                SeverConnecter.AddPanelMission(selectProduct.First());
+                bool result = SeverConnecter.AddPanelMission(selectProduct.First());
+                if (result)
+                {
+                    MessageBox.Show("添加完成");
+                }
+                else
+                {
+                    MessageBox.Show("添加失败");
+                }
             }
         }
     }

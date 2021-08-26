@@ -16,10 +16,10 @@ namespace Container
     {
         public User()
         {
+            this.AET_IMAGE_EXAM_RESULT = new HashSet<AET_IMAGE_EXAM_RESULT>();
             this.FinishedLot = new HashSet<FinishedLot>();
             this.InspectResult = new HashSet<InspectResult>();
             this.OnInspectLot = new HashSet<OnInspectLot>();
-            this.AET_IMAGE_EXAM_RESULT = new HashSet<AET_IMAGE_EXAM_RESULT>();
         }
     
         public int IndexId { get; set; }
@@ -28,9 +28,9 @@ namespace Container
         public string PassWord { get; set; }
         public int Grade { get; set; }
     
+        public virtual ICollection<AET_IMAGE_EXAM_RESULT> AET_IMAGE_EXAM_RESULT { get; set; }
         public virtual ICollection<FinishedLot> FinishedLot { get; set; }
         public virtual ICollection<InspectResult> InspectResult { get; set; }
         public virtual ICollection<OnInspectLot> OnInspectLot { get; set; }
-        public virtual ICollection<AET_IMAGE_EXAM_RESULT> AET_IMAGE_EXAM_RESULT { get; set; }
     }
 }

@@ -26,9 +26,12 @@ namespace test
         {
             //FileManager a = new FileManager();
             //a.RefreshFileList();
+            dbClean();
             TIBlisener();
             //dbtest();
         }
+        static int requestReturned = 0;
+        static int FinishReturned = 0;
         private static void TIBlisener()
         {
             string service = null;
@@ -91,8 +94,6 @@ namespace test
         }
         static void OnMessageReceived(object listener, MessageReceivedEventArgs messageReceivedEventArgs)
         {
-            int requestReturned = 0;
-            int FinishReturned = 0;
 
             Listener li = (Listener)listener;
             Message message = messageReceivedEventArgs.Message;
@@ -109,38 +110,42 @@ namespace test
             string path1 = @"D:\1218180\program2\c#\Mordor\test\RemoteTrayGroupInfoDownloadSend.xml";
             string path2 = @"D:\1218180\program2\c#\Mordor\test\OpCallSend.xml";
             string path3 = @"D:\1218180\program2\c#\Mordor\test\RemoteTrayGroupProcessEndReply.xml";
+            string path4 = @"D:\1218180\program2\c#\Mordor\test\RemoteTrayGroupProcessEndReply2.xml";
 
             if (mestype == "RemoteTrayGroupInfoDownloadRequest")
             {
-                if (requestReturned == 0)
+                if (requestReturned >= 2)
                 {
                     // 测试正常情况；
+                    Console.Out.WriteLine("测试正常情况");
                     FileInfo file = new FileInfo(path1);
                     XmlDocument doc = new XmlDocument();
                     doc.Load(file.OpenRead());
 
                     Message replymessage = new Message();
                     //replymessage.SendSubject = message.ReplySubject;
-                    replymessage.AddField("XmlData", doc);
+                    replymessage.AddField("xmlData", doc);
 
                     li.Transport.SendReply(replymessage, message);
                     requestReturned++;
                 }
-                else if(requestReturned == 1)
+                else if(requestReturned == 0)
                 {
                     // 测试请求超时；
+                    Console.Out.WriteLine("测试请求超时；");
                     requestReturned++;
                 }
-                else if(requestReturned == 2)
+                else if(requestReturned == 1)
                 {
-                    // 测试Opcall ；
+                    // 测试Opcall；
+                    Console.Out.WriteLine("测试Opcall;");
                     FileInfo file = new FileInfo(path2);
                     XmlDocument doc = new XmlDocument();
                     doc.Load(file.OpenRead());
 
                     Message replymessage = new Message();
                     //replymessage.SendSubject = message.ReplySubject;
-                    replymessage.AddField("XmlData", doc);
+                    replymessage.AddField("xmlData", doc);
 
                     li.Transport.SendReply(replymessage, message);
                     requestReturned++;
@@ -148,30 +153,96 @@ namespace test
             }
             else if (mestype == "RemoteTrayGroupProcessEnd")
             {
+                if (FinishReturned >=2)
+                {
+                    // 测试正常情况；
+                    Console.Out.WriteLine("测试正常情况；");
+                    FileInfo file = new FileInfo(path4);
+                    XmlDocument doc = new XmlDocument();
+                    doc.Load(file.OpenRead());
 
+                    Message replymessage = new Message();
+                    //replymessage.SendSubject = message.ReplySubject;
+                    replymessage.AddField("xmlData", doc);
+
+                    li.Transport.SendReply(replymessage, message);
+                }
+                else if (FinishReturned == 0)
+                {
+                    // 测试超时；
+                    Console.Out.WriteLine("测试请求超时；");
+                    FinishReturned++;
+                }
+                else if (FinishReturned == 1)
+                {
+                    // 测试失败情况；
+                    Console.Out.WriteLine("测试失败情况；");
+                    FileInfo file = new FileInfo(path3);
+                    XmlDocument doc = new XmlDocument();
+                    doc.Load(file.OpenRead());
+
+                    Message replymessage = new Message();
+                    //replymessage.SendSubject = message.ReplySubject;
+                    replymessage.AddField("xmlData", doc);
+
+                    li.Transport.SendReply(replymessage, message);
+                    FinishReturned++;
+                }
             }
-            else if (true)
-            {
-
-            }
-            else if (true)
-            {
-
-            }
-            else if (true)
-            {
-
-            }
-
         }
 
+        private static void dbClean()
+        {
+            using (DICS_DBEntities db = new DICS_DBEntities())
+            {
+                foreach (var item in db.InspectResult)
+                {
+                    db.InspectResult.Remove(item);
+                }
+                foreach (var item in db.Panel)
+                {
+                    db.Panel.Remove(item);
+                }
+                foreach (var item in db.WaitLot)
+                {
+                    db.WaitLot.Remove(item);
+                }
+                foreach (var item in db.OnInspectLot)
+                {
+                    db.OnInspectLot.Remove(item);
+                }
+                foreach (var item in db.TrayLot)
+                {
+                    db.TrayLot.Remove(item);
+                }
+                db.SaveChanges();
+            }
+        }
         private static void dbtest()
         {
             using (DICS_DBEntities db = new DICS_DBEntities())
             {
-                var b = db.ProductInfo.First();
-                var a = new OninspectProduct { ProductInfo = b };
-                db.OninspectProduct.Add(a);
+                var b = db.OninspectProduct.First();
+
+                string path1 = @"D:\1218180\program2\c#\Mordor\test\RemoteTrayGroupInfoDownloadSend.xml";
+
+                FileInfo file = new FileInfo(path1);
+                XmlDocument doc = new XmlDocument();
+                doc.Load(file.OpenRead());
+                var aaa = new RemoteTrayGroupInfoDownloadSend(doc);
+                var bbb = aaa.lot.Panel.ToArray();
+                aaa.lot.Panel.Clear();
+                aaa.lot.ProductInfo = b.IndexId;
+                db.TrayLot.Add(aaa.lot);
+
+
+                db.SaveChanges();
+                foreach (var item in bbb)
+                {
+                    item.TrayLot = aaa.lot;
+                    var ooo = (PanelMissionFromMES)item;
+                    db.Panel.Add(ooo.OriginPanel);
+                }
                 db.SaveChanges();
             }
         }
@@ -375,7 +446,7 @@ namespace test
         static Random rd = new Random();
         static int SortTaskList(Task a, Task b)
         {
-            return rd.Next().CompareTo(rd.Next());
+            return a.GetHashCode().CompareTo(b.GetHashCode());
         }
     }
     class stringclass

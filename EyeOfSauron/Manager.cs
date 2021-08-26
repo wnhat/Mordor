@@ -161,7 +161,7 @@ namespace EyeOfSauron
             var newlot = SeverConnecter.GetPanelMission(info,op);
             if (newlot == null)
             {
-                throw new ApplicationException("没有剩余任务以供检查，请退出");
+                throw new ApplicationException("服务器没有剩余任务以供检查，请退出");
             }
             else
             {
@@ -192,7 +192,7 @@ namespace EyeOfSauron
                     {
                         return new InspectMission(newmission);
                     }
-                    catch (FileNotFoundException)
+                    catch (FileNotFoundException e)
                     {
                         User autouser = new User { IndexId = 0 };
                         Defect EjudgeDefect = new Defect("FileError","DE00000",InspectSection.NORMAL);

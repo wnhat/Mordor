@@ -459,5 +459,26 @@ namespace Container
         {
             return PanelId;
         }
+        public Panel OriginPanel
+        {
+            get
+            {
+                Panel newpanel = new Panel
+                {
+                    ACTAOIPANELJUDGE = this.ACTAOIPANELJUDGE,
+                    PIAOI1PANELJUDGE = this.PIAOI1PANELJUDGE,
+                    PIAOI2PANELJUDGE = this.PIAOI2PANELJUDGE,
+                    TFEAOIPANELJUDGE = this.TFEAOIPANELJUDGE,
+                    LastDetailGrade = this.LastDetailGrade,
+                    LastGrade = this.LastGrade,
+                    PanelId = this.PanelId,
+                    IndexId = this.IndexId,
+                    TrayLot = this.TrayLot,
+                    InspectResult = this.InspectResult,
+                    LotId = this.LotId
+                };
+                return newpanel;
+            }
+        }
     }
 }

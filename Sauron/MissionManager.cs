@@ -21,12 +21,12 @@ namespace Sauron
         public MissionManager()
         {
             this.Thefilecontainer = new FileManager();
-
-            string service = null;
-            string network = null;
-            string daemon = null;
-            string subject = "DICS.TEST";
-            this.theMesConnector = new MesConnector(service, network,daemon,subject);
+            //tibrvlisten -service 8410 -network ;225.8.8.41  BOE.B7.MEM.DEV10047792.CNMsvr
+            string service = "9210";
+            string network = ";225.9.9.21";
+            string daemon = "10.141.71.12:7500";
+            string subject = "BOE.B7.MEM.TST.PEMsvr";
+            this.theMesConnector = new MesConnector(service, network, daemon, subject);
 
             RefreshExamList();
             RefreshFileContainer();
@@ -35,55 +35,54 @@ namespace Sauron
             // TODO: add mission test mod;
             ConsoleLogClass.Logger.Information("服务器启动中------任务添加完成");
         }
-        public void RefreshExamList()
+        public void RefreshExamList(NetMQSocketEventArgs a)
         {
-            ConsoleLogClass.Logger.Information("开始考试文件刷新；");
-            // TODO:
-            Dictionary<string, List<ExamMission>> newExamMissionDic = new Dictionary<string, List<ExamMission>>();
-            ExamMissionDic = newExamMissionDic;
-            ConsoleLogClass.Logger.Information("考试文件刷新结束；");
-        }
-        public void WaittingMissionAdd(ProductInfo info)
-        {
-            var newMissionMessage = theMesConnector.RequestMission(info);
-            DbConnector.AddNewLotFromMes(newMissionMessage.lot);
-        }
-        public MissionLot WaitingMissionGet(ProductInfo info)
-        {
-            TrayLot newlot = DbConnector.GetWaitedMission(info);
-            IEnumerable<Panel> panelList = from item in newlot.Panel
-                                             select item;
-            IEnumerable<string> panelidList = from item in newlot.Panel
-                                              select item.PanelId;
-            var path = GetPanelPathList(panelidList.ToArray());
-
-            List<PanelMission> missionlist = new List<PanelMission>();
-            foreach (var item in panelList)
-            {
-                var pathlist = path[item.PanelId];
-                var avipath = pathlist.Where(x => x.PcSection == InspectSection.AVI).FirstOrDefault();
-                var svipath = pathlist.Where(x => x.PcSection == InspectSection.SVI).FirstOrDefault();
-                PanelMission newpanel = new PanelMission(item, MissionType.PRODUCITVE, avipath, svipath);
-                missionlist.Add(newpanel);
-            }
-            MissionLot newMissionLot = new MissionLot(newlot, missionlist);
-            return newMissionLot;
+            RefreshExamList();
+            a.Socket.SignalOK();
         }
         public void GetMission(NetMQSocketEventArgs a, NetMQMessage M)
         {
-            // 获取数据库中正在等待检查的任务返回给客户端;
+            // 获取数据库中正在等待检查的任务返回给客户端;请求的任务不存在时返回为null；
+            
             PanelMissionRequestMessage request = new PanelMissionRequestMessage(M);
             ProductInfo info = request.Info;
-            MissionLot newMissionLot = WaitingMissionGet(info);
-            PanelMissionMessage responseMessage = new PanelMissionMessage(MessageType.SERVER_SEND_MISSION, ServerVersion.Version,newMissionLot);
+            User op = request.Operater;
+            ConsoleLogClass.Logger.Information("收到量产的任务请求；请求型号为：{0} {1} {2} 检查员为：{3}", info.Name,info.ProductType,info.FGcode,op.UserName);
+            MissionLot newMissionLot = WaitingMissionGet(info,op);
+            PanelMissionMessage responseMessage = new PanelMissionMessage(MessageType.SERVER_SEND_MISSION, ServerVersion.Version, newMissionLot);
             a.Socket.SendMultipartMessage(responseMessage);
         }
         public void FinishMission(NetMQSocketEventArgs a, NetMQMessage M)
         {
             PanelMissionMessage finishedMission = new PanelMissionMessage(M);
             a.Socket.SignalOK();
-            DbConnector.finishInspect(finishedMission.ThePanelMissionLot);
-            theMesConnector.FinishInspect(finishedMission.ThePanelMissionLot);
+            ConsoleLogClass.Logger.Information("收到完成的任务 TrayGroupName：{0}", finishedMission.ThePanelMissionLot.TRAYGROUPNAME);
+            try
+            {
+                DbConnector.finishInspect(finishedMission.ThePanelMissionLot);
+            }
+            catch (ArgumentNullException e)
+            {
+
+                ConsoleLogClass.Logger.Error("向数据库储存完成的任务时发生错误,数据库中找不到相对应的OninspectLot,TrayGroupName：{0} ", finishedMission.ThePanelMissionLot.TRAYGROUPNAME);
+                throw;
+            }
+
+            try
+            {
+                theMesConnector.FinishInspect(finishedMission.ThePanelMissionLot);
+            }
+            catch (MesMessageException e)
+            {
+                MesLogClass.Logger.Error(e.Message);
+            }
+        }
+        public void FinishExam(NetMQSocketEventArgs a, NetMQMessage M)
+        {
+            ExamMissionMessage finishedExam = new ExamMissionMessage(M);
+            ConsoleLogClass.Logger.Information("收到完成的考试 试题名称：{0}", finishedExam.ExamRequestInfo);
+            FinishExam(finishedExam.ExamMissionList);
+            a.Socket.SignalOK();
         }
         public void GetProductInfo(NetMQSocketEventArgs a)
         {
@@ -91,7 +90,6 @@ namespace Sauron
             ProductInfoMessage info = new ProductInfoMessage(DbConnector.GetProductInfo());
             a.Socket.SendMultipartMessage(info);
         }
-
         public void GetExamMission(NetMQSocketEventArgs a, NetMQMessage M)
         {
             ExamMissionMessage newexammission = new ExamMissionMessage(M);
@@ -126,10 +124,12 @@ namespace Sauron
             {
                 RemoteTrayGroupInfoDownloadSend returnmessage = theMesConnector.RequestMission(message.Info);
                 DbConnector.AddNewLotFromMes(returnmessage.lot);
+                a.Socket.SignalOK();
             }
             catch (MesMessageException e)
             {
                 MesLogClass.Logger.Error(e.Message);
+                a.Socket.SignalError();
             }
            
         }
@@ -153,12 +153,46 @@ namespace Sauron
         }
         public User CheckUser(User op)
         {
-            // TODO:检查
-            return null;
+            return DbConnector.GetOp(op);
         }
-        public void FinishExam(List<ExamMission> missionlist)
+        void FinishExam(List<ExamMission> missionlist)
         {
 
+        }
+        MissionLot WaitingMissionGet(ProductInfo info,User op)
+        {
+            TrayLot newlot = DbConnector.GetWaitedMission(info,op);
+            if (newlot == null)
+            {
+                return null;
+            }
+            else
+            {
+                IEnumerable<Panel> panelList = from item in newlot.Panel
+                                               select item;
+                IEnumerable<string> panelidList = from item in newlot.Panel
+                                                  select item.PanelId;
+                var path = GetPanelPathList(panelidList.ToArray());
+                List<PanelMission> missionlist = new List<PanelMission>();
+                foreach (var item in panelList)
+                {
+                    var pathlist = path[item.PanelId];
+                    var avipath = pathlist.Where(x => x.PcSection == InspectSection.AVI).FirstOrDefault();
+                    var svipath = pathlist.Where(x => x.PcSection == InspectSection.SVI).FirstOrDefault();
+                    PanelMission newpanel = new PanelMission(item, MissionType.PRODUCITVE, avipath, svipath);
+                    missionlist.Add(newpanel);
+                }
+                MissionLot newMissionLot = new MissionLot(newlot, missionlist);
+                return newMissionLot;
+            }
+        }
+        public void RefreshExamList()
+        {
+            ConsoleLogClass.Logger.Information("开始考试文件刷新；");
+            // TODO:
+            Dictionary<string, List<ExamMission>> newExamMissionDic = new Dictionary<string, List<ExamMission>>();
+            ExamMissionDic = newExamMissionDic;
+            ConsoleLogClass.Logger.Information("考试文件刷新结束；");
         }
     }
 }
