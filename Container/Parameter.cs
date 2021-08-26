@@ -19,10 +19,10 @@ namespace Container
         public static Defect[] CodeNameList;
         public static string AviExamFilePath;
         public static string SviExamFilePath;
-
+        public static Int16 MesConnectTimeOut;
         static Parameter()
         {
-            string sysConfigPath = @"\\172.16.145.22\NetworkDrive\D_Drive\Mordor\sysconfig.json";
+            string sysConfigPath = @"\\172.16.145.22\NetworkDrive\D_Drive\Mordor\sysconfig-test.json";
             FileInfo sysconfig = new FileInfo(sysConfigPath);
             if (sysconfig.Exists)
             {

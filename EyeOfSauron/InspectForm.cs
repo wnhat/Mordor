@@ -21,7 +21,7 @@ namespace EyeOfSauron
         {
             // initial InspectForm:
             InitializeComponent();
-            imageManager = new ImageFormManager(this.pictureBox1, this.pictureBox2, this.pictureBox3);
+            imageManager = new ImageFormManager(this.pictureBox1, this.pictureBox2, this.pictureBox3, this.pictureBox4);
             imageManager.BindLabel(this.imagelabel1,this.imagelabel2,this.imagelabel3);
             SetDefectButton();
         }
@@ -66,6 +66,7 @@ namespace EyeOfSauron
                 this.cell_id_label.Text = TheManager.OnInspectedMission.PanelId;
                 this.remain_label.Text = string.Format("已完成：{0}\n 剩余：{1}",TheManager.FinishedMissionCount,TheManager.MissionLeft);
                 imageManager.SetArray(TheManager.OnInspectedMission.ImageArray, TheManager.OnInspectedMission.ImageNameList);
+                imageManager.SetDefectMap(TheManager.OnInspectedMission.DefectMap);
             }
         }
         protected override void OnShown(EventArgs e)

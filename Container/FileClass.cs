@@ -320,12 +320,12 @@ namespace Container
             string[] filenamelist = this.FileNameList;
             foreach (var item in filename)
             {
-                if (!filenamelist.Contains(item))
+                if (filenamelist.Contains(item))
                 {
-                    return false;
+                    return true;
                 }
             }
-            return true;
+            return false;
         }
     }
     public class FileContainerException : ApplicationException

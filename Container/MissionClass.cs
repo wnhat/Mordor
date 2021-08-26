@@ -119,9 +119,10 @@ namespace Container
         DirContainer svidir;
         public bool HasMajorFile
         {
+            //任意一张图片存在即为True
             get
             {
-                if (avidir.Contains(Parameter.AviImageNameList) && svidir.Contains(Parameter.SviImageNameList))
+                if (avidir.Contains(Parameter.AviImageNameList) || svidir.Contains(Parameter.SviImageNameList))
                 {
                     return true;
                 }
@@ -179,12 +180,21 @@ namespace Container
             List<Bitmap> newlist = new List<Bitmap>();
             foreach (var imagename in Parameter.AviImageNameList)
             {
-                newlist.Add(new Bitmap(this.avidir.GetFileFromMemory(imagename)));
+                var fileMemory = this.avidir.GetFileFromMemory(imagename);
+                if (fileMemory != null)
+                {
+                    newlist.Add(new Bitmap(fileMemory));
+                }
             }
             foreach (var imagename in Parameter.SviImageNameList)
             {
-                newlist.Add(new Bitmap(this.svidir.GetFileFromMemory(imagename)));
+                var fileMemory = this.svidir.GetFileFromMemory(imagename);
+                if (fileMemory != null)
+                {
+                    newlist.Add(new Bitmap(this.svidir.GetFileFromMemory(imagename)));
+                } 
             }
+            newlist.Add(new Bitmap(this.svidir.GetFileFromMemory(this.PanelId+ "_SVI_Rotate.jpg")));
             return newlist.ToArray();
         }
     }
@@ -192,6 +202,7 @@ namespace Container
     {
         public string[] ImageNameList;  // The image name in reuslt file which we need to inspect
         public Bitmap[] ImageArray;
+        public Bitmap DefectMap;
         public InspectMission(PanelMission missioninfo) : base(missioninfo.PanelId)
         {
             var newimagenamelist = Parameter.AviImageNameList.ToList();
@@ -203,6 +214,7 @@ namespace Container
             newimagearray.AddRange(InitialImage(missioninfo.SviPanelPath.ResultPath, Parameter.SviImageNameList));
             //newimagearray.AddRange(InitialImage(missioninfo.AppPanelPath.ResultPath, Parameter.AppImageNameList));
             ImageArray = newimagearray.ToArray();
+            DefectMap = InitialImage(missioninfo.SviPanelPath.ResultPath, PanelId + "_SVI_Rotate.jpg");
         }
         public InspectMission(ExamMission missioninfo) : base(missioninfo.PanelId)
         {
@@ -214,6 +226,7 @@ namespace Container
             newimagearray.AddRange(InitialImage(missioninfo.AviResultPath, Parameter.AviImageNameList));
             newimagearray.AddRange(InitialImage(missioninfo.SviResultPath, Parameter.SviImageNameList));
             ImageArray = newimagearray.ToArray();
+            DefectMap = InitialImage(missioninfo.SviResultPath, PanelId + "_SVI_Rotate.jpg");
         }
         public Bitmap[] InitialImage(string filepath, string[] NameList)
         {
@@ -229,10 +242,27 @@ namespace Container
                 else
                 {
                     string errorstring = string.Format("文件夹中缺少必要文件，panel id：{0},file name {1}", PanelId, NameList[i]);
-                    throw new FileNotFoundException(errorstring);
+                    //throw new FileNotFoundException(errorstring);
                 }
             }
             return NewImageArray;
+        }
+        public Bitmap InitialImage(string filepath, string Name)
+        {
+            DirContainer Container = new DirContainer(filepath, true);
+            Bitmap NewImage;
+            var file = Container.GetFileFromMemory(Name);
+            if (file != null)
+            {
+                NewImage = new Bitmap(file);
+            }
+            else
+            {
+                string errorstring = string.Format("文件夹中缺少必要文件，panel id：{0},file name {1}", PanelId, Name);
+                NewImage = null;
+                //throw new FileNotFoundException(errorstring);
+            }
+            return NewImage;
         }
     }
     public class PanelMission

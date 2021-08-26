@@ -78,6 +78,10 @@
       <Project>{2dfdb54c-e35f-4fb8-abce-f95bcf57a68f}</Project>
       <Name>Container</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Sauron\Sauron.csproj">
+      <Project>{8336ce33-cdee-408d-972e-d02c01cfd448}</Project>
+      <Name>Sauron</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Form1.resx">
