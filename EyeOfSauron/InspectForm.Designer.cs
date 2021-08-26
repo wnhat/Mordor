@@ -56,12 +56,14 @@
             this.imagelabel3 = new System.Windows.Forms.Label();
             this.imagelabel2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.pictureBox4 = new System.Windows.Forms.PictureBox();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.virtual_image_Box)).BeginInit();
             this.tableLayoutPanel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
             this.SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -295,10 +297,10 @@
             // defect_Listview
             // 
             this.defect_Listview.HideSelection = false;
-            this.defect_Listview.Location = new System.Drawing.Point(951, 517);
+            this.defect_Listview.Location = new System.Drawing.Point(1365, 516);
             this.defect_Listview.Margin = new System.Windows.Forms.Padding(2);
             this.defect_Listview.Name = "defect_Listview";
-            this.defect_Listview.Size = new System.Drawing.Size(408, 266);
+            this.defect_Listview.Size = new System.Drawing.Size(346, 148);
             this.defect_Listview.TabIndex = 3;
             this.defect_Listview.UseCompatibleStateImageBehavior = false;
             // 
@@ -428,10 +430,21 @@
             this.label1.TabIndex = 11;
             this.label1.Text = "AVI";
             // 
+            // pictureBox4
+            // 
+            this.pictureBox4.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.pictureBox4.Location = new System.Drawing.Point(952, 516);
+            this.pictureBox4.Name = "pictureBox4";
+            this.pictureBox4.Size = new System.Drawing.Size(407, 268);
+            this.pictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox4.TabIndex = 12;
+            this.pictureBox4.TabStop = false;
+            // 
             // InspectForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(1902, 1024);
+            this.Controls.Add(this.pictureBox4);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.imagelabel2);
             this.Controls.Add(this.imagelabel3);
@@ -457,6 +470,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -492,6 +506,7 @@
         private System.Windows.Forms.Button defect_button_9;
         private System.Windows.Forms.Button defect_button_8;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.PictureBox pictureBox4;
     }
 }
 

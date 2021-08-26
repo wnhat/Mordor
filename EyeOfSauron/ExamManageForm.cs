@@ -190,6 +190,8 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
                 {
                     this.ExamDBGridView.CurrentCell = this.ExamDBGridView[0, RowIndex];
                 }
+                ButtonTextChange(sender, e);
+                this.ExamDBGridView.Focus();
             }
         }
         private void refreshDataSet()
@@ -203,22 +205,22 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
         }
         private void dataGridViewRowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
         {
-            for (int i = 0; i < this.ExamDBGridView.Rows.Count; i++)
+            if (e.RowIndex >= this.ExamDBGridView.Rows.Count)
+                return;
+            DataGridViewRow row = this.ExamDBGridView.Rows[e.RowIndex];
+            switch (Convert.ToInt16(row.Cells[6].Value))
             {
-                switch (Convert.ToInt16(this.ExamDBGridView.Rows[i].Cells[6].Value))
-                {
-                    case 0:
-                        this.ExamDBGridView.Rows[i].DefaultCellStyle.BackColor = Color.White;
-                        break;
-                    case 1:
-                        this.ExamDBGridView.Rows[i].DefaultCellStyle.BackColor = Color.FromArgb(255, 255, 200, 221);
-                        break;
-                    case 2:
-                        this.ExamDBGridView.Rows[i].DefaultCellStyle.BackColor = Color.FromArgb(255, 189, 224, 254);
-                        break;
-                    default:
-                        break;
-                }
+                case 0:
+                    row.DefaultCellStyle.BackColor = Color.White;
+                    break;
+                case 1:
+                    row.DefaultCellStyle.BackColor = Color.FromArgb(255, 255, 200, 221);
+                    break;
+                case 2:
+                    row.DefaultCellStyle.BackColor = Color.FromArgb(255, 189, 224, 254);
+                    break;
+                default:
+                    break;
             }
         }
         private void Cleanbutton_Click(object sender, EventArgs e)
@@ -445,6 +447,7 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
         {
             if (this.ExamDBGridView.SelectedRows.Count != 0 && this.ExamDBGridView.Focused)
             {
+                ButtonTextChange(sender, e);
                 string panelid = this.ExamDBGridView.SelectedRows[0].Cells[1].Value.ToString();
                 try
                 {
@@ -472,6 +475,43 @@ WHERE [DelFlag] = '0' OR [DelFlag] = '2'";
                 e.Graphics.FillRectangle(RectBrush, e.Bounds);
                 e.Graphics.DrawString(this.NewIdListBox.Items[e.Index].ToString(), e.Font, Brushes.Black, e.Bounds, null);
             }
+        }
+
+        private void CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            string text = Convert.ToString(this.ExamDBGridView.CurrentCell.Value);
+            Clipboard.SetDataObject(text);
+        }
+        private void GroupDEL(object sender, EventArgs e)
+        {
+            // 无法完全删除，待修改
+            //if (MessageBox.Show("确认删除 " + this.ExamInfocomboBox.Text + " 中的所有信息", "删除不可恢复", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            //{
+            //    int RowCount = this.ExamDBGridView.Rows.Count;
+            //    for (int i = 0; i < RowCount; i++)
+            //    {
+            //        int delflagValue = Convert.ToInt32(this.ExamDBGridView.Rows[i].Cells[6].Value);
+            //        this.ExamDBGridView.Rows[i].Cells[6].Value = 1;
+            //        delflagValue = Convert.ToInt32(this.ExamDBGridView.Rows[i].Cells[6].Value);
+            //    }
+            //    refreshDataSet();
+            //    //DelFromDB(this.ExamInfocomboBox.Text);
+            //}
+        }
+        private void DelFromDB(string Groupinfo,string PanelID)
+        {
+            string filterString = "[Info] = '"+Groupinfo + "' AND [PanelID] = '" + PanelID + "'";
+            DelFromDB(filterString);
+        }
+        private void DelFromDB(string filterString)
+        {
+            int RowCount;
+            string querystring = @"DELETE FROM [EDIAS_DB].[dbo].[AET_IMAGE_EXAM]
+                WHERE " + filterString;
+            SqlCommand newcommand = new SqlCommand(querystring, TheDataBase);
+            TheDataBase.Open();
+            RowCount = Convert.ToInt32(newcommand.ExecuteNonQuery());
+            TheDataBase.Close();
         }
     }
 }

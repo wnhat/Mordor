@@ -22,7 +22,7 @@ namespace Container
         public static int MesConnectTimeOut;
         static Parameter()
         {
-            string sysConfigPath = @"\\172.16.145.22\NetworkDrive\D_Drive\Mordor\sysconfig.json";
+            string sysConfigPath = @"\\172.16.145.22\NetworkDrive\D_Drive\Mordor\sysconfig-test.json";
             FileInfo sysconfig = new FileInfo(sysConfigPath);
             if (sysconfig.Exists)
             {

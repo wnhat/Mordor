@@ -44,7 +44,7 @@
 //        }
 //        private string SelectString
 //        {
-//            get{return @"SELECT ALL [PanelID],[Judge],[DefectCode],[DefectName],[Section] FROM [EDIAS_DB].[dbo].[AET_IMAGE_EXAM]";}
+//            get {return @"SELECT ALL [PanelID],[Judge],[DefectCode],[DefectName],[Section] FROM [EDIAS_DB].[dbo].[AET_IMAGE_EXAM]"; }
 //        }
 //        public DataSet GetExamDB()
 //        {

@@ -18,23 +18,24 @@ namespace EyeOfSauron
         int Refreshflag = 0;
         Bitmap[] ImageArray;
         string[] ImageNameArray;
-        PictureBox pictureBox1;
-        PictureBox pictureBox2;
-        PictureBox pictureBox3;
+        PictureBox[] PictureBoxList = new PictureBox[4];
         Label label1;
         Label label2;
         Label label3;
         public ImageFormManager(params PictureBox[] boxlist)
         {
-            pictureBox1 = boxlist[0];
-            pictureBox2 = boxlist[1];
-            pictureBox3 = boxlist[2];
+            PictureBoxList = boxlist;
         }
         private void SetImage(Bitmap[] imagearray)
         {
-            pictureBox1.Image = imagearray[0];
-            pictureBox2.Image = imagearray[1];
-            pictureBox3.Image = imagearray[2];
+            for (int i = 0; i< imagearray.Length; i++)
+            {
+                PictureBoxList[i].Image = imagearray[i];
+            }
+        }
+        public void SetDefectMap(Bitmap image)
+        {
+            PictureBoxList[3].Image = image;
         }
         public void BindLabel(params Label[] labellist)
         {

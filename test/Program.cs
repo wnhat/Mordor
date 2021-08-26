@@ -339,8 +339,7 @@ namespace test
                 var finishedtask = Task.WhenAny(OnRuningTask);
                 finishedtask.Result.Wait();
                 OnRuningTask.Remove(finishedtask.Result);
-                finishedtask.Dispose();
-                //ConsoleLogClass.Logger.Information("任务执行完成 task：{0}; status:{1}", finishedtask.Result.Id, finishedtask.Result.Status);
+                ConsoleLogClass.Logger.Information("任务执行完成 task：{0}; status:{1}", finishedtask.Result.Id, finishedtask.Result.Status);
 
                 ConsoleLogClass.Logger.Information("二次添加任务；");
                 var addtask = TaskWaitQueue.Dequeue();
@@ -413,7 +412,6 @@ namespace test
                 var finishedtask = Task.WhenAny(OnRuningTask);
                 finishedtask.Result.Wait();
                 OnRuningTask.Remove(finishedtask.Result);
-                finishedtask.Dispose();
                 ConsoleLogClass.Logger.Information("任务执行完成 task：{0}; status:{1}", finishedtask.Result.Id, finishedtask.Result.Status);
                 
                 ConsoleLogClass.Logger.Information("二次添加任务；");
