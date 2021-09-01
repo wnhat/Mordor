@@ -16,11 +16,6 @@ namespace Sauron
     {
         PanelPathManager PathManager;
         List<InspectPC> InsPCList;
-        List<Task> TaskList = new List<Task>();
-        Queue<Task> WaitTask = new Queue<Task>();
-        List<Task> OnGoingTask = new List<Task>();
-        int runcount = 0;
-        Random rd = new Random();
         public FileManager()
         {
             this.InsPCList = new List<InspectPC>();
@@ -41,7 +36,6 @@ namespace Sauron
             FilePathLogClass.Logger.Information("start to refresh the file dict, time ： {0}", DateTime.Now);
             PanelPathManager newPanelPathManager = new PanelPathManager();
 
-            TaskList = new List<Task>();
             var disklist = new List<HardDisk>();
             // 将Disk与新的PanelpathManager绑定；
             foreach (var pc in InsPCList)
@@ -63,46 +57,6 @@ namespace Sauron
             {
                 ConsoleLogClass.Logger.Information("路径搜寻超过设定时间已被取消，请调查问题原因；");
             }
-            //foreach (var pc in InsPCList)
-            //{
-            //    foreach (var item in pc.DiskCollection)
-            //    {
-            //        item.BindNewManager(newPanelPathManager);
-            //        var refresh_task = new Task(item.GetDiskPathCollection);
-            //        TaskList.Add(refresh_task);
-            //    }
-            //}
-            //TaskList.Sort(SortTaskList);
-            //foreach (var item in TaskList)
-            //{
-            //    WaitTask.Enqueue(item);
-            //}
-            //while (true)
-            //{
-            //    while (runcount < 40)
-            //    {
-            //        var newtask = WaitTask.Dequeue();
-            //        newtask.Start();
-            //        OnGoingTask.Add(newtask);
-            //        runcount++;
-            //    }
-            //    var task = Task.WhenAny(OnGoingTask);
-            //    task.Wait();
-            //    var finishedTask = task.Result;
-            //    OnGoingTask.Remove(finishedTask);
-
-            //    var othertask = WaitTask.Dequeue();
-            //    othertask.Start();
-            //    OnGoingTask.Add(othertask);
-
-            //    runcount++;
-            //    if (runcount == TaskList.Count)
-            //    {
-            //        break;
-            //    }
-            //}
-            //var waittask = Task.WhenAll(TaskList);
-            //waittask.Wait(6000);
             FilePathLogClass.Logger.Information("finished Refresh, time is {0}", DateTime.Now);
             PathManager = newPanelPathManager;
             ConsoleLogClass.Logger.Information("开始垃圾收集；");
@@ -161,6 +115,66 @@ namespace Sauron
     //    public string[] OriginalPath { get { return originalPath; } set { originalPath = value; } }
     //    public string[] ResultPath { get { return resultPath; } set { resultPath = value; } }
     //}
+    class NewHardDisk
+    {
+        PC PcInfo;
+        DiskPart DiskName;
+        public DiskStatus Status = DiskStatus.Unchecked;
+        string lastErrorMessage = null;
+        List<string> PanelList = new List<string>();
+        public NewHardDisk(PC parentPc, DiskPart diskName)
+        {
+            this.PcInfo = parentPc;
+            this.DiskName = diskName;
+        }
+        public void GetDiskPathCollection()
+        {
+            List<string> newPanelList = new List<string>();
+            string originpath = Path.Combine("\\\\", PcInfo.PcIp, "NetworkDrive", DiskName.ToString(), "Defect Info", "Origin");
+            string resultpath = Path.Combine("\\\\", PcInfo.PcIp, "NetworkDrive", DiskName.ToString(), "Defect Info", "Result");
+            Status = DiskStatus.Unchecked;
+            try
+            {
+                string[] image_directory_list = Directory.GetDirectories(originpath);
+                string[] result_directory_list = Directory.GetDirectories(resultpath);
+                Status = DiskStatus.OK;
+                var intersectlist = Enumerable.Intersect(image_directory_list, result_directory_list, new StringPathCompare());
+                foreach (var item in intersectlist)
+                {
+                    var panelId = Path.GetFileName(item);
+                    newPanelList.Add(panelId);
+                }
+                this.PanelList = newPanelList;
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                // 硬盘损坏，该硬盘路径无法通过远程访问的方式打开
+                FilePathLogClass.Logger.Error(e.Message);
+                Status = DiskStatus.ConnectError;
+                lastErrorMessage = e.Message;
+            }
+            catch (DirectoryNotFoundException e)
+            {
+                // 硬盘损坏，或该路径下硬盘无实物存在，该硬盘路径无法通过远程访问的方式打开
+                FilePathLogClass.Logger.Error(e.Message);
+                Status = DiskStatus.NotExist;
+                lastErrorMessage = e.Message;
+            }
+            catch (IOException e)
+            {
+                // 网络通信问题，网络无法链接到该计算机，可能是因为该计算连接交换机的网线出现了故障，或网卡断开，需要检查设备的硬件原因；
+                FilePathLogClass.Logger.Error(e.Message);
+                Status = DiskStatus.ConnectError;
+                lastErrorMessage = e.Message;
+            }
+            catch (Exception e)
+            {
+                FilePathLogClass.Logger.Error(e.Message);
+                Status = DiskStatus.ConnectError;
+                lastErrorMessage = e.Message;
+            }
+        }
+    }
     class HardDisk
     {
         InspectPC ParentPc;

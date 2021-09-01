@@ -42,7 +42,7 @@ namespace Sauron
         static void Server()
         {
             var timer = new NetMQTimer(TimeSpan.FromSeconds(3600));
-            ResponseSocket responseSocket = new ResponseSocket("@tcp://172.16.145.22:6666");
+            ResponseSocket responseSocket = new ResponseSocket("@tcp://172.16.145.22:5555");
             using (var poller = new NetMQPoller { responseSocket, timer })
             {
                 MissionManager TheMissionManager = new MissionManager();

@@ -15,7 +15,7 @@ namespace Container.SeverConnection
         static SeverConnecter()
         {
             request = new RequestSocket();
-            request.Connect("tcp://172.16.145.22:6666");
+            request.Connect("tcp://172.16.145.22:5555");
         }
         public static bool VersionCheck(VersionCheckClass version)
         {

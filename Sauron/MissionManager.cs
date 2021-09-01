@@ -22,11 +22,8 @@ namespace Sauron
         {
             this.Thefilecontainer = new FileManager();
             //tibrvlisten -service 8410 -network ;225.8.8.41  BOE.B7.MEM.DEV10047792.CNMsvr
-            string service = "9210";
-            string network = ";225.9.9.21";
-            string daemon = "10.141.71.12:7500";
-            string subject = "BOE.B7.MEM.TST.PEMsvr";
-            this.theMesConnector = new MesConnector(service, network, daemon, subject);
+
+            this.theMesConnector = new MesConnector();
 
             RefreshExamList();
             RefreshFileContainer();

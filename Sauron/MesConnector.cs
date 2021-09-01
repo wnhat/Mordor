@@ -11,18 +11,13 @@ namespace Sauron
 {
     public class MesConnector
     {
-        string service = "BOE.B7.MEM.TST.PEMsvr";
-        string network = "172.16.145.22";
-        string daemon = null;
-        string subject = "a.b.c";
+        string service = "9210";
+        string network = ";225.9.9.21";
+        string daemon = "10.141.71.12:7500";
+        string subject = "BOE.B7.MEM.TST.PEMsvr";
         Transport transport = null;
-        public MesConnector(string service, string network, string daemon, string subject)
+        public MesConnector()
         {
-            this.service = service;
-            this.network = network;
-            this.daemon = daemon;
-            this.subject = subject;
-            
             try
             {
                 TIBCO.Rendezvous.Environment.Open();

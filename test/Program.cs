@@ -19,6 +19,10 @@ using TIBCO.Rendezvous;
 
 namespace test
 {
+    class testclass
+    {
+        public int testint = 1;
+    }
     static class Program
     {
         [STAThread]
@@ -26,9 +30,10 @@ namespace test
         {
             //FileManager a = new FileManager();
             //a.RefreshFileList();
-            dbClean();
-            TIBlisener();
+            //dbClean();
+            //TIBlisener();
             //dbtest();
+            test03();
         }
         static int requestReturned = 0;
         static int FinishReturned = 0;
@@ -190,7 +195,6 @@ namespace test
                 }
             }
         }
-
         private static void dbClean()
         {
             using (DICS_DBEntities db = new DICS_DBEntities())
@@ -246,7 +250,6 @@ namespace test
                 db.SaveChanges();
             }
         }
-
         static void xmltest()
         {
             string path = @"D:\1218180\program2\c#\Mordor\test\xmltest.xml";
@@ -266,40 +269,14 @@ namespace test
             //}
             
         }
-        
         static void test03()
         {
-            int runcount = 0;
-            List<Task<DiskPathCollection>> TaskList = new List<Task<DiskPathCollection>>();
-            List<stringclass> itemclass = new List<stringclass>();
-            for (int i = 0; i < 2880; i++)
-            {
-                itemclass.Add(new stringclass());
-            }
-            foreach (var item in itemclass)
-            {
-                var newtask = new Task<DiskPathCollection>(item.RunTask);
-                TaskList.Add(newtask);
-            }
-            TaskList.Sort(SortTaskList);
-            while (true)
-            {
-                while (runcount < 200)
-                {
-                    TaskList[runcount].Start();
-                    runcount++;
-                }
-                var finishedtask = Task.WhenAny(TaskList);
-                finishedtask.Wait();
-                finishedtask.Dispose();
-                TaskList[runcount].Start();
-                runcount++;
-                if (runcount == TaskList.Count)
-                {
-                    break;
-                }
-            }
-            Console.ReadLine();
+            testclass a = new testclass();
+            testclass b = new testclass();
+            // 
+            List<testclass> aaa = new List<testclass> {a,b };
+            a.testint++;
+
         }
         static void test02()
         {
