@@ -14,7 +14,7 @@ namespace Container
         public static List<PC> PcListAll;
         static IpTransform()
         {
-            StreamReader file = new StreamReader(@"D:\1218180\program2\c#\Mordor\Sauron\IP.json");
+            StreamReader file = new StreamReader(@"D:\RingWraith\IP.json");
             StringReader file_string = new StringReader(file.ReadToEnd());
             JObject jsonobj = JObject.Parse(file_string.ReadToEnd());
             PcListAll = (List<PC>)jsonobj.GetValue("PcListAll").ToObject(typeof(List<PC>));

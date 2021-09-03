@@ -40,13 +40,12 @@ namespace Sauron
         public void GetMission(NetMQSocketEventArgs a, NetMQMessage M)
         {
             // 获取数据库中正在等待检查的任务返回给客户端;请求的任务不存在时返回为null；
-            
             PanelMissionRequestMessage request = new PanelMissionRequestMessage(M);
             ProductInfo info = request.Info;
             User op = request.Operater;
             ConsoleLogClass.Logger.Information("收到量产的任务请求；请求型号为：{0} {1} {2} 检查员为：{3}", info.Name,info.ProductType,info.FGcode,op.UserName);
             MissionLot newMissionLot = WaitingMissionGet(info,op);
-            PanelMissionMessage responseMessage = new PanelMissionMessage(MessageType.SERVER_SEND_MISSION, ServerVersion.Version, newMissionLot);
+            PanelMissionMessage responseMessage = new PanelMissionMessage(MessageType.SERVER_SEND_MISSION, newMissionLot);
             a.Socket.SendMultipartMessage(responseMessage);
         }
         public void FinishMission(NetMQSocketEventArgs a, NetMQMessage M)
@@ -99,7 +98,7 @@ namespace Sauron
                     item.sortint = rnd.Next();
                 }
                 ExamMissionDic[examinfo].Sort();
-                a.Socket.SendMultipartMessage(new ExamMissionMessage(MessageType.SERVER_SEND_MISSION, ServerVersion.Version, ExamMissionDic[examinfo], examinfo));
+                a.Socket.SendMultipartMessage(new ExamMissionMessage(MessageType.SERVER_SEND_MISSION, ExamMissionDic[examinfo], examinfo));
             }
             else
             {
@@ -110,7 +109,7 @@ namespace Sauron
         public void GetExamInfo(NetMQSocketEventArgs a)
         {
             string[] examinfoarray = ExamMissionDic.Keys.ToArray();
-            a.Socket.SendMultipartMessage(new ExamInfoMessage(examinfoarray, ServerVersion.Version));
+            a.Socket.SendMultipartMessage(new ExamInfoMessage(examinfoarray));
         }
         public void AddMissionByControlor(NetMQSocketEventArgs a, NetMQMessage M)
         {

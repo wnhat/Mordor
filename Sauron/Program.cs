@@ -73,7 +73,7 @@ namespace Sauron
                             // 获取设备中存在的原图路径；
                             PanelPathMessage panelIdInfo = new PanelPathMessage(messageIn);
                             var newPanelPathDic = TheMissionManager.GetPanelPathList(panelIdInfo.panelPathDic.Keys.ToArray());
-                            PanelPathMessage newpanelinfomassage = new PanelPathMessage(MessageType.CLINET_GET_PANEL_PATH, ServerVersion.Version, newPanelPathDic);
+                            PanelPathMessage newpanelinfomassage = new PanelPathMessage(newPanelPathDic);
                             a.Socket.SendMultipartMessage(newpanelinfomassage);
                             break;
                         case MessageType.CLINET_GET_PRODUCTINFO:
@@ -93,12 +93,12 @@ namespace Sauron
                             var op = TheMissionManager.CheckUser(userInfo.TheOperator);
                             if (op != null)
                             {
-                                UserCheckMessage newmessage = new UserCheckMessage(MessageType.SERVER_SEND_USER_TRUE, ServerVersion.Version, op);
+                                UserCheckMessage newmessage = new UserCheckMessage(MessageType.SERVER_SEND_USER_TRUE, op);
                                 a.Socket.SendMultipartMessage(newmessage);
                             }
                             else
                             {
-                                UserCheckMessage newmessage = new UserCheckMessage(MessageType.SERVER_SEND_USER_FLASE, ServerVersion.Version, null);
+                                UserCheckMessage newmessage = new UserCheckMessage(MessageType.SERVER_SEND_USER_FLASE, null);
                                 a.Socket.SendMultipartMessage(newmessage);
                             }
                             break;

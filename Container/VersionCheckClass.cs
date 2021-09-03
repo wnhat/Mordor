@@ -8,22 +8,15 @@ namespace Container
 {
     public class VersionCheckClass : IEquatable<VersionCheckClass>
     {
-        public int FirstVersionNumber;     // 大版本迭代号，当message存在变动时请及时更新该数字，服务器将会校验该版本；
-        public int SecondVersionNumber;    // 小版本迭代号
+        public int VersionNumber;     // 版本迭代号，当message存在变动时请及时更新该数字，服务器将会校验该版本；
         public string UpdateTime;          // 程序上次更新的时间 example: 202100807
 
-        public VersionCheckClass(int firstVersionNumber, int secondVersionNumber, string updateTime)
+        public VersionCheckClass(int firstVersionNumber, string updateTime)
         {
-            FirstVersionNumber = firstVersionNumber;
-            SecondVersionNumber = secondVersionNumber;
-            if (updateTime == null)
-            {
-                throw new ArgumentNullException(nameof(updateTime));
-            }
+            VersionNumber = firstVersionNumber;
             UpdateTime = updateTime;
         }
         public VersionCheckClass() { }
-
         public override bool Equals(object obj)
         {
             return Equals(obj as VersionCheckClass);
@@ -32,16 +25,14 @@ namespace Container
         public bool Equals(VersionCheckClass other)
         {
             return other != null &&
-                   FirstVersionNumber == other.FirstVersionNumber &&
-                   SecondVersionNumber == other.SecondVersionNumber &&
+                   VersionNumber == other.VersionNumber &&
                    UpdateTime == other.UpdateTime;
         }
         
         public override int GetHashCode()
         {
             int hashCode = -427018499;
-            hashCode = hashCode * -1521134295 + FirstVersionNumber.GetHashCode();
-            hashCode = hashCode * -1521134295 + SecondVersionNumber.GetHashCode();
+            hashCode = hashCode * -1521134295 + VersionNumber.GetHashCode();
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(UpdateTime);
             return hashCode;
         }
@@ -57,7 +48,7 @@ namespace Container
         }
         public bool CheckVersion(VersionCheckClass other)
         {
-            if (other.FirstVersionNumber == this.FirstVersionNumber)
+            if (other.VersionNumber == this.VersionNumber)
             {
                 return true;
             }
@@ -67,27 +58,24 @@ namespace Container
             }
         }
     }
-    public static class ServerVersion
+    public static class StaticVersion
     {
         public static VersionCheckClass Version;
-        static ServerVersion()
+        static StaticVersion()
         {
             int firstVersionNumber = 1;
-            int secondVersionNumber = 1;
             string updateTime = "20210808";
-            Version = new VersionCheckClass(firstVersionNumber,secondVersionNumber,updateTime);
+            Version = new VersionCheckClass(firstVersionNumber,updateTime);
         }
     }
-    
-    public static class ClientVersion
+    [System.Serializable]
+    public class VersionException : System.Exception
     {
-        public static VersionCheckClass Version;
-        static ClientVersion()
-        {
-            int firstVersionNumber = 1;
-            int secondVersionNumber = 1;
-            string updateTime = "20210808";
-            Version = new VersionCheckClass(firstVersionNumber, secondVersionNumber, updateTime);
-        }
+        public VersionException() { }
+        public VersionException(string message) : base(message) { }
+        public VersionException(string message, System.Exception inner) : base(message, inner) { }
+        protected VersionException(
+            System.Runtime.Serialization.SerializationInfo info,
+            System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
     }
 }

@@ -62,7 +62,13 @@ namespace Container.MQMessage
             TheMessageType = (MessageType)message[(int)MessageFieldName.MessageType].ConvertToInt32();
             Version = TransferToVersion(message[(int)MessageFieldName.Version].ConvertToString());
         }
-
+        public BaseMessage(MessageType theMessageType)
+        {
+            TheMessageType = theMessageType;
+            Version = StaticVersion.Version;
+            this.Append((int)TheMessageType);
+            this.Append(TransferToString(Version));
+        }
         public BaseMessage(MessageType theMessageType, VersionCheckClass version)
         {
             TheMessageType = theMessageType;
@@ -73,6 +79,7 @@ namespace Container.MQMessage
             Version = version;
             this.Append((int)TheMessageType);
             this.Append(TransferToString(version));
+            CheckVersion();
         }
         string TransferToString(VersionCheckClass version)
         {
@@ -82,11 +89,18 @@ namespace Container.MQMessage
         {
             return JsonConvert.DeserializeObject<VersionCheckClass>(versionstring, JsonSerializerSetting.Setting);
         }
+        void CheckVersion()
+        {
+            if (!Version.CheckVersion(StaticVersion.Version))
+            {
+                throw new VersionException("消息的版本检查异常，请确认客户端的版本；");
+            }
+        }
     }
     public class ProductInfoMessage:BaseMessage
     {
         public List<ProductInfo> InfoList;
-        public ProductInfoMessage(List<ProductInfo> list):base(MessageType.SERVER_SEND_PRODUCTINFO,ServerVersion.Version)
+        public ProductInfoMessage(List<ProductInfo> list):base(MessageType.SERVER_SEND_PRODUCTINFO,StaticVersion.Version)
         {
             InfoList = list;
             this.Append(TransferToString(InfoList));
@@ -109,14 +123,14 @@ namespace Container.MQMessage
         // TODO: 将任务申请operator 添加为附件；
         public ProductInfo Info;
         public User Operater;
-        public PanelMissionRequestMessage(ProductInfo info,User op):base(MessageType.CLINET_GET_PANEL_MISSION,ClientVersion.Version)
+        public PanelMissionRequestMessage(ProductInfo info,User op):base(MessageType.CLINET_GET_PANEL_MISSION,StaticVersion.Version)
         {
             Info = info;
             Operater = op;
             this.Append(TransferToString(Info));
             this.Append(TransferToString(Operater));
         }
-        public PanelMissionRequestMessage(ProductInfo info) : base(MessageType.CONTROLER_ADD_MISSION, ClientVersion.Version)
+        public PanelMissionRequestMessage(ProductInfo info) : base(MessageType.CONTROLER_ADD_MISSION, StaticVersion.Version)
         {
             Info = info;
             Operater = null;
@@ -140,7 +154,7 @@ namespace Container.MQMessage
         {
             ThePanelMissionLot = TransferToMission(theMessage[(int)MessageFieldName.Field1].ConvertToString());
         }
-        public PanelMissionMessage(MessageType messageType, VersionCheckClass version, MissionLot panelMission) : base(messageType,version)
+        public PanelMissionMessage(MessageType messageType, MissionLot panelMission) : base(messageType,StaticVersion.Version)
         {
             ThePanelMissionLot = panelMission;
             this.Append(TransferToString(ThePanelMissionLot));
@@ -157,7 +171,7 @@ namespace Container.MQMessage
     public class UserCheckMessage : BaseMessage
     {
         public User TheOperator;
-        public UserCheckMessage(MessageType type, VersionCheckClass version, User op) : base(type,version)
+        public UserCheckMessage(MessageType type, User op) : base(type,StaticVersion.Version)
         {
             TheOperator = op;
             this.Append(TransferToString(TheOperator));
@@ -179,7 +193,7 @@ namespace Container.MQMessage
     public class PanelResultMessage : BaseMessage
     {
         PanelMissionResult TheResult;
-        public PanelResultMessage(MessageType type, VersionCheckClass version, PanelMissionResult result) : base(type,version)
+        public PanelResultMessage(MessageType type, PanelMissionResult result) : base(type,StaticVersion.Version)
         {
             TheResult = result;
             this.Append(TransferToString(result));
@@ -201,7 +215,7 @@ namespace Container.MQMessage
     {
         public string ExamRequestInfo;
         public List<ExamMission> ExamMissionList;
-        public ExamMissionMessage(MessageType messageType, VersionCheckClass version, List<ExamMission> examMissionList,string examRequestInfo) : base(messageType,version)
+        public ExamMissionMessage(MessageType messageType, List<ExamMission> examMissionList,string examRequestInfo) : base(messageType,StaticVersion.Version)
         {
             this.ExamMissionList = examMissionList;
             this.ExamRequestInfo = examRequestInfo;
@@ -225,7 +239,7 @@ namespace Container.MQMessage
     public class ExamInfoMessage : BaseMessage
     {
         public string[] ExamInfoArray;
-        public ExamInfoMessage(string[] examInfo, VersionCheckClass version) : base(MessageType.SERVER_SEND_EXAMINFO,version)
+        public ExamInfoMessage(string[] examInfo) : base(MessageType.SERVER_SEND_EXAMINFO,StaticVersion.Version)
         {
             this.ExamInfoArray = examInfo;
             this.Append(TransferToString(ExamInfoArray));
@@ -247,12 +261,12 @@ namespace Container.MQMessage
     {
         public Dictionary<string, List<PanelPathContainer>> panelPathDic;
         //序列化发送的Massage
-        public PanelPathMessage(MessageType messageType, VersionCheckClass version, Dictionary<string, List<PanelPathContainer>> panelpathdic) : base(messageType,version)
+        public PanelPathMessage(Dictionary<string, List<PanelPathContainer>> panelpathdic) : base(MessageType.CLINET_GET_PANEL_PATH,StaticVersion.Version)
         {
             panelPathDic = panelpathdic;
             this.Append(TransferToString(panelPathDic));
         }
-        public PanelPathMessage(MessageType messageType, VersionCheckClass version, string[] panelidarray) : base(messageType,version)
+        public PanelPathMessage(string[] panelidarray) : base(MessageType.CLINET_GET_PANEL_PATH,StaticVersion.Version)
         {
             panelPathDic = new Dictionary<string, List<PanelPathContainer>>();
             foreach (var item in panelidarray)
