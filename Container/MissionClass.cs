@@ -182,9 +182,11 @@ namespace Container
             newimagenamelist.AddRange(Parameter.AppImageNameList);
             ImageNameList = newimagenamelist.ToArray();
             List<Bitmap> newimagearray = new List<Bitmap>();
+
             newimagearray.AddRange(InitialImage(missioninfo.AviPanelPath.ResultPath, Parameter.AviImageNameList));
             newimagearray.AddRange(InitialImage(missioninfo.SviPanelPath.ResultPath, Parameter.SviImageNameList));
             //newimagearray.AddRange(InitialImage(missioninfo.AppPanelPath.ResultPath, Parameter.AppImageNameList));
+
             ImageArray = newimagearray.ToArray();
             DefectMap = InitialImage(missioninfo.SviPanelPath.ResultPath, PanelId + "_SVI_Rotate.jpg");
         }
@@ -284,10 +286,13 @@ namespace Container
                 {
                     return JudgeGrade.E;
                 }
-
                 if (mesPanel.LastDetailGrade == JudgeGrade.E.ToString())
                 {
                     if (LastJudge == JudgeGrade.S)
+                    {
+                        return JudgeGrade.E;
+                    }
+                    else if(LastJudge == JudgeGrade.E)
                     {
                         return JudgeGrade.E;
                     }
@@ -302,6 +307,10 @@ namespace Container
                     {
                         return JudgeGrade.S;
                     }
+                    else if (LastJudge == JudgeGrade.E)
+                    {
+                        return JudgeGrade.E;
+                    }
                     else
                     {
                         return JudgeGrade.F;
@@ -313,6 +322,10 @@ namespace Container
                     {
                         return JudgeGrade.A;
                     }
+                    else if (LastJudge == JudgeGrade.E)
+                    {
+                        return JudgeGrade.E;
+                    }
                     else
                     {
                         return JudgeGrade.F;
@@ -323,6 +336,10 @@ namespace Container
                     if (LastJudge == JudgeGrade.S)
                     {
                         return JudgeGrade.W;
+                    }
+                    else if (LastJudge == JudgeGrade.E)
+                    {
+                        return JudgeGrade.E;
                     }
                     else
                     {

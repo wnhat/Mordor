@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Container.SqlConnector;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -28,10 +29,21 @@ namespace Container
             db.SaveChanges();
             db.WaitLot.Add(new WaitLot { LotId = newlot.Lotid });
             db.SaveChanges();
+            var idlist = from item in lot.Panel
+                         select item.PanelId;
+            var detailGradeDict = SqlServerConnector.GetInputPanelMission(idlist.ToArray());
             foreach (var item in lot.Panel)
             {
                 var buffer = (PanelMissionFromMES)item;
                 Panel newpanel = buffer.OriginPanel;
+                if (detailGradeDict.ContainsKey(item.PanelId))
+                {
+                    newpanel.LastDetailGrade = detailGradeDict[item.PanelId];
+                }
+                else
+                {
+                    newpanel.LastDetailGrade = "E";
+                }
                 newpanel.LotId = newlot.Lotid;
                 newpanel.TrayLot = newlot;
                 db.Panel.Add(newpanel);

@@ -11,32 +11,36 @@ namespace Container.SeverConnection
 {
     public static class SeverConnecter
     {
-        static private RequestSocket request;
+        static private RequestSocket Request;
+        static private RequestSocket PathRequest;
         static SeverConnecter()
         {
-            request = new RequestSocket();
-            request.Connect("tcp://172.16.145.22:5555");
+            Request = new RequestSocket();
+            Request.Connect("tcp://172.16.145.22:5555");
+
+            PathRequest = new RequestSocket();
+            PathRequest.Connect("tcp://172.16.150.100:7262");
         }
         public static bool VersionCheck(VersionCheckClass version)
         {
             // 检查子程序与服务器程序的版本号码是否匹配，当重大更新时推进版本号，防止出现异常；
             BaseMessage newmessage = new BaseMessage(MessageType.VERSION_CHECK,version);
-            request.SendMultipartMessage(newmessage);
-            var returnVersion = new BaseMessage(request.ReceiveMultipartMessage());
+            Request.SendMultipartMessage(newmessage);
+            var returnVersion = new BaseMessage(Request.ReceiveMultipartMessage());
             return returnVersion.Version == version;
         }
         public static bool SendBaseMessage(MessageType m)
         {
             // BaseMessage 包含了message的基础信息，在MessageType中详细描述了该信息传输至服务器时对应的行为含义；
             BaseMessage newMessage = new BaseMessage(m);
-            request.SendMultipartMessage(newMessage);
-            return request.ReceiveSignal();
+            Request.SendMultipartMessage(newMessage);
+            return Request.ReceiveSignal();
         }
         public static User CheckPassWord(User theuser)
         {
             UserCheckMessage newMessage = new UserCheckMessage(MessageType.CLINET_CHECK_USER, theuser);
-            request.SendMultipartMessage(newMessage);
-            UserCheckMessage returnUser = new UserCheckMessage(request.ReceiveMultipartMessage());
+            Request.SendMultipartMessage(newMessage);
+            UserCheckMessage returnUser = new UserCheckMessage(Request.ReceiveMultipartMessage());
             if (returnUser.TheMessageType == MessageType.SERVER_SEND_USER_TRUE)
                 return returnUser.TheOperator;
             else
@@ -45,55 +49,55 @@ namespace Container.SeverConnection
         public static Dictionary<string, List<PanelPathContainer>> GetPanelPathByID(params string[] panelIdList)
         {
             BaseMessage newmessage = new PanelPathMessage(panelIdList);
-            request.SendMultipartMessage(newmessage);
-            var returnmessage = new PanelPathMessage(request.ReceiveMultipartMessage());
+            PathRequest.SendMultipartMessage(newmessage);
+            var returnmessage = new PanelPathMessage(PathRequest.ReceiveMultipartMessage());
             return returnmessage.panelPathDic;
         }
         public static MissionLot GetPanelMission(ProductInfo info,User op)
         {
             // get new panel mission from server;
             PanelMissionRequestMessage newMessage = new PanelMissionRequestMessage(info,op);
-            request.SendMultipartMessage(newMessage);
-            PanelMissionMessage returnMessage = new PanelMissionMessage(request.ReceiveMultipartMessage());
+            Request.SendMultipartMessage(newMessage);
+            PanelMissionMessage returnMessage = new PanelMissionMessage(Request.ReceiveMultipartMessage());
             return returnMessage.ThePanelMissionLot;
         }
         public static void SendPanelMissionResult(MissionLot lot)
         {
             PanelMissionMessage ResultMessage = new PanelMissionMessage(MessageType.CLIENT_SEND_MISSION_RESULT, lot);
-            request.SendMultipartMessage(ResultMessage);
-            request.ReceiveSignal();
+            Request.SendMultipartMessage(ResultMessage);
+            Request.ReceiveSignal();
         }
         public static List<ExamMission> GetExamMission(string ExamInfo)
         {
             ExamMissionMessage newMessage = new ExamMissionMessage(MessageType.CLINET_GET_EXAM_MISSION_LIST, null, ExamInfo);
-            request.SendMultipartMessage(newMessage);
-            ExamMissionMessage returnMessage = new ExamMissionMessage(request.ReceiveMultipartMessage());
+            Request.SendMultipartMessage(newMessage);
+            ExamMissionMessage returnMessage = new ExamMissionMessage(Request.ReceiveMultipartMessage());
             return returnMessage.ExamMissionList;
         }
         public static string[] GetExamInfo()
         {
             BaseMessage newMessage = new BaseMessage(MessageType.CLINET_GET_EXAMINFO);
-            request.SendMultipartMessage(newMessage);
-            ExamInfoMessage returnMessage = new ExamInfoMessage(request.ReceiveMultipartMessage());
+            Request.SendMultipartMessage(newMessage);
+            ExamInfoMessage returnMessage = new ExamInfoMessage(Request.ReceiveMultipartMessage());
             return returnMessage.ExamInfoArray;
         }
         public static void SendExamMissionResult(List<ExamMission> ExamResult, string ExamInfo)
         {
             ExamMissionMessage newmessage = new ExamMissionMessage(MessageType.CLIENT_SEND_EXAM_RESULT, ExamResult, ExamInfo);
-            request.SendMultipartMessage(newmessage);
-            request.ReceiveSignal();
+            Request.SendMultipartMessage(newmessage);
+            Request.ReceiveSignal();
         }
         public static bool AddPanelMission(ProductInfo newInfo)
         {
             PanelMissionRequestMessage RequestMessage = new PanelMissionRequestMessage(newInfo);
-            request.SendMultipartMessage(RequestMessage);
-            return request.ReceiveSignal();
+            Request.SendMultipartMessage(RequestMessage);
+            return Request.ReceiveSignal();
         }
         public static List<ProductInfo> GetProductInfo()
         {
             BaseMessage newmessage = new BaseMessage(MessageType.CLINET_GET_PRODUCTINFO);
-            request.SendMultipartMessage(newmessage);
-            ProductInfoMessage returnMessage = new ProductInfoMessage(request.ReceiveMultipartMessage());
+            Request.SendMultipartMessage(newmessage);
+            ProductInfoMessage returnMessage = new ProductInfoMessage(Request.ReceiveMultipartMessage());
             return returnMessage.InfoList;
         }
     }

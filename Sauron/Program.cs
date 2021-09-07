@@ -69,13 +69,6 @@ namespace Sauron
                         case MessageType.CLINET_GET_EXAMINFO:
                             TheMissionManager.GetExamInfo(a);
                             break;
-                        case MessageType.CLINET_GET_PANEL_PATH:
-                            // 获取设备中存在的原图路径；
-                            PanelPathMessage panelIdInfo = new PanelPathMessage(messageIn);
-                            var newPanelPathDic = TheMissionManager.GetPanelPathList(panelIdInfo.panelPathDic.Keys.ToArray());
-                            PanelPathMessage newpanelinfomassage = new PanelPathMessage(newPanelPathDic);
-                            a.Socket.SendMultipartMessage(newpanelinfomassage);
-                            break;
                         case MessageType.CLINET_GET_PRODUCTINFO:
                             TheMissionManager.GetProductInfo(a);
                             break;
@@ -108,10 +101,10 @@ namespace Sauron
                 };
                 timer.Elapsed += (s, a) =>
                 {
-                    ConsoleLogClass.Logger.Error("start refresh the panel list and add mission(test);");
-                    TheMissionManager.RefreshFileContainer();
-                    //TheMissionManager.AddMissionTest();
+                    ConsoleLogClass.Logger.Information("开始定时垃圾收集；");
+                    GC.Collect();
                 };
+                ConsoleLogClass.Logger.Information("服务器启动完毕；");
                 poller.Run(); // 启动轮询器
             }
         }

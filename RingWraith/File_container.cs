@@ -32,7 +32,7 @@ namespace RingWraith
 
             CancellationTokenSource cancel = new CancellationTokenSource();
             Task looptask = Task.Run(() => { Parallel.For(0, DiskCollection.Count, i => { DiskCollection[i].GetDiskPathCollection(); }); }, cancel.Token);
-            if (looptask.Wait(200000))
+            if (looptask.Wait(280000))
             {
                 FilePathLogClass.Logger.Information("路径搜寻正常完成；");
             }
@@ -49,6 +49,13 @@ namespace RingWraith
             foreach (var item in DiskCollection)
             {
                 item.GetPath(panelIdList, newManager);
+            }
+            foreach (var item in panelIdList)
+            {
+                if (!newManager.PathDict.ContainsKey(item))
+                {
+                    newManager.PathDict.Add(item, null);
+                }
             }
             return newManager.PathDict;
         }
@@ -124,12 +131,15 @@ namespace RingWraith
         }
         public void GetPath(string[] panelIdList, PanelPathManager Manager)
         {
-            foreach (var item in panelIdList)
+            if (PathCollection!= null)
             {
-                if (PathCollection.Contains(item))
+                foreach (var item in panelIdList)
                 {
-                    var path = new PanelPathContainer(item,ParentPc,DiskName);
-                    Manager.AddPanelPath(path);
+                    if (PathCollection.Contains(item))
+                    {
+                        var path = new PanelPathContainer(item, ParentPc, DiskName);
+                        Manager.AddPanelPath(path);
+                    }
                 }
             }
         }

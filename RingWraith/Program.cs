@@ -30,7 +30,7 @@ namespace RingWraith
                     {
                         // 转换为自定义Message类型;
                         switchmessage = new BaseMessage(messageIn);
-
+                        FilePathLogClass.Logger.Error("收到请求消息;");
                         if (switchmessage.TheMessageType == MessageType.CLINET_GET_PANEL_PATH)
                         {
                             PanelPathMessage panelIdInfo = new PanelPathMessage(messageIn);
@@ -43,7 +43,6 @@ namespace RingWraith
                     catch (VersionException e)
                     {
                         FilePathLogClass.Logger.Error("收到版本有差异的消息；{0}", e);
-                        throw;
                     }
                 };
                 timer.Elapsed += (s, a) =>

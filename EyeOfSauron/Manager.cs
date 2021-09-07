@@ -188,13 +188,21 @@ namespace EyeOfSauron
                 if (waitMissionQueue.Count != 0)
                 {
                     var newmission = waitMissionQueue.Dequeue();
+                    if (newmission.AviPanelPath == null || newmission.SviPanelPath == null)
+                    {
+                        User autouser = new User { IndexId = 1 };
+                        Defect EjudgeDefect = new Defect("PathNullError", "DE00000", InspectSection.NORMAL);
+                        PanelMissionResult missionresult = new PanelMissionResult(JudgeGrade.E, EjudgeDefect, autouser, newmission.PanelId);
+                        FinishMission(missionresult);
+                        return GetMission();
+                    }
                     try
                     {
                         return new InspectMission(newmission);
                     }
                     catch (FileNotFoundException e)
                     {
-                        User autouser = new User { IndexId = 0 };
+                        User autouser = new User { IndexId = 1 };
                         Defect EjudgeDefect = new Defect("FileError","DE00000",InspectSection.NORMAL);
                         PanelMissionResult missionresult = new PanelMissionResult(JudgeGrade.E, EjudgeDefect, autouser, newmission.PanelId);
                         FinishMission(missionresult);

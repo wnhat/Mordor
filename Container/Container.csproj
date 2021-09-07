@@ -155,6 +155,7 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServerConnecter.cs" />
+    <Compile Include="SqlConnecter.cs" />
     <Compile Include="TrayLot.cs">
       <DependentUpon>DICS_DB.tt</DependentUpon>
     </Compile>

@@ -10,27 +10,18 @@ using System.IO;
 using NetMQ;
 using Container;
 using Container.MQMessage;
+using Container.SeverConnection;
 
 namespace Sauron
 {
     class MissionManager
     {
         MesConnector theMesConnector;       //管理与MES的链接；
-        FileManager Thefilecontainer;       //管理设备文件路径；
         Dictionary<string, List<ExamMission>> ExamMissionDic = new Dictionary<string, List<ExamMission>>();
         public MissionManager()
         {
-            this.Thefilecontainer = new FileManager();
-            //tibrvlisten -service 8410 -network ;225.8.8.41  BOE.B7.MEM.DEV10047792.CNMsvr
-
             this.theMesConnector = new MesConnector();
-
             RefreshExamList();
-            RefreshFileContainer();
-            
-            ConsoleLogClass.Logger.Information("服务器启动中------开始添加任务（测试版）");
-            // TODO: add mission test mod;
-            ConsoleLogClass.Logger.Information("服务器启动中------任务添加完成");
         }
         public void RefreshExamList(NetMQSocketEventArgs a)
         {
@@ -127,25 +118,23 @@ namespace Sauron
                 MesLogClass.Logger.Error(e.Message);
                 a.Socket.SignalError();
             }
-           
         }
         public Dictionary<string, List<PanelPathContainer>> GetPanelPathList(string[] SampleInfoList)
         {
             Dictionary<string, List<PanelPathContainer>> newPanelPathDic = new Dictionary<string, List<PanelPathContainer>>();
+            var panelPathContainer = SeverConnecter.GetPanelPathByID(SampleInfoList);
             foreach (var item in SampleInfoList)
             {
-                var panelPathContainer = Thefilecontainer.GetPanelPathList(item);
-                newPanelPathDic.Add(item, panelPathContainer);
+                if (panelPathContainer.ContainsKey(item))
+                {
+                    newPanelPathDic.Add(item, panelPathContainer[item]);
+                }
+                else
+                {
+                    newPanelPathDic.Add(item, null);
+                }
             }
             return newPanelPathDic;
-        }
-        public void RefreshFileContainer()
-        {
-            ConsoleLogClass.Logger.Information("开始刷新设备文件路径");
-            Thefilecontainer.RefreshFileList();
-            ConsoleLogClass.Logger.Information("文件路径刷新完成");
-            GC.Collect();
-            ConsoleLogClass.Logger.Information("二次垃圾收集");
         }
         public User CheckUser(User op)
         {
@@ -153,7 +142,7 @@ namespace Sauron
         }
         void FinishExam(List<ExamMission> missionlist)
         {
-
+            //TODO: 完成考试任务；
         }
         MissionLot WaitingMissionGet(ProductInfo info,User op)
         {
@@ -173,8 +162,19 @@ namespace Sauron
                 foreach (var item in panelList)
                 {
                     var pathlist = path[item.PanelId];
-                    var avipath = pathlist.Where(x => x.PcSection == InspectSection.AVI).FirstOrDefault();
-                    var svipath = pathlist.Where(x => x.PcSection == InspectSection.SVI).FirstOrDefault();
+                    PanelPathContainer avipath;
+                    PanelPathContainer svipath;
+                    if (pathlist == null)
+                    {
+                        avipath = null;
+                        svipath = null;
+                    }
+                    else
+                    {
+                        avipath = pathlist.Where(x => x.PcSection == InspectSection.AVI).FirstOrDefault();
+                        svipath = pathlist.Where(x => x.PcSection == InspectSection.SVI).FirstOrDefault();
+                    }
+                    
                     PanelMission newpanel = new PanelMission(item, MissionType.PRODUCITVE, avipath, svipath);
                     missionlist.Add(newpanel);
                 }
